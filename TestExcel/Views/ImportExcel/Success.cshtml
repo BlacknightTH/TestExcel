@@ -1,0 +1,87 @@
+﻿@model IEnumerable<TestExcel.Data.SUBJECT>
+
+@{
+    ViewBag.Title = "Success";
+}
+
+<h2>Success</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_NAME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_CREDIT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_SECTION)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_DAY)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_TIME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_CLASSROOM)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_TEACHER)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_SECT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SUBJECT_YEAR)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in ViewBag.model) {
+    <tr>
+        <td>
+            @item.SUBJECT_ID
+        </td>
+        <td>
+            @item.SUBJECT_NAME
+        </td>
+        <td>
+            @item.SUBJECT_CREDIT
+        </td>
+        <td>
+            @item.SUBJECT_SECTION
+        </td>
+        <td>
+            @item.SUBJECT_DAY
+        </td>
+        <td>
+            @item.SUBJECT_TIME
+        </td>
+        <td>
+            @item.SUBJECT_CLASSROOM
+        </td>
+        <td>
+            @item.SUBJECT_TEACHER
+        </td>
+        <td>
+            @item.SUBJECT_SECT
+        </td>
+        <td>
+            @item.SUBJECT_YEAR
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+        </td>
+    </tr>
+}
+
+</table>
