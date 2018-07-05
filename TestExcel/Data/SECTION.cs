@@ -12,15 +12,15 @@ namespace TestExcel.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class SUBJECT
+    public partial class SECTION
     {
         public int ID { get; set; }
         public string SUBJECT_ID { get; set; }
-        public string SUBJECT_NAME { get; set; }
-        public string SUBJECT_CREDIT { get; set; }
-        public string SUBJECT_MID { get; set; }
-        public string SUBJECT_FINAL { get; set; }
-        public string SUBJECT_TIMEMID { get; set; }
-        public string SUBJECT_TIMEFINAL { get; set; }
+        public string SECTION_NUMBER { get; set; }
+        public string SECTION_DATE { get; set; }
+        public string SECTION_TIME { get; set; }
+        public string SECTION_CLASSROOM { get; set; }
+        public string SECTION_TEACHER { get; set; }
+        public string SECTION_FACULTY { get; set; }
     }
 }

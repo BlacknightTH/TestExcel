@@ -166,6 +166,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ImportExcelController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
+    <Compile Include="Data\SECTION.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\SUBJECT.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>
@@ -542,9 +545,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\ImportExcel\Index.cshtml" />
-    <Content Include="Views\ImportExcel\Success.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
     <Content Include="Views\TimeSchedule\Index.cshtml" />
+    <Content Include="Views\ImportExcel\Success.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

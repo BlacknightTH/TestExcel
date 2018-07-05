@@ -21,8 +21,8 @@ namespace TestExcel.Controllers
         public ActionResult Success()
         {
             TestExcelEntities db = new TestExcelEntities();
-            ViewBag.model = db.SUBJECTs.ToList();
-            return View();
+            var model = db.SUBJECTs.ToList();
+            return View(model);
         }
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase excelfile)
@@ -49,22 +49,71 @@ namespace TestExcel.Controllers
                         Excel.Worksheet worksheet = workbook.ActiveSheet;
                         Excel.Range range = worksheet.UsedRange;
                         TestExcelEntities db = new TestExcelEntities();
-                        for (int row = 1; row < range.Rows.Count; row++)
+                        string tmp = "";
+                        bool dd = false;
+                        for (int row = 4; row < range.Rows.Count; row++)
                         {
-                            string subject_ID = ((Excel.Range)range.Cells[row, 1]).Text;
-                            string subject_NAME = ((Excel.Range)range.Cells[row, 2]).Text;
-                            string subject_CREDIT = ((Excel.Range)range.Cells[row, 3]).Text;
-                            string subject_SECTION = ((Excel.Range)range.Cells[row, 4]).Text;
-                            string subject_DAY = ((Excel.Range)range.Cells[row, 5]).Text;
-                            string subject_TIME = ((Excel.Range)range.Cells[row, 6]).Text;
-                            string subject_CLASSROOM = ((Excel.Range)range.Cells[row, 7]).Text;
-                            string subject_TEACHER = ((Excel.Range)range.Cells[row, 8]).Text;
-                            string subject_SECT = ((Excel.Range)range.Cells[row, 9]).Text;
-                            string subject_YEAR = ((Excel.Range)range.Cells[row, 10]).Text;
+                            string B = ((Excel.Range)range.Cells[row, 2]).Text;
+                            string credit = ((Excel.Range)range.Cells[row, 7]).Text;
+                            //string C = ((Excel.Range)range.Cells[row, 3]).Text;
+                            //string D = ((Excel.Range)range.Cells[row, 4]).Text;
+                            //string E = ((Excel.Range)range.Cells[row, 5]).Text;
+                            //string F = ((Excel.Range)range.Cells[row, 6]).Text;
+                            //string G = ((Excel.Range)range.Cells[row, 7]).Text;
+                            //string H = ((Excel.Range)range.Cells[row, 8]).Text;
+                            //string I = ((Excel.Range)range.Cells[row, 9]).Text;
+                            //string J = ((Excel.Range)range.Cells[row, 10]).Text;
+                            //string K = ((Excel.Range)range.Cells[row, 11]).Text;
+                            var ee = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '" + B + "'").Any();
+                            if (B.Length < 4)
+                            { 
+                            dd = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' AND SECTION_NUMBER = '" + B + "'").Any();
+                            }
+                            if (B.Length > 4 && ee != true)
+                            {
+                                if (credit != "")
+                                {
+                                    tmp = B;
+                                    string subject_ID = B;
+                                    string subject_NAME = ((Excel.Range)range.Cells[row, 3]).Text;
+                                    string subject_CREDIT = credit;
+                                    string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
+                                    string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                    string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
+                                    string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
 
-                            saveSubject(subject_ID, subject_NAME, subject_CREDIT,
-                                subject_SECTION, subject_DAY, subject_TIME, subject_CLASSROOM,
-                                subject_TEACHER, subject_SECT, subject_YEAR, db);
+                                    saveSubject(subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                }
+                                else
+                                {
+                                    tmp = B;
+                                    string subject_ID = B;
+                                    string subject_NAME = ((Excel.Range)range.Cells[row, 3]).Text;
+                                    string subject_CREDIT = ((Excel.Range)range.Cells[row, 8]).Text;
+                                    string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
+                                    string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                    string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
+                                    string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+
+                                    saveSubject(subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                }
+                            }
+                            else if(B.Length <= 4 && dd != true)
+                            {
+                                string subject_ID = tmp;
+                                string Section_NUMBER = B;
+                                string Section_DATE = ((Excel.Range)range.Cells[row, 3]).Text;
+                                string Section_TIME = ((Excel.Range)range.Cells[row, 4]).Text;
+                                string Section_CLASSROOM = ((Excel.Range)range.Cells[row, 5]).Text;
+                                string Section_TEACHER = ((Excel.Range)range.Cells[row, 6]).Text;
+                                string Section_FACULTY = ((Excel.Range)range.Cells[row, 7]).Text;
+
+                                saveSection(subject_ID, Section_NUMBER, Section_DATE, Section_TIME, Section_CLASSROOM, Section_TEACHER, Section_FACULTY, db);
+                            }
+
+                            //saveSubject(subject_ID, subject_NAME, subject_CREDIT,
+                            //    subject_SECTION, subject_DAY, subject_TIME, subject_CLASSROOM,
+                            //    subject_TEACHER, subject_SECT, subject_YEAR, db);
                         }
                     }
                     catch
@@ -101,48 +150,8 @@ namespace TestExcel.Controllers
             }
         }
 
-        //private bool ImportData(out int count)
-        //{
-        //    var result = false;
-        //    count = 0;
-        //    try
-        //    {
-        //        String path = Server.MapPath("/") + "\\import\\Test.xlsx";
-        //        var package = new ExcelPackage(new FileInfo(path));
-        //        int startColumn = 1; // in this file excel, data column start at 1, row 1
-        //        int startRow = 1;
-        //        ExcelWorksheet workSheet = package.Workbook.Worksheets[1]; //read sheet 1
-        //        object data = null;
-
-        //        TestExcelEntities db = new TestExcelEntities();
-
-        //        do
-        //        {
-        //            data = workSheet.Cells[startRow, startColumn].Value; //column No.
-        //            object subject_ID = workSheet.Cells[startRow, startColumn].Value.ToString(); //read column subject id
-        //            if (data != null && subject_ID != null)
-        //            {
-        //                //import db
-        //                var isSuccess = saveSubject(subject_ID.ToString(), db);
-        //                if(isSuccess)
-        //                {
-        //                    count++;
-        //                }
-        //            }
-        //            startRow++;
-        //        }
-        //        while (data != null) ;
-        //    }
-        //    catch
-        //    {
-
-        //    }
-        //    return result;
-        //}
-
-        public bool saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT,
-                                string subject_SECTION, string subject_DAY, string subject_TIME, string subject_CLASSROOM,
-                                string subject_TEACHER, string subject_SECT, string subject_YEAR, TestExcelEntities db)
+        public bool saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT, string subject_MID,
+                                string subject_FINAL, string subject_TIMEMID, string subject_TIMEFINAL, TestExcelEntities db)
         {
             var result = false;
             try
@@ -152,17 +161,39 @@ namespace TestExcel.Controllers
                 item.SUBJECT_ID = subject_ID;
                 item.SUBJECT_NAME = subject_NAME;
                 item.SUBJECT_CREDIT = subject_CREDIT;
-                item.SUBJECT_SECTION = subject_SECTION;
-                item.SUBJECT_DAY = subject_DAY;
-                item.SUBJECT_TIME = subject_TIME;
-                item.SUBJECT_CLASSROOM = subject_CLASSROOM;
-                item.SUBJECT_TEACHER = subject_TEACHER;
-                item.SUBJECT_SECT = subject_SECT;
-                item.SUBJECT_YEAR = subject_YEAR;
+                item.SUBJECT_MID = subject_MID;
+                item.SUBJECT_FINAL = subject_FINAL;
+                item.SUBJECT_TIMEMID = subject_TIMEMID;
+                item.SUBJECT_TIMEFINAL = subject_TIMEFINAL;
                 db.SUBJECTs.Add(item);
                 db.SaveChanges();
                 result = true;
+            }
+            catch
+            {
 
+            }
+            return result;
+        }
+
+        public bool saveSection(string subject_ID, string Section_NUMBER, string Section_DATE, string Section_TIME, 
+                                string Section_CLASSROOM, string Section_TEACHER, string Section_FACULTY, TestExcelEntities db)
+        {
+            var result = false;
+            try
+            {
+                //Check exists
+                var item = new SECTION();
+                item.SUBJECT_ID = subject_ID;
+                item.SECTION_NUMBER = Section_NUMBER;
+                item.SECTION_DATE = Section_DATE;
+                item.SECTION_TIME = Section_TIME;
+                item.SECTION_CLASSROOM = Section_CLASSROOM;
+                item.SECTION_TEACHER = Section_TEACHER;
+                item.SECTION_FACULTY = Section_FACULTY;
+                db.SECTIONs.Add(item);
+                db.SaveChanges();
+                result = true;
             }
             catch
             {
