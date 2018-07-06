@@ -50,13 +50,14 @@ namespace TestExcel.Controllers
                         Excel.Range range = worksheet.UsedRange;
                         TestExcelEntities db = new TestExcelEntities();
                         string tmp = "";
+                        string tmp2 = "";
                         for (int row = 4; row < range.Rows.Count; row++)
                         {
                             string B = ((Excel.Range)range.Cells[row, 2]).Text;
                             var ee = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '"+ B +"'").Any();
                             if (B.Length > 4 && ee != true)
                             {
-                                string subject_ID = B;
+                                string Subject_ID = B;
                                 string subject_NAME = ((Excel.Range)range.Cells[row, 3]).Text;
                                 string subject_CREDIT = ((Excel.Range)range.Cells[row, 7]).Text;
                                 string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
@@ -64,7 +65,7 @@ namespace TestExcel.Controllers
                                 string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
                                 string subject_TIMEFINAL = ((Excel.Range)range.Cells[row+1, 11]).Text;
 
-                                saveSubject(subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
                             }
                         }
 
@@ -74,15 +75,34 @@ namespace TestExcel.Controllers
                             if (B.Length > 4)
                             {
                                 tmp = B;
-                                
                             }
-                            else if(B.Length > 0 && B.Length <= 4)
+                            else if (B.Length > 0 && B.Length <= 4)
                             {
+                                tmp2 = ((Excel.Range)range.Cells[row, 2]).Text;
+                                string Subject_ID = tmp;
+                                string Section_Number = ((Excel.Range)range.Cells[row, 2]).Text;
+                                string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
+                                string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
+                                string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
+                                string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
+                                string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
+                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
 
                             }
-                            else
+                            else if (B.Length == 0) 
                             {
-
+                                string C = ((Excel.Range)range.Cells[row, 3]).Text;
+                                if (C.Length != 0)
+                                {
+                                    string Subject_ID = tmp;
+                                    string Section_Number = tmp2;
+                                    string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
+                                    string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
+                                    string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
+                                    string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
+                                    string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
+                                    saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                }
                             }
                         }
                     }
@@ -135,6 +155,30 @@ namespace TestExcel.Controllers
                 item.SUBJECT_TIMEMID = subject_TIMEMID;
                 item.SUBJECT_TIMEFINAL = subject_TIMEFINAL;
                 db.SUBJECTs.Add(item);
+                db.SaveChanges();
+
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void saveSection(string SUBJECT_ID, string SECTION_NUMBER, string SECTION_DATE, string SECTION_TIME,
+                                string SECTION_CLASSROOM, string SECTION_TEACHER, string SECTION_FACULTY, TestExcelEntities db)
+        {
+            try
+            {
+                //Check exists
+                var item = new SECTION();
+                item.SUBJECT_ID = SUBJECT_ID;
+                item.SECTION_NUMBER = SECTION_NUMBER;
+                item.SECTION_DATE = SECTION_DATE;
+                item.SECTION_TIME = SECTION_TIME;
+                item.SECTION_CLASSROOM = SECTION_CLASSROOM;
+                item.SECTION_TEACHER = SECTION_TEACHER;
+                item.SECTION_FACULTY = SECTION_FACULTY;
+                db.SECTIONs.Add(item);
                 db.SaveChanges();
 
             }
