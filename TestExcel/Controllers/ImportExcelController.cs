@@ -54,57 +54,169 @@ namespace TestExcel.Controllers
                         for (int row = 4; row < range.Rows.Count; row++)
                         {
                             string B = ((Excel.Range)range.Cells[row, 2]).Text;
-                            var ee = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '"+ B +"'").Any();
-                            if (B.Length > 4 && ee != true)
-                            {
-                                string Subject_ID = B;
-                                string subject_NAME = ((Excel.Range)range.Cells[row, 3]).Text;
-                                string subject_CREDIT = ((Excel.Range)range.Cells[row, 7]).Text;
-                                string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
-                                string subject_FINAL = ((Excel.Range)range.Cells[row+1, 10]).Text;
-                                string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
-                                string subject_TIMEFINAL = ((Excel.Range)range.Cells[row+1, 11]).Text;
+                            string C = ((Excel.Range)range.Cells[row, 3]).Text;
+                            string D = ((Excel.Range)range.Cells[row, 4]).Text;
+                            string E = ((Excel.Range)range.Cells[row, 5]).Text;
+                            string F = ((Excel.Range)range.Cells[row, 6]).Text;
+                            string G = ((Excel.Range)range.Cells[row, 7]).Text;
 
-                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
-                            }
-                        }
-
-                        for (int row = 4; row < range.Rows.Count; row++)
-                        {
-                            string B = ((Excel.Range)range.Cells[row, 2]).Text;
+                            //
                             if (B.Length > 4)
                             {
                                 tmp = B;
-                            }
-                            else if (B.Length > 0 && B.Length <= 4)
-                            {
-                                tmp2 = ((Excel.Range)range.Cells[row, 2]).Text;
-                                string Subject_ID = tmp;
-                                string Section_Number = ((Excel.Range)range.Cells[row, 2]).Text;
-                                string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
-                                string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
-                                string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
-                                string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
-                                string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
-                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
-
-                            }
-                            else if (B.Length == 0) 
-                            {
-                                string C = ((Excel.Range)range.Cells[row, 3]).Text;
-                                if (C.Length != 0)
+                                var CheckSubject = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '" + B + "'").Any();
+                                if (CheckSubject != true)
                                 {
-                                    string Subject_ID = tmp;
-                                    string Section_Number = tmp2;
-                                    string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
-                                    string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
-                                    string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
-                                    string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
-                                    string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
-                                    saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                    if (G.Length != 0)
+                                    {
+                                        string Subject_ID = B;
+                                        string subject_NAME = C;
+                                        string subject_CREDIT = G;
+                                        string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
+                                        string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                        string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
+                                        string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                    }
+                                    else
+                                    {
+                                        string Subject_ID = B;
+                                        string subject_NAME = C;
+                                        string subject_CREDIT = ((Excel.Range)range.Cells[row, 8]).Text;
+                                        string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
+                                        string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                        string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
+                                        string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                    }
+                                }
+                            }
+                            else if (B.Length <= 4)
+                            {
+                                tmp2 = B;
+
+                                if (B.Length != 0)
+                                {
+                                    if (G.LastOrDefault().ToString() == ",")
+                                    {
+                                        G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                    }
+                                    var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
+"SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME = '" + D + "' and SECTION_CLASSROOM = '" + E + "' " +
+" and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                                    if (CheckSection == false)
+                                    {
+                                        string Subject_ID = tmp;
+                                        string Section_Number = B;
+                                        string Section_Date = C;
+                                        string Section_Time = D;
+                                        string Section_Classroom = E;
+                                        string Section_Teacher = F;
+                                        string Section_Faculty = G;
+                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                    }
+                                }
+                                else
+                                {
+                                    if (C.Length != 0 && D.Length != 0 && G.Length != 0)
+                                    {
+                                        if (tmp2 != "")
+                                        {
+                                            if (G.LastOrDefault().ToString() == ",")
+                                            {
+                                                G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                            }
+                                            var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
+                                        "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME = '" + D + "' and SECTION_CLASSROOM = '" + E + "' " +
+                                        " and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                                            if (CheckSection == false)
+                                            {
+                                                string Subject_ID = tmp;
+                                                string Section_Number = tmp2;
+                                                string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
+                                                string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
+                                                string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
+                                                string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
+                                                string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
+                                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+
+                        //for (int row = 4; row < range.Rows.Count; row++)
+                        //{
+                        //    string B = ((Excel.Range)range.Cells[row, 2]).Text;
+                        //    string C = ((Excel.Range)range.Cells[row, 3]).Text;
+                        //    string D = ((Excel.Range)range.Cells[row, 4]).Text;
+                        //    string E = ((Excel.Range)range.Cells[row, 5]).Text;
+                        //    string F = ((Excel.Range)range.Cells[row, 6]).Text;
+                        //    string G = ((Excel.Range)range.Cells[row, 7]).Text;
+                        //    if (B.Length > 4)
+                        //    {
+                        //        tmp = B;
+
+                        //    }
+                        //    else if (B.Length > 0 && B.Length <= 4)
+                        //    {
+                        //        var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
+                        //            "SECTION_NUMBER = '"+ B +"' and SECTION_DATE = '"+ C +"' and SECTION_TIME = '"+ D + "' and SECTION_CLASSROOM = '"+ E +"' " +
+                        //            " and SECTION_TEACHER = '"+ F +"' and SECTION_FACULTY = '"+ G +"'").Any();
+
+                        //        if(CheckSection == false)
+                        //        {
+                        //            tmp2 = ((Excel.Range)range.Cells[row, 2]).Text;
+                        //            string Subject_ID = tmp;
+                        //            string Section_Number = ((Excel.Range)range.Cells[row, 2]).Text;
+                        //            string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
+                        //            string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
+                        //            string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
+                        //            string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
+                        //            string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
+                        //            saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                        //         }
+                        //        else
+                        //        {
+
+                        //        }
+
+
+
+                        //    }
+                        //    else if (B.Length == 0) 
+                        //    {
+                        //        string C = ((Excel.Range)range.Cells[row, 3]).Text;
+                        //        string D = ((Excel.Range)range.Cells[row, 4]).Text;
+                        //        string E = ((Excel.Range)range.Cells[row, 5]).Text;
+                        //        string F = ((Excel.Range)range.Cells[row, 6]).Text;
+                        //        string G = ((Excel.Range)range.Cells[row, 7]).Text;
+                        //        var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
+                        //            "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME = '" + D + "' and SECTION_CLASSROOM = '" + E + "' " +
+                        //            " and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                        //        if (C.Length != 0)
+                        //        {
+                        //            if (CheckSection == false)
+                        //            {
+                        //                string Subject_ID = tmp;
+                        //                string Section_Number = tmp2;
+                        //                string Section_Date = ((Excel.Range)range.Cells[row, 3]).Text;
+                        //                string Section_Time = ((Excel.Range)range.Cells[row, 4]).Text;
+                        //                string Section_Classroom = ((Excel.Range)range.Cells[row, 5]).Text;
+                        //                string Section_Teacher = ((Excel.Range)range.Cells[row, 6]).Text;
+                        //                string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
+                        //                saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                        //            }
+                        //            else
+                        //            {
+
+                        //            }
+                        //        }
+                        //    }
+                        //}
                     }
                     catch
                     {
