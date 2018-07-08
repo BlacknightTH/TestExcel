@@ -27,14 +27,14 @@ namespace TestExcel.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase excelfile)
         {
-            if(excelfile == null || excelfile.ContentLength == 0)
+            if (excelfile == null || excelfile.ContentLength == 0)
             {
                 ViewBag.Error = "Please select a excel file<br>";
                 return View("Index");
             }
             else
             {
-                if(excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx"))
+                if (excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx"))
                 {
                     string path = Server.MapPath("~/import/" + excelfile.FileName);
                     if (System.IO.File.Exists(path))
@@ -104,8 +104,8 @@ namespace TestExcel.Controllers
                                         G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
                                     }
                                     var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
-"SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME = '" + D + "' and SECTION_CLASSROOM = '" + E + "' " +
-" and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                                    "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME = '" + D + "' and SECTION_CLASSROOM = '" + E + "' " +
+                                    " and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
                                     if (CheckSection == false)
                                     {
                                         string Subject_ID = tmp;
