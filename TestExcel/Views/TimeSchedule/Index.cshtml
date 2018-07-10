@@ -1,7 +1,82 @@
-﻿
+﻿@model IEnumerable<TestExcel.Models.Section_Subject>
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2></h2>
 
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            ลำดับ
+        </th>
+        <th>
+            รหัสวิชา
+        </th>
+        <th>
+            ชื่อวิชา
+        </th>
+        <th>
+            หน่วยกิต
+        </th>
+        <th>
+            ตอน
+        </th>
+        <th></th>
+    </tr>
+        </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+           
+        </td>
+        <td>
+            @item.SUBJECT_ID
+        </td>
+        <td>
+            @item.SUBJECT_NAME
+        </td>
+        <td>
+           @{ 
+               string[] e = item.SUBJECT_CREDIT.Split('(',')');
+               string r = e[0];
+               string r1 = e[1];
+               var ef = r1.Split('-');
+               int ans = 0;
+               for(int i = 0; i < ef.Length;i++)
+               {
+                   ans = ans + (int.Parse(ef[i]));
+               }
+           }
+            @item.SUBJECT_CREDIT
+        </td>
+        <td>
+           @item.SECTION_NUMBER
+        </td>
+    </tr>
+    }
+        </tbody>
+    <tfoot>
+        <tr>
+            <td>
+               
+            </td>
+            <td>
+               
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                หน่วยกิต
+            </td>
+            <td>
+               
+            </td>
+            <th></th>
+        </tr>
+        </tfoot>
+</table>

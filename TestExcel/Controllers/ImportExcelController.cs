@@ -122,8 +122,8 @@ namespace TestExcel.Controllers
                                 {
                                     if (C.Length != 0 && D.Length != 0 && G.Length != 0)
                                     {
-                                        if (tmp2 != "")
-                                        {
+                                        //if (tmp2 != "")
+                                        //{
                                             if (G.LastOrDefault().ToString() == ",")
                                             {
                                                 G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
@@ -142,7 +142,7 @@ namespace TestExcel.Controllers
                                                 string Section_Faculty = ((Excel.Range)range.Cells[row, 7]).Text;
                                                 saveSection(Subject_ID, Section_Number, Section_Date, Section_Time, Section_Classroom, Section_Teacher, Section_Faculty, db);
                                             }
-                                        }
+                                        //}
                                     }
                                 }
                             }
