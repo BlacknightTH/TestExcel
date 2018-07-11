@@ -18,7 +18,8 @@ namespace TestExcel.Data
         public string SUBJECT_ID { get; set; }
         public string SECTION_NUMBER { get; set; }
         public string SECTION_DATE { get; set; }
-        public string SECTION_TIME { get; set; }
+        public string SECTION_TIME_START { get; set; }
+        public string SECTION_TIME_END { get; set; }
         public string SECTION_CLASSROOM { get; set; }
         public string SECTION_TEACHER { get; set; }
         public string SECTION_FACULTY { get; set; }

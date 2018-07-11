@@ -13,7 +13,8 @@
           <Property Name="SUBJECT_ID" Type="varchar" MaxLength="50" />
           <Property Name="SECTION_NUMBER" Type="varchar" MaxLength="20" />
           <Property Name="SECTION_DATE" Type="varchar" MaxLength="20" />
-          <Property Name="SECTION_TIME" Type="varchar" MaxLength="40" />
+          <Property Name="SECTION_TIME_START" Type="varchar" MaxLength="40" />
+          <Property Name="SECTION_TIME_END" Type="varchar" MaxLength="40" />
           <Property Name="SECTION_CLASSROOM" Type="varchar" MaxLength="50" />
           <Property Name="SECTION_TEACHER" Type="varchar" MaxLength="50" />
           <Property Name="SECTION_FACULTY" Type="varchar" MaxLength="200" />
@@ -64,7 +65,8 @@
           <Property Name="SUBJECT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_NUMBER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_DATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SECTION_TIME" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="SECTION_TIME_START" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="SECTION_TIME_END" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_CLASSROOM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_TEACHER" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_FACULTY" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -95,7 +97,8 @@
                 <ScalarProperty Name="SECTION_FACULTY" ColumnName="SECTION_FACULTY" />
                 <ScalarProperty Name="SECTION_TEACHER" ColumnName="SECTION_TEACHER" />
                 <ScalarProperty Name="SECTION_CLASSROOM" ColumnName="SECTION_CLASSROOM" />
-                <ScalarProperty Name="SECTION_TIME" ColumnName="SECTION_TIME" />
+                <ScalarProperty Name="SECTION_TIME_END" ColumnName="SECTION_TIME_END" />
+                <ScalarProperty Name="SECTION_TIME_START" ColumnName="SECTION_TIME_START" />
                 <ScalarProperty Name="SECTION_DATE" ColumnName="SECTION_DATE" />
                 <ScalarProperty Name="SECTION_NUMBER" ColumnName="SECTION_NUMBER" />
                 <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />

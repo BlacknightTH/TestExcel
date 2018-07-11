@@ -19,7 +19,7 @@ namespace TestExcel.Controllers
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_FACULTY.Contains("EnET(I)-R21")
+                        where e1.SECTION_FACULTY.Contains("CVET-R21")
                         select new Section_Subject
                         {
                             ID = e1.ID,
@@ -27,12 +27,15 @@ namespace TestExcel.Controllers
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
                             SECTION_NUMBER = e1.SECTION_NUMBER,
-                            SECTION_FACULTY = e1.SECTION_FACULTY
+                            SECTION_FACULTY = e1.SECTION_FACULTY,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_TEACHER = e1.SECTION_TEACHER,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
                         };
-            Section_Subject d = new Section_Subject();
-            var e = d.SUBJECT_CREDIT.Split('(', ')');
 
-            query = query.Where(x => x.SECTION_NUMBER != "");
+            //query = query.Where(x => x.SECTION_NUMBER != "");
             return View(query);
         }
     }

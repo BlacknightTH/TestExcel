@@ -13,5 +13,10 @@ namespace TestExcel.Models
         public string SUBJECT_NAME { get; set; }
         public string SUBJECT_CREDIT { get; set; }
         public string SECTION_FACULTY { get; set; }
+        public string SECTION_DATE { get; set; }
+        public string SECTION_TIME_START { get; set; }
+        public string SECTION_TIME_END { get; set; }
+        public string SECTION_CLASSROOM { get; set; }
+        public string SECTION_TEACHER { get; set; }
     }
 }
