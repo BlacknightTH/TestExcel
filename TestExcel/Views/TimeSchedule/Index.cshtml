@@ -17,7 +17,7 @@
         });
     });
     </script>
-<h2>@Model.First().SECTION_FACULTY</h2>
+@*<h2>@Model.First().SECTION_FACULTY</h2>*@
 @using (Html.BeginForm("Index","TimeSchedule",FormMethod.Post, new { id = "FACULTY_FORM" , name = "FACULTY_FORM" }))
 {
     @Html.DropDownList("DDL_FACULTY", (SelectList)ViewBag.ddl_Faculty)
@@ -208,18 +208,20 @@
                 {
                     <td></td>
                 }
-                if (Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).Any())
                 {
-                    var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).First().SECTION_TIME_START;
-                    var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).First().SECTION_TIME_END;
-                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                    var TIME = TIME_END - TIME_START;
+                    if (Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).Any())
+                    {
+                        var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).First().SECTION_TIME_START;
+                        var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == 15.00 && x.SECTION_DATE == date[a]).First().SECTION_TIME_END;
+                        var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                        var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                        var TIME = TIME_END - TIME_START;
                     <td colspan="@TIME">@Model.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == date[a]).First().SUBJECT_NAME</td>
-                }
-                else if (Model.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == date[a]).Any() != true)
-                {
+                    }
+                    else if (Model.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == date[a]).Any() != true)
+                    {
                     <td></td>
+                    }
                 }
                 if (Model.Where(x => x.SECTION_TIME_START == 16.00 && x.SECTION_DATE == date[a]).Any())
                 {
@@ -323,23 +325,5 @@
             }
         </tr>
         }
-        @*
-            <tr>
-                <td>@date[0]</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>*@
     </tbody>
 </table>

@@ -32,11 +32,12 @@ namespace TestExcel.Controllers
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_TEACHER = e1.SECTION_TEACHER,
-                            SECTION_TIME_START = float.Parse(e1.SECTION_TIME_START),
-                            SECTION_TIME_END = float.Parse(e1.SECTION_TIME_END)
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
                         };
             ViewBag.FacultyName = Faculty_Name;
             ViewBag.DDLSelected = 1;
+            var rr = query.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == "M").Any();
             ViewBag.ddl_Faculty = new SelectList(db.FACULTies.ToList(), "ID", "FACULTY_NAME");
             return View(query);
         }
@@ -60,8 +61,8 @@ namespace TestExcel.Controllers
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_TEACHER = e1.SECTION_TEACHER,
-                            SECTION_TIME_START = float.Parse(e1.SECTION_TIME_START),
-                            SECTION_TIME_END = float.Parse(e1.SECTION_TIME_END)
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
                         };
             ViewBag.FacultyName = Faculty_Name;
             ViewBag.ddl_Faculty = new SelectList(db.FACULTies.ToList(), "ID", "FACULTY_NAME");

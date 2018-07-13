@@ -218,8 +218,8 @@ namespace TestExcel.Controllers
                 item.SUBJECT_ID = SUBJECT_ID;
                 item.SECTION_NUMBER = SECTION_NUMBER;
                 item.SECTION_DATE = SECTION_DATE;
-                item.SECTION_TIME_START = SECTION_TIME_START;
-                item.SECTION_TIME_END = SECTION_TIME_END;
+                item.SECTION_TIME_START = double.Parse(SECTION_TIME_START);
+                item.SECTION_TIME_END = double.Parse(SECTION_TIME_END);
                 item.SECTION_CLASSROOM = SECTION_CLASSROOM;
                 item.SECTION_TEACHER = SECTION_TEACHER;
                 item.SECTION_FACULTY = SECTION_FACULTY;
