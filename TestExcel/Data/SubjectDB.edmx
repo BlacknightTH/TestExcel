@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TestExcelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="FACULTY">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FACULTY_NAME" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="SECTION">
           <Key>
             <PropertyRef Name="ID" />
@@ -33,6 +40,7 @@
           <Property Name="SUBJECT_TIMEFINAL" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityContainer Name="TestExcelModelStoreContainer">
+          <EntitySet Name="FACULTY" EntityType="Self.FACULTY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SECTION" EntityType="Self.SECTION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SUBJECT" EntityType="Self.SUBJECT" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -43,6 +51,7 @@
         <EntityContainer Name="TestExcelEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
+          <EntitySet Name="FACULTies" EntityType="TestExcelModel.FACULTY" />
         </EntityContainer>
         <EntityType Name="SUBJECT">
           <Key>
@@ -70,6 +79,13 @@
           <Property Name="SECTION_CLASSROOM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_TEACHER" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_FACULTY" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FACULTY">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FACULTY_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -102,6 +118,14 @@
                 <ScalarProperty Name="SECTION_DATE" ColumnName="SECTION_DATE" />
                 <ScalarProperty Name="SECTION_NUMBER" ColumnName="SECTION_NUMBER" />
                 <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FACULTies">
+            <EntityTypeMapping TypeName="TestExcelModel.FACULTY">
+              <MappingFragment StoreEntitySet="FACULTY">
+                <ScalarProperty Name="FACULTY_NAME" ColumnName="FACULTY_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

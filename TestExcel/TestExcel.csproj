@@ -166,6 +166,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ImportExcelController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
+    <Compile Include="Data\FACULTY.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\SECTION.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>
