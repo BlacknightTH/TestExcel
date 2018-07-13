@@ -32,8 +32,8 @@ namespace TestExcel.Controllers
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_TEACHER = e1.SECTION_TEACHER,
-                            SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_START = float.Parse(e1.SECTION_TIME_START),
+                            SECTION_TIME_END = float.Parse(e1.SECTION_TIME_END)
                         };
             ViewBag.FacultyName = Faculty_Name;
             ViewBag.DDLSelected = 1;
