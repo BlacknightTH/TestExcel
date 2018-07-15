@@ -14,8 +14,8 @@
             $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
         $("#DDL_FACULTY").change(function () {
             $("#FACULTY_FORM").submit();
-        });
-               });
+            });
+           });
     </script>
     <h2>@ViewBag.FacultyName</h2>
     @using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "FACULTY_FORM", name = "FACULTY_FORM" }))
@@ -112,47 +112,47 @@
         </thead>
         <tbody>
             @for (int a = 0; a < 6; a++)
-            {
+             {
             <tr>
                 <td>@date[a]</td>
                 @for (int b = 8; b <= 21; b++)
                 {
-                //if (Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault() != null)
-                //{
-                var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
-                var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
-                if (check != null)
-                {
-                var period = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_PERIOD;
-                var TIME = int.Parse(period.ToString()) * 4;
-                <td colspan="@TIME" bgcolor="#F4D9FF">
+                    //if (Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault() != null)
+                    //{
+                    var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
+                    var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                    if (check != null)
+                    {
+                        var period = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_PERIOD;
+                        var TIME = int.Parse(period.ToString()) * 4;
+                        <td colspan="4" bgcolor="#F4D9FF">
+                            @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                        </td>
+                    }
+                    else if (check1 != null)
+                    {
+                        <td colspan="4" bgcolor="#F4D9FF">
                     @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                 </td>
-                }
-                else if (check1 != null)
-                {
-                <td colspan="4" bgcolor="#F4D9FF">
-                    @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
-                </td>
-
-                }
-                else
-                {
-                <td colspan="4"> &nbsp;</td>
-                }
-                @*}
-                }
-                else
-                {
+                     
+                    }
+                    else
+                    {
+                        <td colspan="4"> &nbsp;</td>
+                    }
+                    @*}
+            }
+            else
+            {
                 var period = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                 if (period == null)
                 {
-                <td colspan="4">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                 }
-                }*@
+            }*@
                 }
             </tr>
-            }
+             }
         </tbody>
     </table>
 
