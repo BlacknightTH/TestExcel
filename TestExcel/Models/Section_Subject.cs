@@ -16,7 +16,6 @@ namespace TestExcel.Models
         public string SECTION_DATE { get; set; }
         public Nullable<double> SECTION_TIME_START { get; set; }
         public Nullable<double> SECTION_TIME_END { get; set; }
-        public int SECTION_PERIOD { get; set; }
         public string SECTION_CLASSROOM { get; set; }
         public string SECTION_TEACHER { get; set; }
     }
