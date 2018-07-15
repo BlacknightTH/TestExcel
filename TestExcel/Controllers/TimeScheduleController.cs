@@ -63,7 +63,7 @@ namespace TestExcel.Controllers
                             SECTION_TEACHER = e1.SECTION_TEACHER,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
-                            SECTION_PERIOD = e1.SECTION_TIME_END - e1.SECTION_TIME_START
+                            SECTION_PERIOD = int.Parse((e1.SECTION_TIME_END - e1.SECTION_TIME_START).ToString())
                         };
             ViewBag.FacultyName = Faculty_Name;
             ViewBag.ddl_Faculty = new SelectList(db.FACULTies.ToList(), "ID", "FACULTY_NAME");
