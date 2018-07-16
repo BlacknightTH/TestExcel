@@ -128,22 +128,19 @@
                         var TIME_START = int.Parse(tmp_TIME_START.ToString());
                         var TIME_END = int.Parse(tmp_TIME_END.ToString());
                         var TIME = (TIME_END - TIME_START) * 4;
-                        <td colspan="@TIME" bgcolor="#F4D9FF">
+                        <td draggable="true" colspan="@TIME" bgcolor="#F4D9FF">
                             @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                         </td>
                     }
-                    else if (check1 != null)
+                    else if (check1 == null)
                     {
+                        <td colspan="4">&nbsp;</td>
                         @*<td colspan="4" bgcolor="#F4D9FF">
                     @Model.Where(x => x.SECTION_TIME_START < b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                 </td>*@
                         @*<td colspan="4" bgcolor="#F4D9FF">
                     @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                 </td>*@
-                    }
-                    else
-                    {
-                        <td colspan="4">&nbsp;</td>
                     }
                 }
 
