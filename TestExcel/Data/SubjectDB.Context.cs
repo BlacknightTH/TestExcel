@@ -28,5 +28,6 @@ namespace TestExcel.Data
         public virtual DbSet<SUBJECT> SUBJECTs { get; set; }
         public virtual DbSet<FACULTY> FACULTies { get; set; }
         public virtual DbSet<SECTION> SECTIONs { get; set; }
+        public virtual DbSet<USER> USERs { get; set; }
     }
 }

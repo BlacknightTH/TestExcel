@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.IO;
 using TestExcel.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+using TestExcel.Utility;
 
 namespace TestExcel.Controllers
 {
+    [adminauthen]
     public class ImportExcelController : Controller
     {
         // GET: ImportExcel
+       
         public ActionResult Index()
         {
             return View();

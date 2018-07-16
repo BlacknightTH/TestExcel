@@ -39,10 +39,23 @@
           <Property Name="SUBJECT_TIMEMID" Type="varchar" MaxLength="20" />
           <Property Name="SUBJECT_TIMEFINAL" Type="varchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_USERNAME" Type="varchar" MaxLength="50" />
+          <Property Name="USER_PASSWORD" Type="varchar" MaxLength="50" />
+          <Property Name="USER_EMAIL" Type="varchar" MaxLength="100" />
+          <Property Name="USER_FIRSTNAME" Type="varchar" MaxLength="100" />
+          <Property Name="USER_LASTNAME" Type="varchar" MaxLength="100" />
+          <Property Name="USER_STATUS" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityContainer Name="TestExcelModelStoreContainer">
           <EntitySet Name="FACULTY" EntityType="Self.FACULTY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SECTION" EntityType="Self.SECTION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SUBJECT" EntityType="Self.SUBJECT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -52,6 +65,7 @@
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="FACULTies" EntityType="TestExcelModel.FACULTY" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
+          <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
         </EntityContainer>
         <EntityType Name="SUBJECT">
           <Key>
@@ -86,6 +100,18 @@
           <Property Name="SECTION_CLASSROOM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_TEACHER" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SECTION_FACULTY" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_USERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_PASSWORD" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_EMAIL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="USER_FIRSTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="USER_LASTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="USER_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -126,6 +152,19 @@
                 <ScalarProperty Name="SECTION_DATE" ColumnName="SECTION_DATE" />
                 <ScalarProperty Name="SECTION_NUMBER" ColumnName="SECTION_NUMBER" />
                 <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERs">
+            <EntityTypeMapping TypeName="TestExcelModel.USER">
+              <MappingFragment StoreEntitySet="USER">
+                <ScalarProperty Name="USER_STATUS" ColumnName="USER_STATUS" />
+                <ScalarProperty Name="USER_LASTNAME" ColumnName="USER_LASTNAME" />
+                <ScalarProperty Name="USER_FIRSTNAME" ColumnName="USER_FIRSTNAME" />
+                <ScalarProperty Name="USER_EMAIL" ColumnName="USER_EMAIL" />
+                <ScalarProperty Name="USER_PASSWORD" ColumnName="USER_PASSWORD" />
+                <ScalarProperty Name="USER_USERNAME" ColumnName="USER_USERNAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

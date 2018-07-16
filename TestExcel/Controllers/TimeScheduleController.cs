@@ -6,9 +6,11 @@ using System.Web.Mvc;
 using TestExcel.Data;
 using TestExcel.Models;
 using System.Text;
+using TestExcel.Utility;
 
 namespace TestExcel.Controllers
 {
+    [adminauthen]
     public class TimeScheduleController : Controller
     {
         TestExcelEntities db = new TestExcelEntities();
@@ -69,6 +71,48 @@ namespace TestExcel.Controllers
             ViewBag.DDLSelected = Faculty_id;
                 //query = query.Where(x => x.SECTION_NUMBER != "");
                 return View(query);
+        }
+        [HttpPost]
+        public ActionResult updatedata(FormCollection collection)
+        {
+            string[] date = { "M", "T", "W", "H", "F", "S" };
+            var Mname = "";
+            var Tname = "";
+            var Wname = "";
+            var Hname = "";
+            var Fname = "";
+            var Sname = "";
+            for (int a = 0; a < 6;a++)
+            {
+                for (int b = 8; b < 22; b++)
+                {
+                    if (a == 0)
+                    {
+                        Mname = collection[date[a] + "name" + b];
+                    }
+                    else if(a == 1)
+                    {
+                        Tname = collection[date[a] + "name" + b];
+                    }
+                    else if (a == 2)
+                    {
+                        Wname = collection[date[a] + "name" + b];
+                    }
+                    else if (a == 3)
+                    {
+                        Hname = collection[date[a] + "name" + b];
+                    }
+                    else if (a == 4)
+                    {
+                        Fname = collection[date[a] + "name" + b];
+                    }
+                    else if (a == 5)
+                    {
+                        Sname = collection[date[a] + "name" + b];
+                    }
+                }
+            }
+            return View();
         }
     }
 }

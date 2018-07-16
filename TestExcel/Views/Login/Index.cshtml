@@ -3,28 +3,56 @@
     ViewBag.Title = "Index";
 }
 
-<div class="w3-card-4 center-block" style="width:330px">
-    <div class="w3-container w3-blue w3-center">
-        <h3>เข้าสู่ระบบ</h3>
-    </div>
-    <br />
-    <form class="w3-container form-horizontal" action="/action_page.php">
-        <p>
-            <label><b>Username *</b></label>
+<div class="w3-container center-block" style="width:400px;margin-top:150px">
+    <div class="panel panel-default">
+        <div class="panel-heading w3-blue w3-center">
+            <h3 class="w3-blue">กรุณาเข้าสู่ระบบ</h3>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+            <div>
+                <label><b>Username</b></label>
+            </div>
             <div>
                 @Html.TextBox("Username", "", new { @class = "w3-input w3-border", @placeholder = "Username" })
             </div>
-        </p>
-
-        <p>
-            <label><b>Password *</b></label>
+            <div>
+                <label><b>Password</b></label>
+            </div>
             <div>
                 @Html.Password("Password", "", new { @class = "w3-input w3-border", @placeholder = "Password" })
             </div>
-        </p>
-        <hr>
-        <p>
-            <button class="w3-btn w3-green w3-center registerbtn">เข้าสู่ระบบ</button>
-        </p>
-    </form>
+            <hr>
+            <div>
+                <input type="submit" value="เข้าสู่ระบบ" class="w3-btn w3-green w3-center registerbtn" />
+            </div>
+            }
+        </div>
+    </div>
 </div>
+
+
+        @*<div class="w3-container" style="width:400px">
+                <div class="panel panel-default">
+                    <div class="panel-heading w3-blue w3-center">
+                        <h3 class="w3-blue">กรุณาเข้าสู่ระบบ</h3>
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            <div>
+                                <div class="uk-form-label">USERNAME : </div>
+                                @Html.TextBox("Username", "", new { @class = "uk-input", placeholder = "USERNAME...", @autofocus = "autofocus" })
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-form-label">PASSWORD : </div>
+                                @Html.Password("Password", "", new { @class = "uk-input", placeholder = "PASSWORD..." })
+                            </div>
+                            <div class="uk-margin-top">
+                                <input type="submit" value="Login" class="uk-button uk-button-primary uk-width-1-1">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>*@

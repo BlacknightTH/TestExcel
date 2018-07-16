@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<TestExcel.Models.Section_Subject>
-    @{
+@{
     ViewBag.Title = "Index";
     int i = 0;
     int j = 0;
@@ -8,53 +8,53 @@
     int m = 0;
     string textcreadit = "";
     string[] date = { "M", "T", "W", "H", "F", "S" };
-    }
-    <script>
+}
+<script>
         $(document).ready(function () {
             $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
         $("#DDL_FACULTY").change(function () {
             $("#FACULTY_FORM").submit();
         });
                });
-    </script>
-    <h2>@ViewBag.FacultyName</h2>
-    @using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "FACULTY_FORM", name = "FACULTY_FORM" }))
-    {
+</script>
+<h2>@ViewBag.FacultyName</h2>
+@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "FACULTY_FORM", name = "FACULTY_FORM" }))
+{
     @Html.DropDownList("DDL_FACULTY", (SelectList)ViewBag.ddl_Faculty)
-    }
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    ลำดับ
-                </th>
-                <th>
-                    รหัสวิชา
-                </th>
-                <th>
-                    ชื่อวิชา
-                </th>
-                <th>
-                    หน่วยกิต
-                </th>
-                <th>
-                    ตอน
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Where(x => x.SECTION_NUMBER != ""))
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                ลำดับ
+            </th>
+            <th>
+                รหัสวิชา
+            </th>
+            <th>
+                ชื่อวิชา
+            </th>
+            <th>
+                หน่วยกิต
+            </th>
+            <th>
+                ตอน
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.SECTION_NUMBER != ""))
+        {
             {
-            {
-            i++;
-            string[] e = item.SUBJECT_CREDIT.Split('(', ')');
-            j += int.Parse(e[0]);
-            string[] ee = e[1].Split('-');
-            k += int.Parse(ee[0]);
-            l += int.Parse(ee[1]);
-            m += int.Parse(ee[2]);
+                i++;
+                string[] e = item.SUBJECT_CREDIT.Split('(', ')');
+                j += int.Parse(e[0]);
+                string[] ee = e[1].Split('-');
+                k += int.Parse(ee[0]);
+                l += int.Parse(ee[1]);
+                m += int.Parse(ee[2]);
 
-            textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
+                textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
             }
             <tr>
                 <td>
@@ -73,23 +73,25 @@
                     @item.SECTION_NUMBER
                 </td>
             </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="text-right">
-                    รวม
-                </td>
-                <td>
-                    @textcreadit
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-    <br />
-    <br />
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="text-right">
+                รวม
+            </td>
+            <td>
+                @textcreadit
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<br />
+@using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
+{
     <table class="table" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
         <thead>
             <tr bgcolor=#EA98FF>
@@ -113,43 +115,53 @@
         <tbody>
             @for (int a = 0; a < 6; a++)
             {
-            <tr>
-                <td>@date[a]</td>
-                @for (int b = 8; b <= 21; b++)
-                {
-                    //if (Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault() != null)
-                    //{
-                    var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
-                    var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
-                    if (check != null)
+                <tr>
+                    <td>@date[a]</td>
+                    @for (int b = 8; b <= 21; b++)
                     {
-                        var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
-                        var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
-                        var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                        var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                        var TIME = (TIME_END - TIME_START) * 4;
-                        <td draggable="true" colspan="@TIME" bgcolor="#F4D9FF">
-                            @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
-                        </td>
+                        //if (Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault() != null)
+                        //{
+                        var name = date[a] + "name" + b;
+                        var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
+                        var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                        if (check != null)
+                        {
+                            var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
+                            var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
+                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                            var TIME = (TIME_END - TIME_START) * 4;
+                            var uname = @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                            <td colspan="@TIME" bgcolor="#F4D9FF">
+                                <div>
+                                    @Html.Hidden(name, uname)
+                                    </div>
+                                <div>
+                                    @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                </div>
+                            </td>
+                        }
+                        else if (check1 == null)
+                        {
+                            <td name="@name" colspan="4">&nbsp;</td>
+                            @*<td colspan="4" bgcolor="#F4D9FF">
+                                    @Model.Where(x => x.SECTION_TIME_START < b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                </td>*@
+                            @*<td colspan="4" bgcolor="#F4D9FF">
+                                    @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                </td>*@
+                        }
                     }
-                    else if (check1 == null)
-                    {
-                        <td colspan="4">&nbsp;</td>
-                        @*<td colspan="4" bgcolor="#F4D9FF">
-                    @Model.Where(x => x.SECTION_TIME_START < b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
-                </td>*@
-                        @*<td colspan="4" bgcolor="#F4D9FF">
-                    @Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END >= b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
-                </td>*@
-                    }
-                }
 
-            </tr>
+                </tr>
             }
         </tbody>
     </table>
-
-    @*@if (a == 0)
+    <div>
+        <input type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
+    </div>
+}
+@*@if (a == 0)
     {
     <td>@date[a]</td>
     if (Model.Where(x => x.SECTION_TIME_START == 08.00 && x.SECTION_DATE == date[a]).Any())
