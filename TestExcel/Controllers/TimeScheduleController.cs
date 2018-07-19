@@ -112,7 +112,7 @@ namespace TestExcel.Controllers
                     }
                 }
             }
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

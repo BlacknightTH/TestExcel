@@ -14,7 +14,41 @@
             $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
         $("#DDL_FACULTY").change(function () {
             $("#FACULTY_FORM").submit();
+            });
+
+        $("#TableLocation").sortable({
+            items: 'tbody tr',
+            cursor: 'pointer',
+            axis: 'y',
+            dropOnEmpty: false,
+            start: function (e, ui) {
+                ui.item.addClass("selected");
+            },
+            stop: function (e, ui) {
+                ui.item.removeClass("selected");
+            },
+            receive: function (e, ui) {
+                $(this).find("tbody").append(ui.item);
+            }
         });
+            $("#TableLocation2").sortable({
+                items: 'tbody tr td:not(tbody tr td:last-child)',
+                cursor: 'pointer',
+                axis: 'x,y',
+                dropOnEmpty: false,
+                start: function (e, ui) {
+                    ui.item.addClass("selected");
+                },
+                stop: function (e, ui) {
+                    ui.item.removeClass("selected");
+                    $(this).click(function () {
+                        alert(this.val());
+                    });
+                },
+                receive: function (e, ui) {
+                    $(this).find("tbody").append(ui.item);
+                }
+            });
                });
 </script>
 <h2>@ViewBag.FacultyName</h2>
@@ -22,7 +56,7 @@
 {
     @Html.DropDownList("DDL_FACULTY", (SelectList)ViewBag.ddl_Faculty)
 }
-<table class="table table-bordered">
+<table class="table table-bordered" id="TableLocation">
     <thead>
         <tr>
             <th>
@@ -57,19 +91,19 @@
                 textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
             }
             <tr>
-                <td>
+                <td draggable="true">
                     @i
                 </td>
-                <td>
+                <td draggable="true">
                     @item.SUBJECT_ID
                 </td>
-                <td>
+                <td draggable="true">
                     @item.SUBJECT_NAME
                 </td>
-                <td>
+                <td draggable="true">
                     @item.SUBJECT_CREDIT
                 </td>
-                <td>
+                <td draggable="true">
                     @item.SECTION_NUMBER
                 </td>
             </tr>
@@ -92,7 +126,7 @@
 <br />
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
-    <table class="table table-responsive" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+    <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
         <thead>
             <tr bgcolor="#D3D3D3">
                 <td><b>Day</b></td>
@@ -121,7 +155,8 @@
                     {
                         //if (Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault() != null)
                         //{
-                        var name = date[a] + "name" + b;
+                        var tid = date[a] + "id" + b;
+                        var tname = date[a] + "name" + b;
                         var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
                         var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)
@@ -131,22 +166,24 @@
                             var TIME_START = int.Parse(tmp_TIME_START.ToString());
                             var TIME_END = int.Parse(tmp_TIME_END.ToString());
                             var TIME = (TIME_END - TIME_START) * 4;
-                            var uname = @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
-                            <td width="100%" colspan="@TIME" bgcolor="#D3D3D3">
+                            var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
+                            var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                            <td name="@tid" bgcolor="#D3D3D3" colspan="@TIME">
                                 <div>
-                                    @Html.Hidden(name, uname)
-                                    </div>
-                                <div valign="top" height="50px">
+                                    @Html.Hidden(tid, uid)
+                                    @Html.Hidden(tname, uname)
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
+                                    @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                                 </div>
                             </td>
                         }
                         else if (check1 == null)
+
                         {
-                            <td name="@name" height="50px" colspan="4"></td>
+                            <td name="@tid" height="50px" colspan="4">
+                            </td>
                         }
                     }
-
                 </tr>
             }
         </tbody>
