@@ -10,8 +10,9 @@
     string[] date = { "M", "T", "W", "H", "F", "S" };
 }
 <script>
-        $(document).ready(function () {
-            $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
+    $(document).ready(function () {
+        var date2 = ["M", "T", "W", "H", "F", "S"];
+        $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
         $("#DDL_FACULTY").change(function () {
             $("#FACULTY_FORM").submit();
             });
@@ -32,7 +33,7 @@
             }
         });
             $("#TableLocation2").sortable({
-                items: 'tbody tr td:not(tbody tr td:last-child)',
+                items: 'tbody tr td:not(tbody tr td:last-child,tbody tr td:first-child)',
                 cursor: 'pointer',
                 axis: 'x,y',
                 dropOnEmpty: false,
@@ -168,7 +169,7 @@
                             var TIME = (TIME_END - TIME_START) * 4;
                             var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
                             var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
-                            <td name="@tid" bgcolor="#D3D3D3" colspan="@TIME">
+                            <td id="@tid" bgcolor="#D3D3D3" colspan="@TIME">
                                 <div>
                                     @Html.Hidden(tid, uid)
                                     @Html.Hidden(tname, uname)
@@ -180,7 +181,7 @@
                         else if (check1 == null)
 
                         {
-                            <td name="@tid" height="50px" colspan="4">
+                            <td id="@tid" height="50px" colspan="4">
                             </td>
                         }
                     }
