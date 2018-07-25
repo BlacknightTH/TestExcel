@@ -53,6 +53,10 @@ namespace TestExcel.Controllers
                         TestExcelEntities db = new TestExcelEntities();
                         string tmp = "";
                         string tmp2 = "";
+                        string semester_year = ((Excel.Range)range.Cells[3, 1]).Text;
+                        string[] split_semester_year = semester_year.Split(' ');
+                        string semester = split_semester_year[1];
+                        string year = split_semester_year[3];
                         for (int row = 4; row < range.Rows.Count; row++)
                         {
                             string B = ((Excel.Range)range.Cells[row, 2]).Text;
@@ -66,7 +70,7 @@ namespace TestExcel.Controllers
                             if (B.Length > 4)
                             {
                                 tmp = B;
-                                var CheckSubject = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '" + B + "'").Any();
+                                var CheckSubject = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '" + B + "' and SEMESTER = '"+ semester +"' and YEAR = '"+ year +"'").Any();
                                 if (CheckSubject != true)
                                 {
                                     if (G.Length != 0)
@@ -79,7 +83,7 @@ namespace TestExcel.Controllers
                                         string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
                                         string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, db);
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME,semester,year, db);
                                     }
                                     else
                                     {
@@ -91,7 +95,7 @@ namespace TestExcel.Controllers
                                         string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
                                         string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, db);
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME,semester,year, db);
                                     }
                                 }
                             }
@@ -107,7 +111,7 @@ namespace TestExcel.Controllers
                                     }
                                     var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                     "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
+                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester +"' and YEAR = '" + year + "'").Any();
                                     if (CheckSection == false)
                                     {
                                         string Subject_ID = tmp;
@@ -133,7 +137,7 @@ namespace TestExcel.Controllers
                                         }
                                         var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                 "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
+                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
                                         if (CheckSection == false)
                                         {
                                             string Subject_ID = tmp;
@@ -187,7 +191,7 @@ namespace TestExcel.Controllers
         }
 
         public void saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT, string SUBJECT_MIDTERM_DATE,
-                                string SUBJECT_FINAL_DATE, string SUBJECT_MIDTERM_TIME, string SUBJECT_FINAL_TIME, TestExcelEntities db)
+                                string SUBJECT_FINAL_DATE, string SUBJECT_MIDTERM_TIME, string SUBJECT_FINAL_TIME,string SEMESTER,string YEAR, TestExcelEntities db)
         {
             try
             {
@@ -200,6 +204,8 @@ namespace TestExcel.Controllers
                 item.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
                 item.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
                 item.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
+                item.SEMESTER = SEMESTER;
+                item.YEAR = YEAR;
                 db.SUBJECTs.Add(item);
                 db.SaveChanges();
 

@@ -574,10 +574,10 @@
     <Content Include="Views\TeacherSchedule\Building_69_64.cshtml" />
     <Content Include="Views\TeacherSchedule\Building_65.cshtml" />
     <Content Include="Views\TeacherSchedule\Building_42.cshtml" />
+    <Content Include="Views\ClassRoomSchedule\Building_62.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ClassRoomSchedule\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
