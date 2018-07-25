@@ -5,12 +5,32 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TestExcelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="FACULTY">
+        <EntityType Name="BUILDING">
+          <Key>
+            <PropertyRef Name="BUILDING_NAME" />
+          </Key>
+          <Property Name="BUILDING_NAME" Type="int" Nullable="false" />
+          <Property Name="CLASSROOM_NAME" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DEPARTMENT">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FACULTY_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="BRANCH_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
+          <Property Name="YEAR" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="PROFESSOR">
+          <Key>
+            <PropertyRef Name="PROFESSOR_FIRSTNAME" />
+          </Key>
+          <Property Name="PROFESSOR_FIRSTNAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PROFESSOR_LASTNAME" Type="varchar" MaxLength="50" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" />
+          <Property Name="PROFESSOR_STATUS" Type="varchar" MaxLength="50" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="SECTION">
           <Key>
@@ -23,8 +43,10 @@
           <Property Name="SECTION_TIME_START" Type="float" />
           <Property Name="SECTION_TIME_END" Type="float" />
           <Property Name="SECTION_CLASSROOM" Type="varchar" MaxLength="50" />
-          <Property Name="SECTION_TEACHER" Type="varchar" MaxLength="50" />
-          <Property Name="SECTION_FACULTY" Type="varchar" MaxLength="200" />
+          <Property Name="SECTION_PROFESSOR_SHORTNAME" Type="varchar" MaxLength="50" />
+          <Property Name="SECTION_BRANCH_NAME" Type="varchar" MaxLength="200" />
+          <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
+          <Property Name="YEAR" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="SUBJECT">
           <Key>
@@ -34,10 +56,12 @@
           <Property Name="SUBJECT_ID" Type="varchar" MaxLength="50" />
           <Property Name="SUBJECT_NAME" Type="varchar" MaxLength="200" />
           <Property Name="SUBJECT_CREDIT" Type="varchar" MaxLength="20" />
-          <Property Name="SUBJECT_MID" Type="varchar" MaxLength="10" />
-          <Property Name="SUBJECT_FINAL" Type="varchar" MaxLength="10" />
-          <Property Name="SUBJECT_TIMEMID" Type="varchar" MaxLength="20" />
-          <Property Name="SUBJECT_TIMEFINAL" Type="varchar" MaxLength="20" />
+          <Property Name="SUBJECT_MIDTERM_DATE" Type="varchar" MaxLength="10" />
+          <Property Name="SUBJECT_FINAL_DATE" Type="varchar" MaxLength="10" />
+          <Property Name="SUBJECT_MIDTERM_TIME" Type="varchar" MaxLength="20" />
+          <Property Name="SUBJECT_FINAL_TIME" Type="varchar" MaxLength="20" />
+          <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
+          <Property Name="YEAR" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -52,7 +76,9 @@
           <Property Name="USER_STATUS" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="TestExcelModelStoreContainer">
-          <EntitySet Name="FACULTY" EntityType="Self.FACULTY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BUILDING" EntityType="Self.BUILDING" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DEPARTMENT" EntityType="Self.DEPARTMENT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROFESSOR" EntityType="Self.PROFESSOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SECTION" EntityType="Self.SECTION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SUBJECT" EntityType="Self.SUBJECT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
@@ -62,30 +88,39 @@
     <edmx:ConceptualModels>
       <Schema Namespace="TestExcelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="TestExcelEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
-          <EntitySet Name="FACULTies" EntityType="TestExcelModel.FACULTY" />
+          <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
+          <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
+          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
+          <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
         </EntityContainer>
-        <EntityType Name="SUBJECT">
+        <EntityType Name="BUILDING">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="BUILDING_NAME" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SUBJECT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_CREDIT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_MID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_FINAL" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_TIMEMID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SUBJECT_TIMEFINAL" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BUILDING_NAME" Type="Int32" Nullable="false" />
+          <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="FACULTY">
+        <EntityType Name="DEPARTMENT">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FACULTY_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BRANCH_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PROFESSOR">
+          <Key>
+            <PropertyRef Name="PROFESSOR_FIRSTNAME" />
+          </Key>
+          <Property Name="PROFESSOR_FIRSTNAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_LASTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SECTION">
           <Key>
@@ -98,8 +133,25 @@
           <Property Name="SECTION_TIME_START" Type="Double" />
           <Property Name="SECTION_TIME_END" Type="Double" />
           <Property Name="SECTION_CLASSROOM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SECTION_TEACHER" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SECTION_FACULTY" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SECTION_PROFESSOR_SHORTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SECTION_BRANCH_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SUBJECT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SUBJECT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_CREDIT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_MIDTERM_DATE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_FINAL_DATE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_MIDTERM_TIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SUBJECT_FINAL_TIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="USER">
           <Key>
@@ -119,38 +171,64 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TestExcelModelStoreContainer" CdmEntityContainer="TestExcelEntities">
-          <EntitySetMapping Name="SUBJECTs">
-            <EntityTypeMapping TypeName="TestExcelModel.SUBJECT">
-              <MappingFragment StoreEntitySet="SUBJECT">
-                <ScalarProperty Name="SUBJECT_TIMEFINAL" ColumnName="SUBJECT_TIMEFINAL" />
-                <ScalarProperty Name="SUBJECT_TIMEMID" ColumnName="SUBJECT_TIMEMID" />
-                <ScalarProperty Name="SUBJECT_FINAL" ColumnName="SUBJECT_FINAL" />
-                <ScalarProperty Name="SUBJECT_MID" ColumnName="SUBJECT_MID" />
-                <ScalarProperty Name="SUBJECT_CREDIT" ColumnName="SUBJECT_CREDIT" />
-                <ScalarProperty Name="SUBJECT_NAME" ColumnName="SUBJECT_NAME" />
-                <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />
+          <EntitySetMapping Name="BUILDINGs">
+            <EntityTypeMapping TypeName="TestExcelModel.BUILDING">
+              <MappingFragment StoreEntitySet="BUILDING">
+                <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
+                <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DEPARTMENTs">
+            <EntityTypeMapping TypeName="TestExcelModel.DEPARTMENT">
+              <MappingFragment StoreEntitySet="DEPARTMENT">
+                <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+                <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+                <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="FACULTies">
-            <EntityTypeMapping TypeName="TestExcelModel.FACULTY">
-              <MappingFragment StoreEntitySet="FACULTY">
-                <ScalarProperty Name="FACULTY_NAME" ColumnName="FACULTY_NAME" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+          <EntitySetMapping Name="PROFESSORs">
+            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
+              <MappingFragment StoreEntitySet="PROFESSOR">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
+                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
+                <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
+                <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SECTIONs">
             <EntityTypeMapping TypeName="TestExcelModel.SECTION">
               <MappingFragment StoreEntitySet="SECTION">
-                <ScalarProperty Name="SECTION_FACULTY" ColumnName="SECTION_FACULTY" />
-                <ScalarProperty Name="SECTION_TEACHER" ColumnName="SECTION_TEACHER" />
+                <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+                <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+                <ScalarProperty Name="SECTION_BRANCH_NAME" ColumnName="SECTION_BRANCH_NAME" />
+                <ScalarProperty Name="SECTION_PROFESSOR_SHORTNAME" ColumnName="SECTION_PROFESSOR_SHORTNAME" />
                 <ScalarProperty Name="SECTION_CLASSROOM" ColumnName="SECTION_CLASSROOM" />
                 <ScalarProperty Name="SECTION_TIME_END" ColumnName="SECTION_TIME_END" />
                 <ScalarProperty Name="SECTION_TIME_START" ColumnName="SECTION_TIME_START" />
                 <ScalarProperty Name="SECTION_DATE" ColumnName="SECTION_DATE" />
                 <ScalarProperty Name="SECTION_NUMBER" ColumnName="SECTION_NUMBER" />
+                <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SUBJECTs">
+            <EntityTypeMapping TypeName="TestExcelModel.SUBJECT">
+              <MappingFragment StoreEntitySet="SUBJECT">
+                <ScalarProperty Name="YEAR" ColumnName="YEAR" />
+                <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
+                <ScalarProperty Name="SUBJECT_FINAL_TIME" ColumnName="SUBJECT_FINAL_TIME" />
+                <ScalarProperty Name="SUBJECT_MIDTERM_TIME" ColumnName="SUBJECT_MIDTERM_TIME" />
+                <ScalarProperty Name="SUBJECT_FINAL_DATE" ColumnName="SUBJECT_FINAL_DATE" />
+                <ScalarProperty Name="SUBJECT_MIDTERM_DATE" ColumnName="SUBJECT_MIDTERM_DATE" />
+                <ScalarProperty Name="SUBJECT_CREDIT" ColumnName="SUBJECT_CREDIT" />
+                <ScalarProperty Name="SUBJECT_NAME" ColumnName="SUBJECT_NAME" />
                 <ScalarProperty Name="SUBJECT_ID" ColumnName="SUBJECT_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>

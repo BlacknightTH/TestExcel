@@ -169,7 +169,13 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\TeacherScheduleController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
-    <Compile Include="Data\FACULTY.cs">
+    <Compile Include="Data\BUILDING.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DEPARTMENT.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\PROFESSOR.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\SECTION.cs">

@@ -74,24 +74,24 @@ namespace TestExcel.Controllers
                                         string Subject_ID = B;
                                         string subject_NAME = C;
                                         string subject_CREDIT = G;
-                                        string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
-                                        string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
-                                        string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
-                                        string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+                                        string subject_MIDTERM_DATE = ((Excel.Range)range.Cells[row, 10]).Text;
+                                        string subject_FINAL_DATE = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                        string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
+                                        string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, db);
                                     }
                                     else
                                     {
                                         string Subject_ID = B;
                                         string subject_NAME = C;
                                         string subject_CREDIT = ((Excel.Range)range.Cells[row, 8]).Text;
-                                        string subject_MID = ((Excel.Range)range.Cells[row, 10]).Text;
-                                        string subject_FINAL = ((Excel.Range)range.Cells[row + 1, 10]).Text;
-                                        string subject_TIMEMID = ((Excel.Range)range.Cells[row, 11]).Text;
-                                        string subject_TIMEFINAL = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+                                        string subject_MIDTERM_DATE = ((Excel.Range)range.Cells[row, 10]).Text;
+                                        string subject_FINAL_DATE = ((Excel.Range)range.Cells[row + 1, 10]).Text;
+                                        string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
+                                        string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MID, subject_FINAL, subject_TIMEMID, subject_TIMEFINAL, db);
+                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, db);
                                     }
                                 }
                             }
@@ -107,18 +107,18 @@ namespace TestExcel.Controllers
                                     }
                                     var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                     "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                    " and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
                                     if (CheckSection == false)
                                     {
                                         string Subject_ID = tmp;
                                         string Section_Number = B;
                                         string Section_Date = C;
-                                        string Section_Time_Start = split_date[0];
-                                        string Section_Time_End = split_date[1];
+                                        string Section_Start_Time = split_date[0];
+                                        string Section_End_Time = split_date[1];
                                         string Section_Classroom = E;
-                                        string Section_Teacher = F;
-                                        string Section_Faculty = G;
-                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Time_Start, Section_Time_End, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                        string Section_Professor = F;
+                                        string Section_Branch_Name = G;
+                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, db);
                                     }
                                 }
                                 else
@@ -133,18 +133,18 @@ namespace TestExcel.Controllers
                                         }
                                         var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                 "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                " and SECTION_TEACHER = '" + F + "' and SECTION_FACULTY = '" + G + "'").Any();
+                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
                                         if (CheckSection == false)
                                         {
                                             string Subject_ID = tmp;
                                             string Section_Number = tmp2;
                                             string Section_Date = C;
-                                            string Section_Time_Start = split_date[0];
-                                            string Section_Time_End = split_date[1];
+                                            string Section_Start_Time = split_date[0];
+                                            string Section_End_Time = split_date[1];
                                             string Section_Classroom = E;
-                                            string Section_Teacher = F;
-                                            string Section_Faculty = G;
-                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Time_Start, Section_Time_End, Section_Classroom, Section_Teacher, Section_Faculty, db);
+                                            string Section_Professor = F;
+                                            string Section_Branch_Name = G;
+                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, db);
                                         }
                                         //}
                                     }
@@ -186,8 +186,8 @@ namespace TestExcel.Controllers
             }
         }
 
-        public void saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT, string subject_MID,
-                                string subject_FINAL, string subject_TIMEMID, string subject_TIMEFINAL, TestExcelEntities db)
+        public void saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT, string SUBJECT_MIDTERM_DATE,
+                                string SUBJECT_FINAL_DATE, string SUBJECT_MIDTERM_TIME, string SUBJECT_FINAL_TIME, TestExcelEntities db)
         {
             try
             {
@@ -196,10 +196,10 @@ namespace TestExcel.Controllers
                 item.SUBJECT_ID = subject_ID;
                 item.SUBJECT_NAME = subject_NAME;
                 item.SUBJECT_CREDIT = subject_CREDIT;
-                item.SUBJECT_MID = subject_MID;
-                item.SUBJECT_FINAL = subject_FINAL;
-                item.SUBJECT_TIMEMID = subject_TIMEMID;
-                item.SUBJECT_TIMEFINAL = subject_TIMEFINAL;
+                item.SUBJECT_MIDTERM_DATE = SUBJECT_MIDTERM_DATE;
+                item.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
+                item.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
+                item.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
                 db.SUBJECTs.Add(item);
                 db.SaveChanges();
 
@@ -211,7 +211,7 @@ namespace TestExcel.Controllers
         }
 
         public void saveSection(string SUBJECT_ID, string SECTION_NUMBER, string SECTION_DATE, string SECTION_TIME_START, string SECTION_TIME_END,
-                                string SECTION_CLASSROOM, string SECTION_TEACHER, string SECTION_FACULTY, TestExcelEntities db)
+                                string SECTION_CLASSROOM, string SECTION_PROFESSOR_SHORTNAME, string SECTION_BRANCH_NAME, TestExcelEntities db)
         {
             try
             {
@@ -223,8 +223,8 @@ namespace TestExcel.Controllers
                 item.SECTION_TIME_START = double.Parse(SECTION_TIME_START);
                 item.SECTION_TIME_END = double.Parse(SECTION_TIME_END);
                 item.SECTION_CLASSROOM = SECTION_CLASSROOM;
-                item.SECTION_TEACHER = SECTION_TEACHER;
-                item.SECTION_FACULTY = SECTION_FACULTY;
+                item.SECTION_PROFESSOR_SHORTNAME = SECTION_PROFESSOR_SHORTNAME;
+                item.SECTION_BRANCH_NAME = SECTION_BRANCH_NAME;
                 db.SECTIONs.Add(item);
                 db.SaveChanges();
 

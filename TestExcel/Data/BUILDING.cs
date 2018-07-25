@@ -12,17 +12,9 @@ namespace TestExcel.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class SUBJECT
+    public partial class BUILDING
     {
-        public int ID { get; set; }
-        public string SUBJECT_ID { get; set; }
-        public string SUBJECT_NAME { get; set; }
-        public string SUBJECT_CREDIT { get; set; }
-        public string SUBJECT_MIDTERM_DATE { get; set; }
-        public string SUBJECT_FINAL_DATE { get; set; }
-        public string SUBJECT_MIDTERM_TIME { get; set; }
-        public string SUBJECT_FINAL_TIME { get; set; }
-        public string SEMESTER { get; set; }
-        public string YEAR { get; set; }
+        public int BUILDING_NAME { get; set; }
+        public string CLASSROOM_NAME { get; set; }
     }
 }

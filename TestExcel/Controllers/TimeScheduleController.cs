@@ -18,11 +18,11 @@ namespace TestExcel.Controllers
         // GET: TimeSchedule
         public ActionResult Index()
         {
-            var Faculty_Name = db.FACULTies.Select(x => x.FACULTY_NAME).First();
+            var BRANCH_NAME = db.DEPARTMENTs.Select(x => x.BRANCH_NAME).First();
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_FACULTY.Contains(Faculty_Name)
+                        where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAME)
                         select new Section_Subject
                         {
                             ID = e1.ID,
@@ -30,28 +30,28 @@ namespace TestExcel.Controllers
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
                             SECTION_NUMBER = e1.SECTION_NUMBER,
-                            SECTION_FACULTY = e1.SECTION_FACULTY,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                             SECTION_DATE = e1.SECTION_DATE,
-                            SECTION_TEACHER = e1.SECTION_TEACHER,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END
                         };
-            ViewBag.FacultyName = Faculty_Name;
+            ViewBag.BRANCH_NAME = BRANCH_NAME;
             ViewBag.DDLSelected = 1;
             var rr = query.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == "M").Any();
-            ViewBag.ddl_Faculty = new SelectList(db.FACULTies.ToList(), "ID", "FACULTY_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
             return View(query);
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)
         {
-            int Faculty_id = int.Parse(collection["DDL_FACULTY"]);
-            var Faculty_Name = db.FACULTies.Where(x => x.ID == Faculty_id).First().FACULTY_NAME;
+            int Branch_id = int.Parse(collection["DDL_BRANCH"]);
+            var BRANCH_NAME = db.DEPARTMENTs.Where(x => x.ID == Branch_id).First().DEPARTMENT_NAME;
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_FACULTY.Contains(Faculty_Name)
+                        where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAME)
                         select new Section_Subject
                         {
                             ID = e1.ID,
@@ -59,16 +59,16 @@ namespace TestExcel.Controllers
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
                             SECTION_NUMBER = e1.SECTION_NUMBER,
-                            SECTION_FACULTY = e1.SECTION_FACULTY,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                             SECTION_DATE = e1.SECTION_DATE,
-                            SECTION_TEACHER = e1.SECTION_TEACHER,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                         };
-            ViewBag.FacultyName = Faculty_Name;
-            ViewBag.ddl_Faculty = new SelectList(db.FACULTies.ToList(), "ID", "FACULTY_NAME");
-            ViewBag.DDLSelected = Faculty_id;
+            ViewBag.BRANCH_NAME = BRANCH_NAME;
+            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
+            ViewBag.DDLSelected = Branch_id;
                 //query = query.Where(x => x.SECTION_NUMBER != "");
                 return View(query);
         }

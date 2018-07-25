@@ -12,9 +12,9 @@
 <script>
     $(document).ready(function () {
         var date2 = ["M", "T", "W", "H", "F", "S"];
-        $("#DDL_FACULTY").val(@ViewBag.DDLSelected);
-        $("#DDL_FACULTY").change(function () {
-            $("#FACULTY_FORM").submit();
+        $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
+        $("#DDL_BRANCH").change(function () {
+            $("#BRANCH_FORM").submit();
             });
 
         $("#TableLocation").sortable({
@@ -52,10 +52,11 @@
             });
                });
 </script>
-<h2>@ViewBag.FacultyName</h2>
-@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "FACULTY_FORM", name = "FACULTY_FORM" }))
+<h2>@ViewBag.BRANCH_NAME</h2>
+
+@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
 {
-    @Html.DropDownList("DDL_FACULTY", (SelectList)ViewBag.ddl_Faculty)
+    @Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch)
 }
 <table class="table table-bordered" id="TableLocation">
     <thead>
