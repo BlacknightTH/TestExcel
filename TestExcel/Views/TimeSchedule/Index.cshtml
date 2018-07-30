@@ -17,40 +17,40 @@
             $("#BRANCH_FORM").submit();
             });
 
-        $("#TableLocation").sortable({
-            items: 'tbody tr',
-            cursor: 'pointer',
-            axis: 'y',
-            dropOnEmpty: false,
-            start: function (e, ui) {
-                ui.item.addClass("selected");
-            },
-            stop: function (e, ui) {
-                ui.item.removeClass("selected");
-            },
-            receive: function (e, ui) {
-                $(this).find("tbody").append(ui.item);
-            }
-        });
-            $("#TableLocation2").sortable({
-                items: 'tbody tr td:not(tbody tr td:last-child,tbody tr td:first-child)',
-                cursor: 'pointer',
-                axis: 'x,y',
-                dropOnEmpty: false,
-                start: function (e, ui) {
-                    ui.item.addClass("selected");
-                },
-                stop: function (e, ui) {
-                    ui.item.removeClass("selected");
-                    $(this).click(function () {
-                        alert(this.val());
-                    });
-                },
-                receive: function (e, ui) {
-                    $(this).find("tbody").append(ui.item);
-                }
+        //$("#TableLocation").sortable({
+        //    items: 'tbody tr',
+        //    cursor: 'pointer',
+        //    axis: 'y',
+        //    dropOnEmpty: false,
+        //    start: function (e, ui) {
+        //        ui.item.addClass("selected");
+        //    },
+        //    stop: function (e, ui) {
+        //        ui.item.removeClass("selected");
+        //    },
+        //    receive: function (e, ui) {
+        //        $(this).find("tbody").append(ui.item);
+        //    }
+        //});
+        //    $("#TableLocation2").sortable({
+        //        items: 'tbody tr td:not(tbody tr td:last-child,tbody tr td:first-child)',
+        //        cursor: 'pointer',
+        //        axis: 'x,y',
+        //        dropOnEmpty: false,
+        //        start: function (e, ui) {
+        //            ui.item.addClass("selected");
+        //        },
+        //        stop: function (e, ui) {
+        //            ui.item.removeClass("selected");
+        //            $(this).click(function () {
+        //                alert(this.val());
+        //            });
+        //        },
+        //        receive: function (e, ui) {
+        //            $(this).find("tbody").append(ui.item);
+        //        }
+        //    });
             });
-               });
 </script>
 <h2>@ViewBag.BRANCH_NAME</h2>
 

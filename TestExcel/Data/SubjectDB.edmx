@@ -27,11 +27,12 @@
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
-            <PropertyRef Name="PROFESSOR_SHORTNAME" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PROFESSOR_FIRSTNAME" Type="varchar" MaxLength="50" />
           <Property Name="PROFESSOR_LASTNAME" Type="varchar" MaxLength="50" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" />
           <Property Name="PROFESSOR_STATUS" Type="varchar" MaxLength="50" />
           <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -159,11 +160,12 @@
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
-            <PropertyRef Name="PROFESSOR_SHORTNAME" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PROFESSOR_FIRSTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PROFESSOR_LASTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
@@ -247,6 +249,7 @@
                 <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
                 <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
                 <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -38,7 +38,6 @@ namespace TestExcel.Controllers
                         };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
             ViewBag.DDLSelected = 1;
-            var rr = query.Where(x => x.SECTION_TIME_START <= 15.00 && x.SECTION_DATE == "M").Any();
             ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
             return View(query);
         }
@@ -46,11 +45,13 @@ namespace TestExcel.Controllers
         public ActionResult Index(FormCollection collection)
         {
             int Branch_id = int.Parse(collection["DDL_BRANCH"]);
-            var BRANCH_NAME = db.DEPARTMENTs.Where(x => x.ID == Branch_id).First().DEPARTMENT_NAME;
+            string BRANCH_NAME = db.DEPARTMENTs.Where(x => x.ID == Branch_id).First().BRANCH_NAME;
+            string[] br = BRANCH_NAME.Split('\r');
+            string contain = br[0];
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAME)
+                        where e1.SECTION_BRANCH_NAME.Contains(contain)
                         select new Section_Subject
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -62,7 +63,7 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
                         };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
             ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
