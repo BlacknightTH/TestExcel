@@ -1,0 +1,76 @@
+﻿@model IEnumerable<TestExcel.Data.BUILDING>
+@{
+    ViewBag.Title = "Building_42";
+}
+
+<h2 class="text-center">ตารางการใช้ห้องเรียน</h2>
+<h2 class="text-center">ห้องเรียนอาคาร 42</h2>
+<table class="table table-responsive" id="Table" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+    <thead>
+        <tr bgcolor="#D3D3D3">
+            <td><b>อาคาร/ห้อง</b></td>
+            <td colspan="4" width="60px"><b>8:00</b></td>
+            <td colspan="4" width="60px"><b>9:00</b></td>
+            <td colspan="4" width="60px"><b>10:00</b></td>
+            <td colspan="4" width="60px"><b>11:00</b></td>
+            <td colspan="4" width="60px"><b>12:00</b></td>
+            <td colspan="4" width="60px"><b>13:00</b></td>
+            <td colspan="4" width="60px"><b>14:00</b></td>
+            <td colspan="4" width="60px"><b>15:00</b></td>
+            <td colspan="4" width="60px"><b>16:00</b></td>
+            <td colspan="4" width="60px"><b>17:00</b></td>
+            <td colspan="4" width="60px"><b>18:00</b></td>
+            <td colspan="4" width="60px"><b>19:00</b></td>
+            <td colspan="4" width="60px"><b>20:00</b></td>
+            <td colspan="4" width="60px"><b>21:00</b></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CLASSROOM_NAME</td>
+                @for (int b = 8; b <= 21; b++)
+                {
+                    <td colspan="4"></td>
+                }
+            </tr>
+        }
+        @*@for (int a = 1; a < Model.Where(x => x.BUILDING_NAME == 62).Count(); a++)
+            {
+                <tr>
+                    <td>@date[a] </td>
+                    @for (int b = 8; b <= 21; b++)
+                    {
+                        var tid = date[a] + "id" + b;
+                        var tname = date[a] + "name" + b;
+                        var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
+                        var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                        if (check != null)
+                        {
+                            var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
+                            var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
+                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                            var TIME = (TIME_END - TIME_START) * 4;
+                            var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
+                            var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                            <td id="@tid" bgcolor="#D3D3D3" colspan="@TIME">
+                                <div>
+                                    @Html.Hidden(tid, uid)
+                                    @Html.Hidden(tname, uname)
+                                    @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
+                                    @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                </div>
+                            </td>
+                        }
+                        else if (check1 == null)
+
+                        {
+                            <td id="@tid" height="50px" colspan="4"></td>
+                        }
+                    }
+                </tr>
+            }*@
+    </tbody>
+</table>

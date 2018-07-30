@@ -27,11 +27,11 @@
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
-            <PropertyRef Name="PROFESSOR_FIRSTNAME" />
+            <PropertyRef Name="PROFESSOR_SHORTNAME" />
           </Key>
-          <Property Name="PROFESSOR_FIRSTNAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PROFESSOR_FIRSTNAME" Type="varchar" MaxLength="50" />
           <Property Name="PROFESSOR_LASTNAME" Type="varchar" MaxLength="50" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="PROFESSOR_STATUS" Type="varchar" MaxLength="50" />
           <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -90,11 +90,11 @@
       <Schema Namespace="TestExcelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="TestExcelEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
-          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
           <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
+          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
         </EntityContainer>
         <EntityType Name="DEPARTMENT">
           <Key>
@@ -105,16 +105,6 @@
           <Property Name="BRANCH_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="PROFESSOR">
-          <Key>
-            <PropertyRef Name="PROFESSOR_FIRSTNAME" />
-          </Key>
-          <Property Name="PROFESSOR_FIRSTNAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_LASTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SECTION">
           <Key>
@@ -167,6 +157,16 @@
           <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="PROFESSOR">
+          <Key>
+            <PropertyRef Name="PROFESSOR_SHORTNAME" />
+          </Key>
+          <Property Name="PROFESSOR_FIRSTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_LASTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -181,17 +181,6 @@
                 <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
                 <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PROFESSORs">
-            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
-              <MappingFragment StoreEntitySet="PROFESSOR">
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
-                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
-                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
-                <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
-                <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -247,6 +236,17 @@
                 <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
                 <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROFESSORs">
+            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
+              <MappingFragment StoreEntitySet="PROFESSOR">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
+                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
+                <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
+                <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

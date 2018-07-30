@@ -111,7 +111,7 @@ namespace TestExcel.Controllers
                                     }
                                     var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                     "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester +"' and YEAR = '" + year + "'").Any();
+                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
                                     if (CheckSection == false)
                                     {
                                         string Subject_ID = tmp;
@@ -137,7 +137,7 @@ namespace TestExcel.Controllers
                                         }
                                         var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                 "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
+                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
                                         if (CheckSection == false)
                                         {
                                             string Subject_ID = tmp;

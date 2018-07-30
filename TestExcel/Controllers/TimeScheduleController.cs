@@ -25,7 +25,6 @@ namespace TestExcel.Controllers
                         where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAME)
                         select new Section_Subject
                         {
-                            ID = e1.ID,
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
@@ -54,7 +53,6 @@ namespace TestExcel.Controllers
                         where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAME)
                         select new Section_Subject
                         {
-                            ID = e1.ID,
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,

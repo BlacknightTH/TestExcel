@@ -167,7 +167,6 @@
     <Compile Include="Controllers\ClassRoomScheduleController.cs" />
     <Compile Include="Controllers\ImportExcelController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\TeacherScheduleController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
     <Compile Include="Data\BUILDING.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
@@ -205,6 +204,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Building_Classroom.cs" />
     <Compile Include="Models\Section_Subject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\SessionFilter.cs" />
@@ -569,12 +569,11 @@
     <Content Include="Views\TimeSchedule\Index.cshtml" />
     <Content Include="Views\ImportExcel\Success.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\TeacherSchedule\Building_62.cshtml" />
-    <Content Include="Views\TeacherSchedule\Building_63.cshtml" />
-    <Content Include="Views\TeacherSchedule\Building_69_64.cshtml" />
-    <Content Include="Views\TeacherSchedule\Building_65.cshtml" />
-    <Content Include="Views\TeacherSchedule\Building_42.cshtml" />
     <Content Include="Views\ClassRoomSchedule\Building_62.cshtml" />
+    <Content Include="Views\ClassRoomSchedule\Building_63.cshtml" />
+    <Content Include="Views\ClassRoomSchedule\Building_69_64.cshtml" />
+    <Content Include="Views\ClassRoomSchedule\Building_65.cshtml" />
+    <Content Include="Views\ClassRoomSchedule\Building_42.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
