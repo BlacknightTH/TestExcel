@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Building";
+}
+<script>
+    $(document).ready(function () {
+        $("#DDL_P").val(@ViewBag.DDLSelected);
+        $("#DDL_PA").val(@ViewBag.DDLPSelected);
+        $("#getBTN").click(function () {
+            $("#P_FORM").submit();
+        });
+        $("#P_FORM").on("submit", function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $("#P_FORM").serialize(),
+                success: function (data) {
+                    $("#Results").html(data);
+                }
+            });
+        });
+    });
+</script>
+<h2 class="text-center">ตารางการใช้ห้องเรียน</h2>
+<h2 class="text-center">ห้องเรียนอาคาร ...</h2>
+@using (Html.BeginForm("Building", "ClassRoomSchedule", FormMethod.Post, new { id = "P_FORM", name = "P_FORM" }))
+{
+    <select id="DDL_PA" name="DDL_PA">
+        <option value="62">อาคารเรียน 62</option>
+        <option value="63">อาคารเรียน 63</option>
+        <option value="65">อาคารเรียน 65</option>
+        <option value="42">อาคารเรียน 42</option>
+        <option value="69">อาคารเรียน 69</option>
+        <option value="64">อาคารเรียน 64</option>
+    </select>
+    @Html.DropDownList("DDL_P", (SelectList)ViewBag.ddl_Branch)
+
+}
+    <input id="getBTN" type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
+
+<div id="Results"></div>

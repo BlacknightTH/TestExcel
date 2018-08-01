@@ -16,7 +16,27 @@
         $("#DDL_BRANCH").change(function () {
             $("#BRANCH_FORM").submit();
             });
+        $("#draggable tr td div").draggable({ cursor: "move", revert: "invalid" });
+        $(".droppable").droppable({
+            accept: "#draggable tr td div",
+            drop: function (event, ui) {
+                console.log("drop");
+                $(this).removeClass("border").removeClass("over");
+                var dropped = ui.draggable;
+                var droppedOn = $(this);
+                $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
 
+
+            },
+            over: function (event, elem) {
+                $(this).addClass("over");
+                console.log("over");
+            }
+            ,
+            out: function (event, elem) {
+                $(this).removeClass("over");
+            }
+        });
         //$("#TableLocation").sortable({
         //    items: 'tbody tr',
         //    cursor: 'pointer',
@@ -148,7 +168,7 @@
                 <td colspan="4" width="60px"><b>21:00</b></td>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="draggable">
             @for (int a = 0; a < 6; a++)
             {
                 <tr>
@@ -170,8 +190,8 @@
                             var TIME = (TIME_END - TIME_START) * 4;
                             var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
                             var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
-                            <td id="@tid" bgcolor="#D3D3D3" colspan="@TIME">
-                                <div>
+                            <td id="@tid" colspan="@TIME" class="droppable">
+                                <div style="background-color:#D3D3D3;width:100%;height:100%">
                                     @Html.Hidden(tid, uid)
                                     @Html.Hidden(tname, uname)
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
@@ -182,7 +202,7 @@
                         else if (check1 == null)
 
                         {
-                            <td id="@tid" height="50px" colspan="4">
+                            <td id="@tid" class="droppable" height="50px" colspan="4">
                             </td>
                         }
                     }
