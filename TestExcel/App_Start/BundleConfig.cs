@@ -28,7 +28,7 @@ namespace TestExcel
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
-                      "~/Content/Style.css",
+                      "~/Content/EditStyle.css",
                       "~/Content/site.css",
                       "~/Content/w3.css",
                       "~/Content/font-awesome.min.css",
