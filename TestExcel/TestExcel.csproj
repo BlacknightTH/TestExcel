@@ -573,6 +573,7 @@
     <Content Include="Views\ClassRoomSchedule\Building.cshtml" />
     <Content Include="Views\ClassRoomSchedule\Results.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
+    <Content Include="Views\Shared\_TimeScheduleLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

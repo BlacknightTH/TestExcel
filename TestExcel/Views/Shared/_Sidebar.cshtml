@@ -1,1 +1,108 @@
 ﻿
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
+<div class="w3-sidebar w3-bar-block w3-light-grey w3-card" style="width:160px;">
+    <a href="#" class="w3-bar-item w3-button w3-indigo">คณะ</a>
+    <button value="1" class="w3-button w3-block w3-left-align">
+        EnET <i class="fa fa-caret-down"></i>
+    </button>
+    <div id="demoAcc_1" class="w3-hide w3-white w3-card">
+        <button value="11" class="w3-button w3-block w3-left-align">
+            EnET-C <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div id="demoAcc_11" class="w3-hide w3-white w3-card">
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R11)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R11S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R21)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R21S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R31)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R31S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R41)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-C(R41S)</a>
+        </div>
+
+        <button value="111" class="w3-button w3-block w3-left-align">
+            EnET-T <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div id="demoAcc_111" class="w3-hide w3-white w3-card">
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R11)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R11S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R21)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R21S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R31)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R31S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R41)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-T(R41S)</a>
+        </div>
+
+        <button value="1111" class="w3-button w3-block w3-left-align">
+            EnET-B <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div id="demoAcc_1111" class="w3-hide w3-white w3-card">
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R11)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R11S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R21)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R21S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R31)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R31S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R41)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-B(R41S)</a>
+        </div>
+
+        <button value="11111" class="w3-button w3-block w3-left-align">
+            EnET-I <i class="fa fa-caret-down"></i>
+        </button>
+
+        <div id="demoAcc_11111" class="w3-hide w3-white w3-card">
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R11)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R11S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R21)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R21S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R31)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R31S)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R41)</a>
+            <a href="#" class="w3-bar-item w3-button">EnET-I(R41S)</a>
+        </div>
+
+
+
+
+    </div>
+
+</div>
+        <script>
+            var value;
+            $("button").click(function () {
+                value = $(this).val();
+                myAccFunc();
+            });
+            function myAccFunc() {
+                var x = document.getElementById("demoAcc_" + value);
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                    x.previousElementSibling.className += " w3-green";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                    x.previousElementSibling.className =
+                        x.previousElementSibling.className.replace(" w3-green", "");
+                }
+            }
+           
+            function myDropFunc() {
+                var x = document.getElementById("demoDrop");
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                    x.previousElementSibling.className += " w3-green";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                    x.previousElementSibling.className =
+                        x.previousElementSibling.className.replace(" w3-green", "");
+                }
+            }
+        </script>
+
