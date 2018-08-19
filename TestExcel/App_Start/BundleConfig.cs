@@ -30,6 +30,7 @@ namespace TestExcel
                       "~/Content/bootstrap.min.css",
                       "~/Content/EditStyle.css",
                       "~/Content/site.css",
+                      "~/Content/Style.css",
                       "~/Content/w3.css",
                       "~/Content/font-awesome.min.css",
                       "~/Content/themes/base/jquery-ui.min.css",
