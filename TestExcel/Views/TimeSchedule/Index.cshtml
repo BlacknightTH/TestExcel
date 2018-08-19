@@ -100,6 +100,10 @@
                 $(this).removeClass("over");
             }
         });
+        $("#x_button").click(function () {
+            var rr = $(this).val();
+            $("#gate").val(rr);
+        });
         //$("#TableLocation").sortable({
         //    items: 'tbody tr',
         //    cursor: 'pointer',
@@ -257,9 +261,13 @@
                             var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
                             var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
                             <td id="@tid" colspan="@TIME" class="droppable">
-                                <div class="draggable" style="background-color:#D3D3D3;width:100%;height:100%">
+                                <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
+                                    <div id="x_button" class="btn btn-default pull-right x_button text-center">
+                                        X
+                                        @Html.Hidden("x_value", TIME +"_"+ date[a])
+                                    </div>
                                     @*@Html.Hidden(tid, uid)
-                            @Html.Hidden(tname, uname)*@
+                                    @Html.Hidden(tname, uname)*@
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                                 </div>
@@ -273,7 +281,12 @@
                             int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
                             var TIME = (tmp_last - tmp_first) * 4;
                                 <td id="@tid" colspan="@TIME" class="droppable">
-                                    <div class="draggable" style="background-color:#D3D3D3;width:100%;height:100%">
+                                    <div id="x_button" class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
+                                        <div class="btn btn-default pull-right x_button text-center">
+                                            X
+                                            @Html.Hidden("x_value", TIME + "_" + date[a])
+                                        </div>
+ 
                                         @first.SUBJECT_ID
                                         @first.SUBJECT_NAME
                                     </div>
