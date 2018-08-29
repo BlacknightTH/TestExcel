@@ -12,7 +12,9 @@
 }
 <script>
     $(document).ready(function () {
-        var colspan;
+        var tmp6;
+        var colspan; var tmp_id; var subject_id; var subject_name; var subject_credit; var subject_number; var subject_hour;
+        var tmp1; var tmp2; var tmp3; var tmp4; var tmp5; var tmp6; var j; var a; var i;
         var date2 = ["M", "T", "W", "H", "F", "S"];
         $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
         $("#DDL_BRANCH").change(function () {
@@ -100,10 +102,70 @@
                 $(this).removeClass("over");
             }
         });
-        $("#x_button").click(function () {
+        $(".x_button").click(function () {
             var rr = $(this).val();
             $("#gate").val(rr);
+            $("#" + tmp_id).children().remove();
+
+            var tmp_num = $("#" + tmp_id).attr("colspan");
+            a = parseInt(tmp1[1]);
+            j = (parseInt(tmp_num) / 4) + a;
+            for (i = a; i < j; i++){
+                tmp6 = tmp1[0] + "_" + i;
+                $("#" + tmp6).removeAttr('hidden');
+            }
+
+            $("#" + tmp_id).attr("colspan", "4");
+            //$("#" + tmp3).after('<td id="' + tmp_id + '" class="droppable ui-droppable" height="50px" colspan="4"></td>');
         });
+        $("#TableLocation tbody tr").click(function () {
+            if ($(this).find("input").is(':checked')) {
+                $(this).css("background-color", "");
+                $(this).find("input").prop('checked', false);
+            }
+            else {
+                $("#TableLocation tbody tr").find("input").prop('checked', false);
+                $("#TableLocation tbody tr").css("background-color", "");
+
+                $(this).css("background-color", "#d6d9db");
+                $(this).find("input").prop('checked', true);
+                subject_id = $(this).find("#subject_id").val();
+                subject_name = $(this).find("#subject_name").val();
+                subject_credit = $(this).find("#subject_credit").val();
+                subject_number = $(this).find("#subject_number").val();
+                subject_hour = $(this).find("#subject_hour").val();
+            }
+        });
+        $("#TableLocation2").click(function () {
+            if ($("#TableLocation tbody tr").find("input").is(':checked')) {
+                $("#" + tmp_id).hide().attr("id", va + "_hide");
+                $("#TableLocation tbody tr").find("input").prop('checked', false);
+                $("#TableLocation tbody tr").css("background-color", "");
+
+                colspan = 4 * subject_hour;
+                //$("#" + va).attr("colspan", colspan);
+                //$("#" + va).attr("colspan",colspan);
+                $("#" + tmp3).after('<td id="' + tmp_id + '" class="droppable" height="50px" colspan="' + colspan + '"><div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div> ' + subject_id + '  ' + subject_name + '</div></td>');
+            }
+        });
+        $("#TableLocation2 tr td").hover(function () {
+            tmp_id = $(this).attr("id");
+            if (tmp_id != null) {
+                tmp1 = tmp_id.split("_");
+                tmp2 = parseInt(tmp1[1]) - 1;
+                tmp3 = tmp1[0] + "_" + tmp2;
+                tmp4 = parseInt(tmp1[1]) + 1;
+                tmp5 = tmp1[0] + "_" + tmp4;
+            }
+            if ($("#TableLocation tbody tr").find("input").is(':checked')) {
+                $("#" + tmp_id).css("background-color", "#d6d9db");
+            }
+            $("#gate").val(tmp_id);
+        }, function () {
+            va = $(this).attr("id");
+            $("#" + tmp_id).css("background-color", "");
+        });
+
         //$("#TableLocation").sortable({
         //    items: 'tbody tr',
         //    cursor: 'pointer',
@@ -148,6 +210,7 @@
 <table class="table table-bordered" id="TableLocation">
     <thead>
         <tr>
+            <th></th>
             <th>
                 ลำดับ
             </th>
@@ -181,19 +244,27 @@
             }
             <tr>
                 <td>
+                    @Html.CheckBox("check" + i)
+                </td>
+                <td>
                     @i
                 </td>
                 <td>
                     @item.SUBJECT_ID
+                    @Html.Hidden("subject_id", item.SUBJECT_ID)
+                    @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
                 </td>
                 <td>
                     @item.SUBJECT_NAME
+                    @Html.Hidden("subject_name", item.SUBJECT_NAME)
                 </td>
                 <td>
                     @item.SUBJECT_CREDIT
+                    @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
                 </td>
                 <td>
                     @item.SECTION_NUMBER
+                    @Html.Hidden("subject_number", item.SECTION_NUMBER)
                 </td>
             </tr>
         }
@@ -214,7 +285,7 @@
 <br />
 <br />
 <input name="gate" id="gate" value="" />
-
+<input name="gate1" id="gate1" value="" />
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
@@ -244,7 +315,7 @@
                 <td>@date[a]</td>
                 @for (int b = 8; b <= 21; b++)
                 {
-                    var tid = date[a] + "id" + b;
+                    var tid = date[a] + "id_" + b;
                     var tname = date[a] + "name" + b;
                     var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
                     var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
@@ -264,10 +335,10 @@
                                 <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
                                     <div id="x_button" class="btn btn-default pull-right x_button text-center">
                                         X
-                                        @Html.Hidden("x_value", TIME +"_"+ date[a])
+                                        @Html.Hidden("x_value", TIME + "_" + date[a])
                                     </div>
                                     @*@Html.Hidden(tid, uid)
-                                    @Html.Hidden(tname, uname)*@
+                            @Html.Hidden(tname, uname)*@
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
                                     @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                                 </div>
@@ -280,24 +351,35 @@
                             int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
                             int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
                             var TIME = (tmp_last - tmp_first) * 4;
-                                <td id="@tid" colspan="@TIME" class="droppable">
-                                    <div id="x_button" class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
-                                        <div class="btn btn-default pull-right x_button text-center">
-                                            X
-                                            @Html.Hidden("x_value", TIME + "_" + date[a])
-                                        </div>
- 
-                                        @first.SUBJECT_ID
-                                        @first.SUBJECT_NAME
+                            <td id="@tid" colspan="@TIME" class="droppable">
+                                <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
+                                    <div id="x_button" class="btn btn-default pull-right x_button text-center">
+                                        X
+                                        @Html.Hidden("x_value", TIME + "_" + date[a])
                                     </div>
-                                </td>
+
+                                    @first.SUBJECT_ID
+                                    @first.SUBJECT_NAME
+                                </div>
+                            </td>
                         }
                     }
-                    else if (check1 == null)
-
+                    else
                     {
-                        <td id="@tid" class="droppable" height="50px" colspan="4"></td>
+                        if (check1 == null)
+                        {
+                            <td id="@tid" class="droppable" height="50px" colspan="4"></td>
+                        }
+                        else
+                        {
+                            <td id="@tid" class="droppable" height="50px" colspan="4" hidden></td>
+                        }
                     }
+                    @*else if (check1 == null)
+
+            {
+                <td id="@tid" class="droppable" height="50px" colspan="4"></td>
+            }*@
                 }
             </tr>
             }
