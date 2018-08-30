@@ -23,46 +23,47 @@
         $(".draggable").draggable({
             cursor: "move",
             revert: "invalid",
-            create: function (event, ui) {
-                var total = 0;
-                for (var r = 2; r <= $('.M td').length; r++) {
-                    var gg = $('.M td:nth-child(' + r + ')').attr("colspan");
-                    if (gg === "undefined") {
-                        //t = parseInt(gg);
-                        //total += parseInt(gg);
-                    }
-                    else {
-                        total += parseInt(gg);
-                    }
-                }
-                $("#gate").val(total);
-            },
+            //create: function (event, ui) {
+            //    var total = 0;
+            //    for (var r = 2; r <= $('.M td').length; r++) {
+            //        var gg = $('.M td:nth-child(' + r + ')').attr("colspan");
+            //        if (gg === "undefined") {
+            //            //t = parseInt(gg);
+            //            //total += parseInt(gg);
+            //        }
+            //        else {
+            //            total += parseInt(gg);
+            //        }
+            //    }
+            //    $("#gate").val(total);
+            //},
             start: function (event, ui) {
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
                 $(this).parent().attr("colspan", "4");
+                var tmp = $(this).parent().attr("id");
+                tmp = tmp.split("_");
+                a = parseInt(tmp[1]);
+                j = (parseInt(colspan) / 4) + a;
+                for (i = a; i < j; i++) {
+                    tmp6 = tmp[0] + "_" + i;
+                    $("#" + tmp6).show();
+                }
             },
             stop: function (event, ui) {
                 console.log("stop");
                 $(this).parent().attr("colspan", colspan);
-                var total = 0;
-                for (var r = 2; r <= $('.M td').length; r++) {
-                    var gg = $('.M td:nth-child(' + r + ')').attr("colspan");
-                    if (gg === "undefined") {
-                        //t = parseInt(gg);
-                        //total += parseInt(gg);
-                    }
-                    else {
-                        total += parseInt(gg);
-                    }
+
+                var tmp = $(this).parent().attr("id");
+                tmp = tmp.split("_");
+                a = parseInt(tmp[1]);
+                j = (parseInt(colspan) / 4) + a;
+                a = a + 1;
+                for (i = a; i < j; i++) {
+                    tmp6 = tmp[0] + "_" + i;
+                    $("#" + tmp6).hide();
                 }
-                if (total < 56) {
-                    $(".M").append('<td class="droppable last" height="50px" colspan="4"></td>');
-                }
-                else if (total > 56) {
-                    $(".last").remove();
-                }
-                $("#gate").val(total);
+                
             }
         });
         $(".droppable").droppable({
@@ -73,25 +74,7 @@
                 var dropped = ui.draggable;
                 var droppedOn = $(this);
                 $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
-                $(this).attr("colspan", colspan);
-                var total = 0;
-                for (var r = 2; r <= $('.M td').length; r++) {
-                    var gg = $('.M td:nth-child(' + r + ')').attr("colspan");
-                    if (gg === "undefined") {
-                        //t = parseInt(gg);
-                        //total += parseInt(gg);
-                    }
-                    else {
-                        total += parseInt(gg);
-                    }
-                }
-                if (total < 56) {
-                    $(".M").append('<td class="droppable last" height="50px" colspan="4"></td>');
-                }
-                else if (total > 56) {
-                    $(".last").remove();
-                }
-                $("#gate").val(total);
+                
             },
             over: function (event, elem) {
                 $(this).addClass("over");
@@ -112,7 +95,7 @@
             j = (parseInt(tmp_num) / 4) + a;
             for (i = a; i < j; i++){
                 tmp6 = tmp1[0] + "_" + i;
-                $("#" + tmp6).removeAttr('hidden');
+                $("#" + tmp6).show();
             }
 
             $("#" + tmp_id).attr("colspan", "4");
@@ -286,6 +269,7 @@
 <br />
 <input name="gate" id="gate" value="" />
 <input name="gate1" id="gate1" value="" />
+<input name="gate2" id="gate2" value="" />
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
@@ -372,7 +356,7 @@
                         }
                         else
                         {
-                            <td id="@tid" class="droppable" height="50px" colspan="4" hidden></td>
+                            <td id="@tid" class="droppable" height="50px" colspan="4" style="display:none"></td>
                         }
                     }
                     @*else if (check1 == null)
