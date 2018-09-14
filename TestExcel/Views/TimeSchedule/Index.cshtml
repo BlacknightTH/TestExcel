@@ -20,87 +20,74 @@
         $("#DDL_BRANCH").change(function () {
             $("#BRANCH_FORM").submit();
         });
-        $(".draggable").draggable({
-            cursor: "move",
-            revert: "invalid",
-            //create: function (event, ui) {
-            //    var total = 0;
-            //    for (var r = 2; r <= $('.M td').length; r++) {
-            //        var gg = $('.M td:nth-child(' + r + ')').attr("colspan");
-            //        if (gg === "undefined") {
-            //            //t = parseInt(gg);
-            //            //total += parseInt(gg);
-            //        }
-            //        else {
-            //            total += parseInt(gg);
-            //        }
-            //    }
-            //    $("#gate").val(total);
-            //},
-            start: function (event, ui) {
-                console.log("start");
-                colspan = $(this).parent().attr("colspan");
-                $(this).parent().attr("colspan", "4");
-                var tmp = $(this).parent().attr("id");
-                tmp = tmp.split("_");
-                a = parseInt(tmp[1]);
-                j = (parseInt(colspan) / 4) + a;
+            $(".draggable").draggable({
+                cursor: "move",
+                revert: "invalid",
+                start: function (event, ui) {
+                    console.log("start");
+                    colspan = $(this).parent().attr("colspan");
+                    $(this).parent().attr("colspan", "4");
+                    var tmp = $(this).parent().attr("id");
+                    tmp = tmp.split("_");
+                    a = parseInt(tmp[1]);
+                    j = (parseInt(colspan) / 4) + a;
+                    for (i = a; i < j; i++) {
+                        tmp6 = tmp[0] + "_" + i;
+                        $("#" + tmp6).show();
+                    }
+                },
+                stop: function (event, ui) {
+                    console.log("stop");
+                    $(this).parent().attr("colspan", colspan);
+
+                    var tmp = $(this).parent().attr("id");
+                    tmp = tmp.split("_");
+                    a = parseInt(tmp[1]);
+                    j = (parseInt(colspan) / 4) + a;
+                    a = a + 1;
+                    for (i = a; i < j; i++) {
+                        tmp6 = tmp[0] + "_" + i;
+                        $("#" + tmp6).hide();
+                    }
+
+                }
+            });
+        
+            $(".droppable").droppable({
+                accept: ".draggable",
+                drop: function (event, ui) {
+                    console.log("drop");
+                    $(this).removeClass("border").removeClass("over");
+                    var dropped = ui.draggable;
+                    var droppedOn = $(this);
+                    $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
+
+                },
+                over: function (event, elem) {
+                    $(this).addClass("over");
+                    console.log("over");
+                }
+                ,
+                out: function (event, elem) {
+                    $(this).removeClass("over");
+                }
+            });
+            $(".x_button").click(function () {
+                var rr = $(this).val();
+                $("#gate").val(rr);
+                $("#" + tmp_id).children().remove();
+
+                var tmp_num = $("#" + tmp_id).attr("colspan");
+                a = parseInt(tmp1[1]);
+                j = (parseInt(tmp_num) / 4) + a;
                 for (i = a; i < j; i++) {
-                    tmp6 = tmp[0] + "_" + i;
+                    tmp6 = tmp1[0] + "_" + i;
                     $("#" + tmp6).show();
                 }
-            },
-            stop: function (event, ui) {
-                console.log("stop");
-                $(this).parent().attr("colspan", colspan);
 
-                var tmp = $(this).parent().attr("id");
-                tmp = tmp.split("_");
-                a = parseInt(tmp[1]);
-                j = (parseInt(colspan) / 4) + a;
-                a = a + 1;
-                for (i = a; i < j; i++) {
-                    tmp6 = tmp[0] + "_" + i;
-                    $("#" + tmp6).hide();
-                }
-                
-            }
-        });
-        $(".droppable").droppable({
-            accept: ".draggable",
-            drop: function (event, ui) {
-                console.log("drop");
-                $(this).removeClass("border").removeClass("over");
-                var dropped = ui.draggable;
-                var droppedOn = $(this);
-                $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
-                
-            },
-            over: function (event, elem) {
-                $(this).addClass("over");
-                console.log("over");
-            }
-            ,
-            out: function (event, elem) {
-                $(this).removeClass("over");
-            }
-        });
-        $(".x_button").click(function () {
-            var rr = $(this).val();
-            $("#gate").val(rr);
-            $("#" + tmp_id).children().remove();
+                $("#" + tmp_id).attr("colspan", "4");
 
-            var tmp_num = $("#" + tmp_id).attr("colspan");
-            a = parseInt(tmp1[1]);
-            j = (parseInt(tmp_num) / 4) + a;
-            for (i = a; i < j; i++){
-                tmp6 = tmp1[0] + "_" + i;
-                $("#" + tmp6).show();
-            }
-
-            $("#" + tmp_id).attr("colspan", "4");
-            //$("#" + tmp3).after('<td id="' + tmp_id + '" class="droppable ui-droppable" height="50px" colspan="4"></td>');
-        });
+            });
         $("#TableLocation tbody tr").click(function () {
             if ($(this).find("input").is(':checked')) {
                 $(this).css("background-color", "");
@@ -121,14 +108,73 @@
         });
         $("#TableLocation2").click(function () {
             if ($("#TableLocation tbody tr").find("input").is(':checked')) {
-                $("#" + tmp_id).hide().attr("id", va + "_hide");
                 $("#TableLocation tbody tr").find("input").prop('checked', false);
                 $("#TableLocation tbody tr").css("background-color", "");
 
                 colspan = 4 * subject_hour;
-                //$("#" + va).attr("colspan", colspan);
-                //$("#" + va).attr("colspan",colspan);
-                $("#" + tmp3).after('<td id="' + tmp_id + '" class="droppable" height="50px" colspan="' + colspan + '"><div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div> ' + subject_id + '  ' + subject_name + '</div></td>');
+                $("#" + tmp_id).attr('colspan', colspan);
+                $("#" + tmp_id).html('<div class="" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div> ' + subject_id + '  ' + subject_name + '</div>');
+                $("#" + tmp_id).children().addClass("draggable");
+
+                var tmp = $("#" + tmp_id).attr("id");
+                tmp = tmp.split("_");
+                a = parseInt(tmp[1]);
+                j = (parseInt(colspan) / 4) + a;
+                a = a + 1;
+                for (i = a; i < j; i++) {
+                    tmp6 = tmp[0] + "_" + i;
+                    $("#" + tmp6).hide();
+                }
+
+                $(".draggable").draggable({
+                    cursor: "move",
+                    revert: "invalid",
+                    start: function (event, ui) {
+                        console.log("start");
+                        colspan = $(this).parent().attr("colspan");
+                        $(this).parent().attr("colspan", "4");
+                        var tmp = $(this).parent().attr("id");
+                        tmp = tmp.split("_");
+                        a = parseInt(tmp[1]);
+                        j = (parseInt(colspan) / 4) + a;
+                        for (i = a; i < j; i++) {
+                            tmp6 = tmp[0] + "_" + i;
+                            $("#" + tmp6).show();
+                        }
+                    },
+                    stop: function (event, ui) {
+                        console.log("stop");
+                        $(this).parent().attr("colspan", colspan);
+
+                        var tmp = $(this).parent().attr("id");
+                        tmp = tmp.split("_");
+                        a = parseInt(tmp[1]);
+                        j = (parseInt(colspan) / 4) + a;
+                        a = a + 1;
+                        for (i = a; i < j; i++) {
+                            tmp6 = tmp[0] + "_" + i;
+                            $("#" + tmp6).hide();
+                        }
+
+                    }
+                });
+
+                $(".x_button").click(function () {
+                    var rr = $(this).val();
+                    $("#gate").val(rr);
+                    $("#" + tmp_id).children().remove();
+
+                    var tmp_num = $("#" + tmp_id).attr("colspan");
+                    a = parseInt(tmp1[1]);
+                    j = (parseInt(tmp_num) / 4) + a;
+                    for (i = a; i < j; i++) {
+                        tmp6 = tmp1[0] + "_" + i;
+                        $("#" + tmp6).show();
+                    }
+
+                    $("#" + tmp_id).attr("colspan", "4");
+
+                });
             }
         });
         $("#TableLocation2 tr td").hover(function () {
@@ -148,40 +194,6 @@
             va = $(this).attr("id");
             $("#" + tmp_id).css("background-color", "");
         });
-
-        //$("#TableLocation").sortable({
-        //    items: 'tbody tr',
-        //    cursor: 'pointer',
-        //    axis: 'y',
-        //    dropOnEmpty: false,
-        //    start: function (e, ui) {
-        //        ui.item.addClass("selected");
-        //    },
-        //    stop: function (e, ui) {
-        //        ui.item.removeClass("selected");
-        //    },
-        //    receive: function (e, ui) {
-        //        $(this).find("tbody").append(ui.item);
-        //    }
-        //});
-        //    $("#TableLocation2").sortable({
-        //        items: 'tbody tr td:not(tbody tr td:last-child,tbody tr td:first-child)',
-        //        cursor: 'pointer',
-        //        axis: 'x,y',
-        //        dropOnEmpty: false,
-        //        start: function (e, ui) {
-        //            ui.item.addClass("selected");
-        //        },
-        //        stop: function (e, ui) {
-        //            ui.item.removeClass("selected");
-        //            $(this).click(function () {
-        //                alert(this.val());
-        //            });
-        //        },
-        //        receive: function (e, ui) {
-        //            $(this).find("tbody").append(ui.item);
-        //        }
-        //    });
             });
 </script>
 <h2>@ViewBag.BRANCH_NAME</h2>
@@ -268,8 +280,8 @@
 <br />
 <br />
 <input name="gate" id="gate" value="" />
-<input name="gate1" id="gate1" value="" />
-<input name="gate2" id="gate2" value="" />
+@*<input name="gate1" id="gate1" value="" />
+<input name="gate2" id="gate2" value="" />*@
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
