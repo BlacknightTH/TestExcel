@@ -12,9 +12,10 @@ namespace TestExcel.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class DEPARTMENT
+    public partial class BRANCH
     {
-        public int ID { get; set; }
+        public int BRANCH_ID { get; set; }
+        public string BRANCH_NAME { get; set; }
         public string DEPARTMENT_NAME { get; set; }
     }
 }

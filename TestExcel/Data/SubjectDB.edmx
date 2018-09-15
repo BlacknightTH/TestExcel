@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TestExcelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BRANCH">
+          <Key>
+            <PropertyRef Name="BRANCH_ID" />
+          </Key>
+          <Property Name="BRANCH_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BRANCH_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="BUILDING">
           <Key>
             <PropertyRef Name="ID" />
@@ -20,10 +28,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="BRANCH_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
-          <Property Name="YEAR" Type="varchar" MaxLength="20" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
@@ -78,6 +83,7 @@
           <Property Name="USER_STATUS" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="TestExcelModelStoreContainer">
+          <EntitySet Name="BRANCH" EntityType="Self.BRANCH" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BUILDING" EntityType="Self.BUILDING" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DEPARTMENT" EntityType="Self.DEPARTMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROFESSOR" EntityType="Self.PROFESSOR" Schema="dbo" store:Type="Tables" />
@@ -90,23 +96,14 @@
     <edmx:ConceptualModels>
       <Schema Namespace="TestExcelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="TestExcelEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
           <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
           <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
+          <EntitySet Name="BRANCHes" EntityType="TestExcelModel.BRANCH" />
+          <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
         </EntityContainer>
-        <EntityType Name="DEPARTMENT">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BRANCH_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="SECTION">
           <Key>
             <PropertyRef Name="ID" />
@@ -169,23 +166,27 @@
           <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BRANCH">
+          <Key>
+            <PropertyRef Name="BRANCH_ID" />
+          </Key>
+          <Property Name="BRANCH_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BRANCH_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DEPARTMENT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TestExcelModelStoreContainer" CdmEntityContainer="TestExcelEntities">
-          <EntitySetMapping Name="DEPARTMENTs">
-            <EntityTypeMapping TypeName="TestExcelModel.DEPARTMENT">
-              <MappingFragment StoreEntitySet="DEPARTMENT">
-                <ScalarProperty Name="YEAR" ColumnName="YEAR" />
-                <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
-                <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SECTIONs">
             <EntityTypeMapping TypeName="TestExcelModel.SECTION">
               <MappingFragment StoreEntitySet="SECTION">
@@ -249,6 +250,23 @@
                 <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
                 <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
                 <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BRANCHes">
+            <EntityTypeMapping TypeName="TestExcelModel.BRANCH">
+              <MappingFragment StoreEntitySet="BRANCH">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
+                <ScalarProperty Name="BRANCH_ID" ColumnName="BRANCH_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DEPARTMENTs">
+            <EntityTypeMapping TypeName="TestExcelModel.DEPARTMENT">
+              <MappingFragment StoreEntitySet="DEPARTMENT">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

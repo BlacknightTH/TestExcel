@@ -168,6 +168,9 @@
     <Compile Include="Controllers\ImportExcelController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
+    <Compile Include="Data\BRANCH.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\BUILDING.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>

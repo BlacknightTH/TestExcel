@@ -18,7 +18,7 @@ namespace TestExcel.Controllers
         // GET: TimeSchedule
         public ActionResult Index()
         {
-            var BRANCH_NAME = db.DEPARTMENTs.Select(x => x.BRANCH_NAME).First();
+            var BRANCH_NAME = db.BRANCHes.Select(x => x.BRANCH_NAME).First();
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
@@ -38,14 +38,14 @@ namespace TestExcel.Controllers
                         };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
             ViewBag.DDLSelected = 1;
-            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)
         {
             int Branch_id = int.Parse(collection["DDL_BRANCH"]);
-            string BRANCH_NAME = db.DEPARTMENTs.Where(x => x.ID == Branch_id).First().BRANCH_NAME;
+            string BRANCH_NAME = db.BRANCHes.Where(x => x.BRANCH_ID == Branch_id).First().BRANCH_NAME;
             string[] br = BRANCH_NAME.Split('\r');
             string contain = br[0];
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
@@ -66,7 +66,7 @@ namespace TestExcel.Controllers
                             SECTION_TIME_END = e1.SECTION_TIME_END
                         };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
-            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "ID", "BRANCH_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.DEPARTMENTs.ToList(), "BRANCH_ID", "BRANCH_NAME");
             ViewBag.DDLSelected = Branch_id;
                 //query = query.Where(x => x.SECTION_NUMBER != "");
                 return View(query);
