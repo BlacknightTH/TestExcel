@@ -17,7 +17,5 @@ namespace TestExcel.Data
         public int ID { get; set; }
         public Nullable<int> BUILDING_NAME { get; set; }
         public string CLASSROOM_NAME { get; set; }
-        public string SEMESTER { get; set; }
-        public string YEAR { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace TestExcel
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-3.3.1.min.js",
                         "~/Scripts/jquery-ui-1.12.1.min.js",
+                        "~/Scripts/Schedule.js",
                         "~/Scripts/jquery.unobtrusive-ajax.min.js",
                         "~/Scripts/DataTables/jquery.dataTables.min.js"));
 

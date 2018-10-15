@@ -558,6 +558,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Schedule.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -578,6 +579,8 @@
     <Content Include="Views\ClassRoomSchedule\Results.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
     <Content Include="Views\Shared\_TimeScheduleLayout.cshtml" />
+    <Content Include="Views\TimeSchedule\ClSchedule.cshtml" />
+    <Content Include="Views\TimeSchedule\TeSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

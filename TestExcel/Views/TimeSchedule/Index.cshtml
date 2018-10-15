@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<TestExcel.Models.Section_Subject>
-@{
+    @{
     ViewBag.Title = "Index";
     int i = 0;
     int j = 0;
@@ -9,216 +9,35 @@
     string textcreadit = "";
     string[] date = { "M", "T", "W", "H", "F", "S" };
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
-}
-<script>
-    $(document).ready(function () {
-        var tmp6;
-        var colspan; var tmp_id; var subject_id; var subject_name; var subject_credit; var subject_number; var subject_hour;
-        var tmp1; var tmp2; var tmp3; var tmp4; var tmp5; var tmp6; var j; var a; var i;
-        var date2 = ["M", "T", "W", "H", "F", "S"];
-        $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
+    }
+    <script>
+        $(document).ready(function () {
+            $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
         $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
-        $("#DDL_DEPARTMENT").change(function () {
-            $("#Count").val(1);
-            $("#BRANCH_FORM").submit();
         });
-        $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
-            $(".draggable").draggable({
-                cursor: "move",
-                revert: "invalid",
-                start: function (event, ui) {
-                    console.log("start");
-                    colspan = $(this).parent().attr("colspan");
-                    $(this).parent().attr("colspan", "4");
-                    var tmp = $(this).parent().attr("id");
-                    tmp = tmp.split("_");
-                    a = parseInt(tmp[1]);
-                    j = (parseInt(colspan) / 4) + a;
-                    for (i = a; i < j; i++) {
-                        tmp6 = tmp[0] + "_" + i;
-                        $("#" + tmp6).show();
-                    }
-                },
-                stop: function (event, ui) {
-                    console.log("stop");
-                    $(this).parent().attr("colspan", colspan);
-
-                    var tmp = $(this).parent().attr("id");
-                    tmp = tmp.split("_");
-                    a = parseInt(tmp[1]);
-                    j = (parseInt(colspan) / 4) + a;
-                    a = a + 1;
-                    for (i = a; i < j; i++) {
-                        tmp6 = tmp[0] + "_" + i;
-                        $("#" + tmp6).hide();
-                    }
-
-                }
-            });
-        
-            $(".droppable").droppable({
-                accept: ".draggable",
-                drop: function (event, ui) {
-                    console.log("drop");
-                    $(this).removeClass("border").removeClass("over");
-                    var dropped = ui.draggable;
-                    var droppedOn = $(this);
-                    $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
-
-                },
-                over: function (event, elem) {
-                    $(this).addClass("over");
-                    console.log("over");
-                }
-                ,
-                out: function (event, elem) {
-                    $(this).removeClass("over");
-                }
-            });
-            $(".x_button").click(function () {
-                var rr = $(this).val();
-                $("#gate").val(rr);
-                $("#" + tmp_id).children().remove();
-
-                var tmp_num = $("#" + tmp_id).attr("colspan");
-                a = parseInt(tmp1[1]);
-                j = (parseInt(tmp_num) / 4) + a;
-                for (i = a; i < j; i++) {
-                    tmp6 = tmp1[0] + "_" + i;
-                    $("#" + tmp6).show();
-                }
-
-                $("#" + tmp_id).attr("colspan", "4");
-
-            });
-        $("#TableLocation tbody tr").click(function () {
-            if ($(this).find("input").is(':checked')) {
-                $(this).css("background-color", "");
-                $(this).find("input").prop('checked', false);
-            }
-            else {
-                $("#TableLocation tbody tr").find("input").prop('checked', false);
-                $("#TableLocation tbody tr").css("background-color", "");
-
-                $(this).css("background-color", "#d6d9db");
-                $(this).find("input").prop('checked', true);
-                subject_id = $(this).find("#subject_id").val();
-                subject_name = $(this).find("#subject_name").val();
-                subject_credit = $(this).find("#subject_credit").val();
-                subject_number = $(this).find("#subject_number").val();
-                subject_hour = $(this).find("#subject_hour").val();
-            }
-        });
-        $("#TableLocation2").click(function () {
-            if ($("#TableLocation tbody tr").find("input").is(':checked')) {
-                $("#TableLocation tbody tr").find("input").prop('checked', false);
-                $("#TableLocation tbody tr").css("background-color", "");
-
-                colspan = 4 * subject_hour;
-                $("#" + tmp_id).attr('colspan', colspan);
-                $("#" + tmp_id).html('<div class="" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div> ' + subject_id + '  ' + subject_name + '</div>');
-                $("#" + tmp_id).children().addClass("draggable");
-
-                var tmp = $("#" + tmp_id).attr("id");
-                tmp = tmp.split("_");
-                a = parseInt(tmp[1]);
-                j = (parseInt(colspan) / 4) + a;
-                a = a + 1;
-                for (i = a; i < j; i++) {
-                    tmp6 = tmp[0] + "_" + i;
-                    $("#" + tmp6).hide();
-                }
-
-                $(".draggable").draggable({
-                    cursor: "move",
-                    revert: "invalid",
-                    start: function (event, ui) {
-                        console.log("start");
-                        colspan = $(this).parent().attr("colspan");
-                        $(this).parent().attr("colspan", "4");
-                        var tmp = $(this).parent().attr("id");
-                        tmp = tmp.split("_");
-                        a = parseInt(tmp[1]);
-                        j = (parseInt(colspan) / 4) + a;
-                        for (i = a; i < j; i++) {
-                            tmp6 = tmp[0] + "_" + i;
-                            $("#" + tmp6).show();
-                        }
-                    },
-                    stop: function (event, ui) {
-                        console.log("stop");
-                        $(this).parent().attr("colspan", colspan);
-
-                        var tmp = $(this).parent().attr("id");
-                        tmp = tmp.split("_");
-                        a = parseInt(tmp[1]);
-                        j = (parseInt(colspan) / 4) + a;
-                        a = a + 1;
-                        for (i = a; i < j; i++) {
-                            tmp6 = tmp[0] + "_" + i;
-                            $("#" + tmp6).hide();
-                        }
-
-                    }
-                });
-
-                $(".x_button").click(function () {
-                    var rr = $(this).val();
-                    $("#gate").val(rr);
-                    $("#" + tmp_id).children().remove();
-
-                    var tmp_num = $("#" + tmp_id).attr("colspan");
-                    a = parseInt(tmp1[1]);
-                    j = (parseInt(tmp_num) / 4) + a;
-                    for (i = a; i < j; i++) {
-                        tmp6 = tmp1[0] + "_" + i;
-                        $("#" + tmp6).show();
-                    }
-
-                    $("#" + tmp_id).attr("colspan", "4");
-
-                });
-            }
-        });
-        $("#TableLocation2 tr td").hover(function () {
-            tmp_id = $(this).attr("id");
-            if (tmp_id != null) {
-                tmp1 = tmp_id.split("_");
-                tmp2 = parseInt(tmp1[1]) - 1;
-                tmp3 = tmp1[0] + "_" + tmp2;
-                tmp4 = parseInt(tmp1[1]) + 1;
-                tmp5 = tmp1[0] + "_" + tmp4;
-            }
-            if ($("#TableLocation tbody tr").find("input").is(':checked')) {
-                $("#" + tmp_id).css("background-color", "#d6d9db");
-            }
-            $("#gate").val(tmp_id);
-        }, function () {
-            va = $(this).attr("id");
-            $("#" + tmp_id).css("background-color", "");
-        });
-            });
-</script>
-
-<h2>@ViewBag.BRANCH_NAME</h2>
-
-@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
-{
-<div class="w3-row">
-    <div class="w3-col m2 l1">
-        @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department)
-        @Html.Hidden("Count",0)
+    </script>
+    <div class="w3-row w3-center fontup">
+        @Html.ActionLink("คณะ/สาขา", "Index", "TimeSchedule" , new { style = "color:blue;font-size:20px" }) ||
+        @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  ||
+        @Html.ActionLink("ครูผู้สอน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
     </div>
-    <div class="w3-col m2 l1">
-        @Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch)
+
+    <h2>@ViewBag.BRANCH_NAME</h2>
+
+    @using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
+    {
+    <div class="w3-row">
+        <div class="w3-col m1 l1" style="margin-right:50px">
+            @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { style = "width:100px" })
+            @Html.Hidden("Count",0)
+        </div>
+        <div class="w3-col m2 l2">
+            @Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { style = "width:130px" })
+        </div>
     </div>
-    <div class="w3-right">
-        <input type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
-    </div>
-</div>
 
     }
-<br>
+    <br>
     <table class="table table-bordered" id="TableLocation">
         <thead>
             <tr>
@@ -246,39 +65,46 @@
                 {
                     i++;
                     string[] e = item.SUBJECT_CREDIT.Split('(', ')');
-                    j += int.Parse(e[0]);
-                    string[] ee = e[1].Split('-');
-                    k += int.Parse(ee[0]);
-                    l += int.Parse(ee[1]);
-                    m += int.Parse(ee[2]);
+                    if(e[0] != "")
+                    {
+                        j += int.Parse(e[0]);
+                        string[] ee = e[1].Split('-');
+                        k += int.Parse(ee[0]);
+                        l += int.Parse(ee[1]);
+                        m += int.Parse(ee[2]);
 
-                    textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
+                        textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
+                    }
+                    else
+                    {
+                        textcreadit = "";
+                    }
                 }
-                <tr>
-                    <td>
-                        @Html.CheckBox("check" + i)
-                    </td>
-                    <td>
-                        @i
-                    </td>
-                    <td>
-                        @item.SUBJECT_ID
-                        @Html.Hidden("subject_id", item.SUBJECT_ID)
-                        @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
-                    </td>
-                    <td>
-                        @item.SUBJECT_NAME
-                        @Html.Hidden("subject_name", item.SUBJECT_NAME)
-                    </td>
-                    <td>
-                        @item.SUBJECT_CREDIT
-                        @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
-                    </td>
-                    <td>
-                        @item.SECTION_NUMBER
-                        @Html.Hidden("subject_number", item.SECTION_NUMBER)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.CheckBox("check" + i)
+                </td>
+                <td>
+                    @i
+                </td>
+                <td>
+                    @item.SUBJECT_ID
+                    @Html.Hidden("subject_id", item.SUBJECT_ID)
+                    @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
+                </td>
+                <td>
+                    @item.SUBJECT_NAME
+                    @Html.Hidden("subject_name", item.SUBJECT_NAME)
+                </td>
+                <td>
+                    @item.SUBJECT_CREDIT
+                    @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
+                </td>
+                <td>
+                    @item.SECTION_NUMBER
+                    @Html.Hidden("subject_number", item.SECTION_NUMBER)
+                </td>
+            </tr>
             }
         </tbody>
         <tfoot>
@@ -300,107 +126,137 @@
     <br />
     <input name="gate" id="gate" value="" />
     @*<input name="gate1" id="gate1" value="" />
-        <input name="gate2" id="gate2" value="" />*@
+    <input name="gate2" id="gate2" value="" />*@
     @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
     {
-        <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
-            <thead>
-                <tr bgcolor="#D3D3D3">
-                    <td><b>Day</b></td>
-                    <td colspan="4" width="60px"><b>8:00</b></td>
-                    <td colspan="4" width="60px"><b>9:00</b></td>
-                    <td colspan="4" width="60px"><b>10:00</b></td>
-                    <td colspan="4" width="60px"><b>11:00</b></td>
-                    <td colspan="4" width="60px"><b>12:00</b></td>
-                    <td colspan="4" width="60px"><b>13:00</b></td>
-                    <td colspan="4" width="60px"><b>14:00</b></td>
-                    <td colspan="4" width="60px"><b>15:00</b></td>
-                    <td colspan="4" width="60px"><b>16:00</b></td>
-                    <td colspan="4" width="60px"><b>17:00</b></td>
-                    <td colspan="4" width="60px"><b>18:00</b></td>
-                    <td colspan="4" width="60px"><b>19:00</b></td>
-                    <td colspan="4" width="60px"><b>20:00</b></td>
-                    <td colspan="4" width="60px"><b>21:00</b></td>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int a = 0; a < 6; a++)
+    <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+        <thead>
+            <tr bgcolor="#D3D3D3">
+                <td><b>Day</b></td>
+                <td colspan="4" width="60px"><b>8:00</b></td>
+                <td colspan="4" width="60px"><b>9:00</b></td>
+                <td colspan="4" width="60px"><b>10:00</b></td>
+                <td colspan="4" width="60px"><b>11:00</b></td>
+                <td colspan="4" width="60px"><b>12:00</b></td>
+                <td colspan="4" width="60px"><b>13:00</b></td>
+                <td colspan="4" width="60px"><b>14:00</b></td>
+                <td colspan="4" width="60px"><b>15:00</b></td>
+                <td colspan="4" width="60px"><b>16:00</b></td>
+                <td colspan="4" width="60px"><b>17:00</b></td>
+                <td colspan="4" width="60px"><b>18:00</b></td>
+                <td colspan="4" width="60px"><b>19:00</b></td>
+                <td colspan="4" width="60px"><b>20:00</b></td>
+                <td colspan="4" width="60px"><b>21:00</b></td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int a = 0; a < 6; a++)
+            {
+            <tr id="@date[a]" name="@date[a]" class="@date[a]">
+                <td>@date[a]</td>
+                @for (int b = 8; b <= 21; b++)
                 {
-                    <tr id="@date[a]" name="@date[a]" class="@date[a]">
-                        <td>@date[a]</td>
-                        @for (int b = 8; b <= 21; b++)
+                    var tid = date[a] + "id_" + b;
+                    var tname = date[a] + "name" + b;
+                    var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
+                    var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                    if (check != null)
+                    {
+                        var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a]).Count();
+                        if (trigger == 1)
                         {
-                            var tid = date[a] + "id_" + b;
-                            var tname = date[a] + "name" + b;
-                            var check = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).LastOrDefault();
-                            var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
-                            if (check != null && check.SECTION_NUMBER != "")
-                            {
-                                var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).Count();
-                                if (trigger == 1)
-                                {
-                                    var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
-                                    var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
-                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                                    var TIME = (TIME_END - TIME_START) * 4;
-                                    var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
-                                    var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
-                                    <td id="@tid" colspan="@TIME" class="droppable">
-                                        <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
-                                            <div id="x_button" class="btn btn-default pull-right x_button text-center">
-                                                X
-                                                @Html.Hidden("x_value", TIME + "_" + date[a])
-                                            </div>
-                                            @*@Html.Hidden(tid, uid)
-                                                @Html.Hidden(tname, uname)*@
-                                            @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
-                                            @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
-                                        </div>
-                                    </td>
-                                }
-                                else if (trigger == 2)
-                                {
-                                    var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).First();
-                                    var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).Last();
-                                    int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                                    int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
-                                    var TIME = (tmp_last - tmp_first) * 4;
-                                    <td id="@tid" colspan="@TIME" class="droppable">
-                                        <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
-                                            <div id="x_button" class="btn btn-default pull-right x_button text-center">
-                                                X
-                                                @Html.Hidden("x_value", TIME + "_" + date[a])
-                                            </div>
-
-                                            @first.SUBJECT_ID
-                                            @first.SUBJECT_NAME
-                                        </div>
-                                    </td>
-                                }
-                            }
-                            else
-                            {
-                                if (check1 == null)
-                                {
-                                    <td id="@tid" class="droppable" height="50px" colspan="4"></td>
-                                }
-                                else
-                                {
-                                    <td id="@tid" class="droppable" height="50px" colspan="4" style="display:none"></td>
-                                }
-                            }
-                            @*else if (check1 == null)
-
-                                {
-                                    <td id="@tid" class="droppable" height="50px" colspan="4"></td>
-                                }*@
-                        }
-                    </tr>
+                            var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
+                            var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
+                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                            var TIME = (TIME_END - TIME_START) * 4;
+                            var uid = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
+                            var uname = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                <td id="@tid" colspan="@TIME" class="droppable">
+                    <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
+                        <div id="x_button" class="btn btn-default pull-right x_button text-center">
+                            X
+                            @Html.Hidden("x_value", TIME + "_" + date[a])
+                        </div>
+                        @*@Html.Hidden(tid, uid)
+                        @Html.Hidden(tname, uname)*@
+                        @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
+                        @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                    </div>
+                </td>
                 }
-            </tbody>
-        </table>
-        <div>
-            <input type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
-        </div>
+                else if (trigger == 2)
+                {
+                var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).First();
+                var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).Last();
+                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+
+                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
+                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
+                {
+                <td id="@tid" class="droppable" height="50px" width="auto" colspan="4" style="display:none"></td>
+                }
+                else if (tmpl_first == tmpl_last)
+                {
+                var TIME = (tmp_last - tmp_first) * 4;
+                <td id="@tid" colspan="@TIME" class="droppable">
+                    <div class="draggable" style="background-color:#D3D3D3;height:50px">
+                        <div id="x_button" class="btn btn-default pull-right x_button text-center">
+                            X
+                            @Html.Hidden("x_value", TIME + "_" + date[a])
+                        </div>
+
+                        @first.SUBJECT_ID
+                        @first.SUBJECT_NAME
+                    </div>
+                </td>
+                }
+                else if (tmpl_first != tmpl_last)
+                {
+                var tmp_TIME_START = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_START;
+                var tmp_TIME_END = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).Last().SECTION_TIME_END;
+                var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                var TIME = (TIME_END - TIME_START) * 4;
+
+                <td id="@tid" colspan="@TIME" class="droppable">
+                    <div class="draggable" style="background-color:#D3D3D3;width:100%;height:50px">
+                        <div id="x_button" class="btn btn-default pull-right x_button text-center">
+                            X
+                            @Html.Hidden("x_value", TIME + "_" + date[a])
+                        </div>
+
+                        @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID
+                        @Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                    </div>
+                </td>
+                }
+                }
+                }
+                else
+                {
+                if (check1 == null)
+                {
+                <td id="@tid" class="droppable" height="50px" width="auto" colspan="4"></td>
+                }
+                else
+                {
+                <td id="@tid" class="droppable" height="50px" width="auto" colspan="4" style="display:none"></td>
+                }
+                }
+                @*else if (check1 == null)
+
+                {
+                <td id="@tid" class="droppable" height="50px" colspan="4"></td>
+                }*@
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <input type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
+    </div>
     }

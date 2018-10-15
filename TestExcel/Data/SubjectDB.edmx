@@ -20,8 +20,6 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BUILDING_NAME" Type="int" />
           <Property Name="CLASSROOM_NAME" Type="varchar" MaxLength="50" />
-          <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
-          <Property Name="YEAR" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
@@ -29,6 +27,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="DEPARTMENT_THAI_NAME" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
@@ -99,10 +98,10 @@
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
-          <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
           <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
           <EntitySet Name="BRANCHes" EntityType="TestExcelModel.BRANCH" />
           <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
+          <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
         </EntityContainer>
         <EntityType Name="SECTION">
           <Key>
@@ -145,16 +144,6 @@
           <Property Name="USER_LASTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="USER_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BUILDING">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BUILDING_NAME" Type="Int32" />
-          <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
             <PropertyRef Name="ID" />
@@ -180,6 +169,15 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_THAI_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BUILDING">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BUILDING_NAME" Type="Int32" />
+          <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -231,17 +229,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BUILDINGs">
-            <EntityTypeMapping TypeName="TestExcelModel.BUILDING">
-              <MappingFragment StoreEntitySet="BUILDING">
-                <ScalarProperty Name="YEAR" ColumnName="YEAR" />
-                <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
-                <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
-                <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PROFESSORs">
             <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
               <MappingFragment StoreEntitySet="PROFESSOR">
@@ -266,7 +253,17 @@
           <EntitySetMapping Name="DEPARTMENTs">
             <EntityTypeMapping TypeName="TestExcelModel.DEPARTMENT">
               <MappingFragment StoreEntitySet="DEPARTMENT">
+                <ScalarProperty Name="DEPARTMENT_THAI_NAME" ColumnName="DEPARTMENT_THAI_NAME" />
                 <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BUILDINGs">
+            <EntityTypeMapping TypeName="TestExcelModel.BUILDING">
+              <MappingFragment StoreEntitySet="BUILDING">
+                <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
+                <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
