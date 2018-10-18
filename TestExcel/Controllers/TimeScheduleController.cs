@@ -116,7 +116,6 @@ namespace TestExcel.Controllers
             ViewBag.CLASSROOM_NAME = CLASSROOM_NAME;
             ViewBag.CDDLSelected = 1;
             ViewBag.BDDLSelected = 63;
-            ViewBag.ddl_Building = new SelectList(db.BUILDINGs.Distinct().ToList(), "ID", "BUILDING_NAME");
             ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
             return View(query);
         }
@@ -137,7 +136,7 @@ namespace TestExcel.Controllers
             {
                 CLASSROOM_NAME = db.BUILDINGs.Where(x => x.ID == Classroom_id).First().CLASSROOM_NAME;
                 //string[] br = CLASSROOM_NAME.Split('\r');
-                //CLASSROOM_NAME = br[0];
+                //CLASSROOM_NAME = br[0];#D3D3D3  #25b0ee
             }
 
             var query = from e1 in db.SECTIONs
@@ -160,18 +159,63 @@ namespace TestExcel.Controllers
             ViewBag.CLASSROOM_NAME = CLASSROOM_NAME;
             ViewBag.CDDLSelected = Classroom_id;
             ViewBag.BDDLSelected = Building_id;
-            ViewBag.ddl_Building = new SelectList(db.BUILDINGs.Distinct().ToList(), "ID", "BUILDING_NAME");
             ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id).ToList(), "ID", "CLASSROOM_NAME");
             return View(query);
         }
         public ActionResult TeSchedule()
         {
-            return View();
+            var PROFESSOR_SHORTNAME = db.PROFESSORs.Select(x => x.PROFESSOR_SHORTNAME).First();
+
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
+                        select new Section_Subject
+                        {
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
+                        };
+            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
+            ViewBag.PDDLSelected = 1;
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "ID", "PROFESSOR_SHORTNAME");
+            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            return View(query);
         }
         [HttpPost]
         public ActionResult TeSchedule(FormCollection collection)
         {
-            return View();
+            int Professor_id = int.Parse(collection["DDL_PROFESSOR"]);
+
+            var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.ID == Professor_id).First().PROFESSOR_SHORTNAME;
+
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
+                        select new Section_Subject
+                        {
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END
+                        };
+            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
+            ViewBag.PDDLSelected = Professor_id;
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "ID", "PROFESSOR_SHORTNAME");
+            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            return View(query);
         }
         [HttpPost]
         public ActionResult updatedata(FormCollection collection)

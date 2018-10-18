@@ -16,7 +16,12 @@
             <ul class="nav navbar-nav navbar-right">
                 @if (Session["Username"] != null)
                 {
+                    <li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
                     <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+                }
+                else
+                {
+                    <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
                 }
             </ul>
         </div>
