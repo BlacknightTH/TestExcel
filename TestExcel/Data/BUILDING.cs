@@ -15,7 +15,7 @@ namespace TestExcel.Data
     public partial class BUILDING
     {
         public int ID { get; set; }
-        public Nullable<int> BUILDING_NAME { get; set; }
+        public string BUILDING_NAME { get; set; }
         public string CLASSROOM_NAME { get; set; }
     }
 }

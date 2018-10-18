@@ -18,7 +18,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BUILDING_NAME" Type="int" />
+          <Property Name="BUILDING_NAME" Type="varchar" MaxLength="50" />
           <Property Name="CLASSROOM_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
@@ -176,7 +176,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BUILDING_NAME" Type="Int32" />
+          <Property Name="BUILDING_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>

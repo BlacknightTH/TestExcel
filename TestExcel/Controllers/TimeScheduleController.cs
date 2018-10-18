@@ -94,12 +94,12 @@ namespace TestExcel.Controllers
         }
         public ActionResult ClSchedule()
         {
-            var CLASSROOM_NAME = db.BUILDINGs.Select(x => x.CLASSROOM_NAME).First();
-           
+            var Building = "63";
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_CLASSROOM.Contains(CLASSROOM_NAME)
-                        select new Section_Subject
+                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
+                        where e3.BUILDING_NAME.Contains(Building)
+                        select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
@@ -110,39 +110,26 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            BUILDING_NAME = e3.BUILDING_NAME
                         };
-            ViewBag.BUILDING_NAME = 63;
-            ViewBag.CLASSROOM_NAME = CLASSROOM_NAME;
-            ViewBag.CDDLSelected = 1;
-            ViewBag.BDDLSelected = 63;
-            ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
-            return View(query);
+            ViewBag.BUILDING_NAME = Building;
+            ViewBag.BDDLSelected = Building;
+            ViewBag.DATE = 0;
+            var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").ToList();
+            var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
+            return View(tupleData);
         }
         [HttpPost]
         public ActionResult ClSchedule(FormCollection collection)
         {
             int Building_id = int.Parse(collection["DDL_BUILDING"]);
-            int Classroom_id = int.Parse(collection["DDL_CLASSROOM"]);
-            int count = int.Parse(collection["Count"]);
-            var CLASSROOM_NAME = "";
-            if (count == 1)
-            {
-                CLASSROOM_NAME = db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id).First().CLASSROOM_NAME;
-                int CLASSROOM_ID = db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id).First().ID;
-                Classroom_id = CLASSROOM_ID;
-            }
-            else
-            {
-                CLASSROOM_NAME = db.BUILDINGs.Where(x => x.ID == Classroom_id).First().CLASSROOM_NAME;
-                //string[] br = CLASSROOM_NAME.Split('\r');
-                //CLASSROOM_NAME = br[0];#D3D3D3  #25b0ee
-            }
-
+            int Date = int.Parse(collection["DDL_DATE"]);
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_CLASSROOM.Contains(CLASSROOM_NAME)
-                        select new Section_Subject
+                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
+                        where e3.BUILDING_NAME.Contains(Building_id.ToString())
+                        select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
@@ -153,14 +140,15 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            BUILDING_NAME = e3.BUILDING_NAME
                         };
-            ViewBag.BUILDING_NAME = Building_id;
-            ViewBag.CLASSROOM_NAME = CLASSROOM_NAME;
-            ViewBag.CDDLSelected = Classroom_id;
+            ViewBag.BUILDING_NAME = Building_id.ToString();
             ViewBag.BDDLSelected = Building_id;
-            ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id).ToList(), "ID", "CLASSROOM_NAME");
-            return View(query);
+            ViewBag.DATE = Date;
+            var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id.ToString()).ToList();
+            var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
+            return View(tupleData);
         }
         public ActionResult TeSchedule()
         {

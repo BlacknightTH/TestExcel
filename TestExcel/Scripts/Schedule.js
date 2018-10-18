@@ -190,10 +190,9 @@ $("#TableLocation2 tr td").hover(function () {
 
 // หน้า อาคารเรียน/ห้องเรียน //
 $("#DDL_BUILDING").change(function () {
-    $("#Count").val(1);
     $("#BUILDING_FORM").submit();
 });
-$("#DDL_CLASSROOM").change(function () {
+$("#DDL_DATE").change(function () {
     $("#BUILDING_FORM").submit();
 });
 //-----------------------------------------------------------//

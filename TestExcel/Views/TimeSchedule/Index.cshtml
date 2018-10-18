@@ -189,18 +189,18 @@
                         @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                     </div>
                 </td>
-                }
-                else if (trigger == 2)
-                {
-                var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).First();
-                var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID).Last();
-                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                        }
+                        else if (trigger == 2)
+                        {
+                            var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
+                            var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
+                            int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                            int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
 
-                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
-                if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
-                {
+                            int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
+                            int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                            if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
+                            {
                 <td id="@tid" class="droppable" height="50px" width="auto" colspan="4" style="display:none"></td>
                 }
                 else if (tmpl_first == tmpl_last)
