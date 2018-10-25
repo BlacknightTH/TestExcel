@@ -7,6 +7,9 @@ $("#DDL_DEPARTMENT").change(function () {
     $("#Count").val(1);
     $("#BRANCH_FORM").submit();
 });
+$("#DDL_SEMESTERYEAR").change(function () {
+    $("#BRANCH_FORM").submit();
+});
 $("#DDL_BRANCH").change(function () {
     $("#BRANCH_FORM").submit();
 });

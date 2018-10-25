@@ -53,6 +53,12 @@ namespace TestExcel.Controllers
                         TestExcelEntities db = new TestExcelEntities();
                         string tmp = "";
                         string tmp2 = "";
+                        //int Section_ID = 1;
+                        //var checkSubject_ID = db.SECTIONs.Count();
+                        //if(checkSubject_ID != 0)
+                        //{
+                        //    Section_ID += db.SECTIONs.Count();
+                        //}
                         string semester_year = ((Excel.Range)range.Cells[3, 1]).Text;
                         string[] split_semester_year = semester_year.Split(' ');
                         string semester = split_semester_year[1];
@@ -66,7 +72,6 @@ namespace TestExcel.Controllers
                             string F = ((Excel.Range)range.Cells[row, 6]).Text;
                             string G = ((Excel.Range)range.Cells[row, 7]).Text;
 
-                            //
                             if (B.Length > 4)
                             {
                                 tmp = B;
@@ -111,7 +116,7 @@ namespace TestExcel.Controllers
                                     }
                                     var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                     "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
+                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
                                     if (CheckSection == false)
                                     {
                                         string Subject_ID = tmp;
@@ -122,7 +127,8 @@ namespace TestExcel.Controllers
                                         string Section_Classroom = E;
                                         string Section_Professor = F;
                                         string Section_Branch_Name = G;
-                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, db);
+                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                        //Section_ID++;
                                     }
                                 }
                                 else
@@ -137,7 +143,7 @@ namespace TestExcel.Controllers
                                         }
                                         var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
                                 "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "'").Any();
+                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
                                         if (CheckSection == false)
                                         {
                                             string Subject_ID = tmp;
@@ -148,7 +154,8 @@ namespace TestExcel.Controllers
                                             string Section_Classroom = E;
                                             string Section_Professor = F;
                                             string Section_Branch_Name = G;
-                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, db);
+                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                            //Section_ID++;
                                         }
                                         //}
                                     }
@@ -180,7 +187,7 @@ namespace TestExcel.Controllers
                             }
                         }
                     }
-                    return RedirectToAction("Success");
+                    return RedirectToAction("Index","TimeSchedule");
                 }
                 else
                 {
@@ -217,7 +224,7 @@ namespace TestExcel.Controllers
         }
 
         public void saveSection(string SUBJECT_ID, string SECTION_NUMBER, string SECTION_DATE, string SECTION_TIME_START, string SECTION_TIME_END,
-                                string SECTION_CLASSROOM, string SECTION_PROFESSOR_SHORTNAME, string SECTION_BRANCH_NAME, TestExcelEntities db)
+                                string SECTION_CLASSROOM, string SECTION_PROFESSOR_SHORTNAME, string SECTION_BRANCH_NAME, string SEMESTER, string YEAR, TestExcelEntities db)
         {
             try
             {
@@ -231,6 +238,8 @@ namespace TestExcel.Controllers
                 item.SECTION_CLASSROOM = SECTION_CLASSROOM;
                 item.SECTION_PROFESSOR_SHORTNAME = SECTION_PROFESSOR_SHORTNAME;
                 item.SECTION_BRANCH_NAME = SECTION_BRANCH_NAME;
+                item.SEMESTER = SEMESTER;
+                item.YEAR = YEAR;
                 db.SECTIONs.Add(item);
                 db.SaveChanges();
 

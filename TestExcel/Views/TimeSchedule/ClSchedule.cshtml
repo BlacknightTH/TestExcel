@@ -30,6 +30,9 @@ else
 @using (Html.BeginForm("ClSchedule", "TimeSchedule", FormMethod.Post, new { id = "BUILDING_FORM", name = "BUILDING_FORM" }))
 {
     <div class="w3-row">
+        <div class="w3-col m1 l1" style="margin-right:50px">
+            @Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { style = "width:100px" })
+        </div>
         <div class="w3-col m3 l2" style="margin-right:100px">
             <select id="DDL_BUILDING" name="DDL_BUILDING" style="width:260px">
                 <option value="63">อาคารเรียน 63</option>
@@ -78,10 +81,10 @@ else
     <tbody>
         @{
             var temp = Model.Item2;
-            var temp1 = Model.Item2.Select(x => x.ID);
+            var temp1 = Model.Item2.Select(x => x.BUILDING_ID);
             for (int a = temp1.First(); a <= temp1.Last(); a++)
             {
-                var classroom = @Model.Item2.Where(x => x.ID == a).FirstOrDefault().CLASSROOM_NAME;
+                var classroom = @Model.Item2.Where(x => x.BUILDING_ID == a).FirstOrDefault().CLASSROOM_NAME;
                 <tr>
                     <td>@classroom</td>
                     @for (int b = 8; b <= 21; b++)

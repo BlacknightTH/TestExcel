@@ -22,7 +22,7 @@ namespace TestExcel.Controllers
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAMEs)
+                        where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAMEs) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
                         select new Section_Subject
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -34,12 +34,22 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
+
             ViewBag.BRANCH_NAME = BRANCH_NAMEs;
             ViewBag.DDLSelected = 1;
             ViewBag.DepartDDLSelected = 1;
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "ID", "DEPARTMENT_NAME");
+            ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
+            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == DEPART_NAMEs).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
@@ -49,10 +59,14 @@ namespace TestExcel.Controllers
             int Branch_id = int.Parse(collection["DDL_BRANCH"]);
             int Depart_id = int.Parse(collection["DDL_DEPARTMENT"]);
             int count = int.Parse(collection["Count"]);
+            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
+            string[] dl = DDL_SEMESTERYEAR.Split('/');
+            string semester = dl[0];
+            string year = dl[1];
             string temp, contain, BRANCH_NAME;
             if (count == 1)
             {
-                temp = db.DEPARTMENTs.Where(x => x.ID == Depart_id).First().DEPARTMENT_NAME;
+                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
                 BRANCH_NAME = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_NAME;
                 int BRANCH_ID = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_ID;
                 var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
@@ -61,7 +75,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                temp = db.DEPARTMENTs.Where(x => x.ID == Depart_id).First().DEPARTMENT_NAME;
+                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
                 BRANCH_NAME = db.BRANCHes.Where(x => x.BRANCH_ID == Branch_id).First().BRANCH_NAME;
                 var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
                 string[] br = BRANCH_NAME.Split('\r');
@@ -70,7 +84,7 @@ namespace TestExcel.Controllers
             //var model = db.SUBJECTs.SqlQuery("Select DISTINCT SUBJECT.SUBJECT_ID, * from SUBJECT inner join SECTION on SUBJECT.SUBJECT_ID = SECTION.SUBJECT_ID where SECTION.SECTION_FACULTY like '%EnET(I)-R21%'").ToList();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_BRANCH_NAME.Contains(contain)
+                        where e1.SECTION_BRANCH_NAME.Contains(contain) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -82,14 +96,22 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "ID", "DEPARTMENT_NAME");
-            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
             ViewBag.DDLSelected = Branch_id;
             ViewBag.DepartDDLSelected = Depart_id;
-            //query = query.Where(x => x.SECTION_NUMBER != "");
+            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
+            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         public ActionResult ClSchedule()
@@ -98,7 +120,7 @@ namespace TestExcel.Controllers
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
-                        where e3.BUILDING_NAME.Contains(Building)
+                        where e3.BUILDING_NAME.Contains(Building) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
                         select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -111,11 +133,20 @@ namespace TestExcel.Controllers
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
-                            BUILDING_NAME = e3.BUILDING_NAME
+                            BUILDING_NAME = e3.BUILDING_NAME,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
             ViewBag.BUILDING_NAME = Building;
             ViewBag.BDDLSelected = Building;
             ViewBag.DATE = 0;
+            ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
             var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").ToList();
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
@@ -125,6 +156,10 @@ namespace TestExcel.Controllers
         {
             int Building_id = int.Parse(collection["DDL_BUILDING"]);
             int Date = int.Parse(collection["DDL_DATE"]);
+            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
+            string[] dl = DDL_SEMESTERYEAR.Split('/');
+            string semester = dl[0];
+            string year = dl[1];
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
@@ -141,11 +176,20 @@ namespace TestExcel.Controllers
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
-                            BUILDING_NAME = e3.BUILDING_NAME
+                            BUILDING_NAME = e3.BUILDING_NAME,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
             ViewBag.BUILDING_NAME = Building_id.ToString();
             ViewBag.BDDLSelected = Building_id;
             ViewBag.DATE = Date;
+            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
             var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id.ToString()).ToList();
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
@@ -156,7 +200,7 @@ namespace TestExcel.Controllers
 
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
                         select new Section_Subject
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -168,11 +212,20 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
             ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
             ViewBag.PDDLSelected = 1;
-            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "ID", "PROFESSOR_SHORTNAME");
+            ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
             //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
             return View(query);
         }
@@ -180,8 +233,11 @@ namespace TestExcel.Controllers
         public ActionResult TeSchedule(FormCollection collection)
         {
             int Professor_id = int.Parse(collection["DDL_PROFESSOR"]);
-
-            var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.ID == Professor_id).First().PROFESSOR_SHORTNAME;
+            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
+            string[] dl = DDL_SEMESTERYEAR.Split('/');
+            string semester = dl[0];
+            string year = dl[1];
+            var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.PROFESSOR_ID == Professor_id).First().PROFESSOR_SHORTNAME;
 
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
@@ -197,11 +253,20 @@ namespace TestExcel.Controllers
                             SECTION_DATE = e1.SECTION_DATE,
                             SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
                             SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
                         };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                               };
             ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
             ViewBag.PDDLSelected = Professor_id;
-            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "ID", "PROFESSOR_SHORTNAME");
+            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
             //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
             return View(query);
         }
@@ -215,7 +280,7 @@ namespace TestExcel.Controllers
             var Hname = "";
             var Fname = "";
             var Sname = "";
-            for (int a = 0; a < 6;a++)
+            for (int a = 0; a < 6; a++)
             {
                 for (int b = 8; b < 22; b++)
                 {
@@ -223,7 +288,7 @@ namespace TestExcel.Controllers
                     {
                         Mname = collection[date[a] + "name" + b];
                     }
-                    else if(a == 1)
+                    else if (a == 1)
                     {
                         Tname = collection[date[a] + "name" + b];
                     }

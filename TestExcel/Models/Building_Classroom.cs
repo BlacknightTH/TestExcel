@@ -22,7 +22,7 @@ namespace TestExcel.Models
         //public string SUBJECT_FINAL_DATE { get; set; }
         //public string SUBJECT_MIDTERM_TIME { get; set; }
         //public string SUBJECT_FINAL_TIME { get; set; }
-        //public string SEMESTER { get; set; }
-        //public string YEAR { get; set; }
+        public string SEMESTER { get; set; }
+        public string YEAR { get; set; }
     }
 }

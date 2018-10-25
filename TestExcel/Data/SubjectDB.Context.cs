@@ -25,12 +25,12 @@ namespace TestExcel.Data
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<BRANCH> BRANCHes { get; set; }
+        public virtual DbSet<BUILDING> BUILDINGs { get; set; }
+        public virtual DbSet<DEPARTMENT> DEPARTMENTs { get; set; }
+        public virtual DbSet<PROFESSOR> PROFESSORs { get; set; }
         public virtual DbSet<SECTION> SECTIONs { get; set; }
         public virtual DbSet<SUBJECT> SUBJECTs { get; set; }
         public virtual DbSet<USER> USERs { get; set; }
-        public virtual DbSet<PROFESSOR> PROFESSORs { get; set; }
-        public virtual DbSet<BRANCH> BRANCHes { get; set; }
-        public virtual DbSet<DEPARTMENT> DEPARTMENTs { get; set; }
-        public virtual DbSet<BUILDING> BUILDINGs { get; set; }
     }
 }

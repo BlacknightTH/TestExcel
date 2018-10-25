@@ -14,7 +14,7 @@ namespace TestExcel.Data
     
     public partial class DEPARTMENT
     {
-        public int ID { get; set; }
+        public int DEPARTMENT_ID { get; set; }
         public string DEPARTMENT_NAME { get; set; }
         public string DEPARTMENT_THAI_NAME { get; set; }
     }

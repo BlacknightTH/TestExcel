@@ -10,7 +10,7 @@
     <script>
         $(document).ready(function () {
             $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
-        $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
+            $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
             });
     </script>
     <div class="w3-row w3-center fontup">
@@ -25,8 +25,11 @@
     {
     <div class="w3-row">
         <div class="w3-col m1 l1" style="margin-right:50px">
+            @Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { style = "width:100px" })
+        </div>
+        <div class="w3-col m1 l1" style="margin-right:50px">
             @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { style = "width:100px" })
-            @Html.Hidden("Count",0)
+            @Html.Hidden("Count", 0)
         </div>
         <div class="w3-col m2 l2">
             @Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { style = "width:130px" })

@@ -20,11 +20,14 @@
 
 @using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = "PROFESSOR_FORM", name = "PROFESSOR_FORM" }))
 {
-    <div class="w3-row">
-        <div class="w3-col m1 l1" style="margin-right:50px">
-            @Html.DropDownList("DDL_PROFESSOR", (SelectList)ViewBag.ddl_Professor, new { style = "width:100px" })
-        </div>
+<div class="w3-row">
+    <div class="w3-col m1 l1" style="margin-right:50px">
+        @Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { style = "width:100px" })
     </div>
+    <div class="w3-col m1 l1" style="margin-right:50px">
+        @Html.DropDownList("DDL_PROFESSOR", (SelectList)ViewBag.ddl_Professor, new { style = "width:100px" })
+    </div>
+</div>
 
 }
 <br>
