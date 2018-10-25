@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TestExcel.Data.USER>
+
+@{
+    ViewBag.Title = "Member";
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+</div>
+<br>
+<h2>Member</h2>
+<br>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="w3-table-all" id="DataTable" name="DataTable">
+    <thead>
+        <tr class="w3-blue">
+            <th>ชื่อผู้ใช้งาน</th>
+            <th>รหัสผ่าน</th>
+            <th>อิเมลล์</th>
+            <th>ชื่อจริง</th>
+            <th>นามสกุล</th>
+            <th>สถานะ</th>
+            <th>แก้ไข</th>
+            <th>ลบ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.USER_USERNAME
+                </td>
+                <td>
+                    @item.USER_PASSWORD
+                </td>
+                <td>
+                    @item.USER_EMAIL
+                </td>
+                <td>
+                    @item.USER_FIRSTNAME
+                </td>
+                <td>
+                    @item.USER_LASTNAME
+                </td>
+                <td>
+                    @item.USER_STATUS
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Edit",new { id = item.ID })"><span class="btn btn-success fa fa-pencil"></span></a>
+                </td>
+                <td>
+                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.ID')" href="@Url.Action("Delete","Manage",new { id = item.ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

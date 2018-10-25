@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TestExcel.Data.SUBJECT>
+
+@{
+    ViewBag.Title = "Subject";
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+</div>
+<br>
+<h2>Subject</h2>
+<br>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="w3-table-all" id="DataTable" name="DataTable">
+    <thead>
+        <tr class="w3-blue">
+            <th>รหัสวิชา</th>
+            <th>ชื่อวิชา</th>
+            <th>หน่วยกิต</th>
+            <th>วันที่สอบกลางภาค</th>
+            <th>วันที่สอบปลายภาค</th>
+            <th>เวลาสอบกลางภาค</th>
+            <th>เวลาสอบปลายภาค</th>
+            <th>ภาคการศึกษา</th>
+            <th>ปีการศึกษา</th>
+            <th>แก้ไข</th>
+            <th>ลบ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.SUBJECT_ID
+                </td>
+                <td>
+                    @item.SUBJECT_NAME
+                </td>
+                <td>
+                    @item.SUBJECT_CREDIT
+                </td>
+                <td>
+                    @item.SUBJECT_MIDTERM_DATE
+                </td>
+                <td>
+                    @item.SUBJECT_FINAL_DATE
+                </td>
+                <td>
+                    @item.SUBJECT_MIDTERM_TIME
+                </td>
+                <td>
+                    @item.SUBJECT_FINAL_TIME
+                </td>
+                <td>
+                    @item.SEMESTER
+                </td>
+                <td>
+                    @item.YEAR
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Edit",new { id = item.ID })"><span class="btn btn-success fa fa-pencil"></span></a>
+                </td>
+                <td>
+                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.ID')" href="@Url.Action("Delete","Manage",new { id = item.ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

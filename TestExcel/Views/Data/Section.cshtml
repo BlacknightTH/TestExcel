@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TestExcel.Data.SECTION>
+
+@{
+    ViewBag.Title = "Section";
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+</div>
+<br>
+<h2>Section</h2>
+<br>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="w3-table-all" id="DataTable" name="DataTable">
+    <thead>
+        <tr class="w3-blue">
+            <th>รหัสวิชา</th>
+            <th>เลขเซค</th>
+            <th>วัน</th>
+            <th>เวลาเริ่ม</th>
+            <th>เวลาสิ้นสุด</th>
+            <th>ห้องเรียน</th>
+            <th>อักษรย่ออาจารย์</th>
+            <th>สาขาวิชา</th>
+            <th>ภาคการศึกษา</th>
+            <th>ปีการศึกษา</th>
+            <th>แก้ไข</th>
+            <th>ลบ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @item.SUBJECT_ID
+            </td>
+            <td>
+                @item.SECTION_NUMBER
+            </td>
+            <td>
+                @item.SECTION_DATE
+            </td>
+            <td>
+                @item.SECTION_TIME_START
+            </td>
+            <td>
+                @item.SECTION_TIME_END
+            </td>
+            <td>
+                @item.SECTION_CLASSROOM
+            </td>
+            <td>
+                @item.SECTION_PROFESSOR_SHORTNAME
+            </td>
+            <td>
+                @item.SECTION_BRANCH_NAME
+            </td>
+            <td>
+                @item.SEMESTER
+            </td>
+            <td>
+                @item.YEAR
+            </td>
+            <td>
+                <a href="@Url.Action("Edit","Edit",new { id = item.SECTION_ID })"><span class="btn btn-success fa fa-pencil"></span></a>
+            </td>
+            <td>
+            <a onclick="return confirm('Are you sure you want to delete record with id = @item.SECTION_ID')" href="@Url.Action("Delete","Manage",new { id = item.SECTION_ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
+            </td>
+        </tr>
+        }
+        </tbody>
+</table>

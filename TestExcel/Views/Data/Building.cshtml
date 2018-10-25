@@ -1,0 +1,46 @@
+﻿@model IEnumerable<TestExcel.Data.BUILDING>
+
+@{
+    ViewBag.Title = "Building";
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+</div>
+<br>
+<h2>Building</h2>
+<br>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="w3-table-all" id="DataTable" name="DataTable">
+    <thead>
+        <tr class="w3-blue">
+            <th>อาคาร</th>
+            <th>ห้องเรียน</th>
+            <th>แก้ไข</th>
+            <th>ลบ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.BUILDING_NAME
+                </td>
+                <td>
+                    @item.CLASSROOM_NAME
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Edit",new { id = item.BUILDING_ID })"><span class="btn btn-success fa fa-pencil"></span></a>
+                </td>
+                <td>
+                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.BUILDING_ID')" href="@Url.Action("Delete","Manage",new { id = item.BUILDING_ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
