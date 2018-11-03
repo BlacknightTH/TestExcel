@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -53,12 +52,7 @@ namespace TestExcel.Controllers
                         TestExcelEntities db = new TestExcelEntities();
                         string tmp = "";
                         string tmp2 = "";
-                        //int Section_ID = 1;
-                        //var checkSubject_ID = db.SECTIONs.Count();
-                        //if(checkSubject_ID != 0)
-                        //{
-                        //    Section_ID += db.SECTIONs.Count();
-                        //}
+                       
                         string semester_year = ((Excel.Range)range.Cells[3, 1]).Text;
                         string[] split_semester_year = semester_year.Split(' ');
                         string semester = split_semester_year[1];

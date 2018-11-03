@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+
+<h2>Index</h2>
+<span>Excel File </span><input type="file" name="excelfile" />
+<a href="@Url.Action("Export","ExportExcel")">Export Excel</a>
