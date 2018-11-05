@@ -214,6 +214,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Building_Classroom.cs" />
+    <Compile Include="Models\Department_Branch.cs" />
     <Compile Include="Models\Section_Subject.cs" />
     <Compile Include="Models\SemesterYear.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -466,6 +467,11 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="fonts\THSarabun Bold Italic.ttf" />
+    <Content Include="fonts\THSarabun Bold.ttf" />
+    <Content Include="fonts\THSarabun Italic.ttf" />
+    <Content Include="fonts\THSarabun.ttf" />
+    <Content Include="fonts\angsa.ttf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />

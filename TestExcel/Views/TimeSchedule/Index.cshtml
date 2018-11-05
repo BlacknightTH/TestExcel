@@ -10,8 +10,8 @@
     <script>
         $(document).ready(function () {
             $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
-            $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
-            });
+        $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
+                });
     </script>
     <div class="w3-row w3-center fontup">
         @Html.ActionLink("คณะ/สาขา", "Index", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
@@ -155,32 +155,32 @@
                 <td>@date[a]</td>
                 @for (int b = 8; b <= 21; b++)
                 {
-                    var tid = date[a] + "id_" + b;
-                    var tname = date[a] + "name" + b;
-                    var WhereTimeDate = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]);
-                    var check = WhereTimeDate.LastOrDefault();
-                    var Bcolor = Model.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
-                    if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
-                    {
-                        color = "#25b0ee";
-                    }
-                    else
-                    {
-                        color = "#D3D3D3";
-                    }
-                    var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
-                    if (check != null)
-                    {
-                        var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
-                        if (trigger == 1)
-                        {
-                            var tmp_TIME_START = check.SECTION_TIME_START;
-                            var tmp_TIME_END = check.SECTION_TIME_END;
-                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                            var TIME = (TIME_END - TIME_START) * 4;
-                            var uid = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
-                            var uname = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                var tid = date[a] + "id_" + b;
+                var tname = date[a] + "name" + b;
+                var WhereTimeDate = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]);
+                var check = WhereTimeDate.LastOrDefault();
+                var Bcolor = Model.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
+                if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
+                {
+                color = "#25b0ee";
+                }
+                else
+                {
+                color = "#D3D3D3";
+                }
+                var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                if (check != null)
+                {
+                var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
+                if (trigger == 1)
+                {
+                var tmp_TIME_START = check.SECTION_TIME_START;
+                var tmp_TIME_END = check.SECTION_TIME_END;
+                var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                var TIME = (TIME_END - TIME_START) * 4;
+                var uid = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
+                var uname = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
                 <td id="@tid" colspan="@TIME" class="droppable">
                     <div class="draggable" style="background-color:@color;width:100%;height:50px">
                         <div id="x_button" class="btn btn-default pull-right x_button text-center">
@@ -193,18 +193,18 @@
                         @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
                     </div>
                 </td>
-                        }
-                        else if (trigger == 2)
-                        {
-                            var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
-                            var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
-                            int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                            int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                }
+                else if (trigger == 2)
+                {
+                var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
+                var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
+                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
 
-                            int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                            int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
-                            if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
-                            {
+                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
+                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
+                {
                 <td id="@tid" class="droppable" height="50px" width="auto" colspan="4" style="display:none"></td>
                 }
                 else if (tmpl_first == tmpl_last)

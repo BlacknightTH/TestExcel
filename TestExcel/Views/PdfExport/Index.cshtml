@@ -5,16 +5,58 @@
 
 <h2>Index</h2>
 
-<div>
+@using (Html.BeginForm("Report", "PdfExport", FormMethod.Post, new { @class = "form-horizontal" }))
+{
     <div>
-        <input type="submit" id="btnDownloadResume" value="Download">
+        <label><b>Department</b></label>
     </div>
-</div>
+    <div>
+        @Html.TextBox("department_name", "CvET", new { @class = "w3-input w3-border", @placeholder = "Department_name" })
+    </div>
+    <div>
+        <label><b>Semester</b></label>
+    </div>
+    <div>
+        @Html.Password("semester", "1", new { @class = "w3-input w3-border", @placeholder = "semester" })
+    </div>
+    <div>
+        <label><b>Password</b></label>
+    </div>
+    <div>
+        @Html.Password("year", "2560", new { @class = "w3-input w3-border", @placeholder = "year" })
+    </div>
+    <hr>
+    <div>
+        <input type="submit" value="Download" class="w3-btn w3-green w3-center registerbtn" />
+    </div>
+}
 
-<script type="text/javascript">
-
-        $("#btnDownloadResume").click(function()
-        {
-            window.location.href = "handlername?method=getpdf";
-        })
-</script>  
+@using (Html.BeginForm("TeReport", "PdfExport", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div>
+    <select id="DDL_DATE" name="DDL_DATE" style="width:100px">
+        <option value="0">วันจันทร์</option>
+        <option value="1">วันอังคาร</option>
+        <option value="2">วันพุธ</option>
+        <option value="3">วันพฤหัสบดี</option>
+        <option value="4">วันศุกร์</option>
+        <option value="5">วันเสาร์</option>
+    </select>
+        </div>
+    <div>
+        <label><b>Semester</b></label>
+    </div>
+    <div>
+        @Html.Password("semester", "1", new { @class = "w3-input w3-border", @placeholder = "semester" })
+    </div>
+    <div>
+        <label><b>Password</b></label>
+    </div>
+    <div>
+        @Html.Password("year", "2560", new { @class = "w3-input w3-border", @placeholder = "year" })
+    </div>
+    <hr>
+    <div>
+        <input type="submit" value="Download" class="w3-btn w3-green w3-center registerbtn" />
+    </div>
+}
