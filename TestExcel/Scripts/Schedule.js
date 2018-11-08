@@ -207,8 +207,8 @@ $("#DDL_PROFESSOR").change(function () {
 //-----------------------------------------------------------//
 
 // หน้าข้อมูล //
-$('#DataTable').DataTable({
-    "pagingType": "full_numbers",
-    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
-});
+//$('#DataTable').DataTable({
+//    "pagingType": "full_numbers",
+//    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+//});
 //-----------------------------------------------------------//

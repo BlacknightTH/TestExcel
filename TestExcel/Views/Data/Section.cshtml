@@ -4,74 +4,192 @@
     ViewBag.Title = "Section";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
+<h2>Section</h2>
+<br>
 <div class="w3-row w3-center fontup">
     @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
 </div>
-<br>
-<h2>Section</h2>
-<br>
+<div class="container">
+    <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="w3-table-all" id="DataTable" name="DataTable">
-    <thead>
-        <tr class="w3-blue">
-            <th>รหัสวิชา</th>
-            <th>เลขเซค</th>
-            <th>วัน</th>
-            <th>เวลาเริ่ม</th>
-            <th>เวลาสิ้นสุด</th>
-            <th>ห้องเรียน</th>
-            <th>อักษรย่ออาจารย์</th>
-            <th>สาขาวิชา</th>
-            <th>ภาคการศึกษา</th>
-            <th>ปีการศึกษา</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @item.SUBJECT_ID
-            </td>
-            <td>
-                @item.SECTION_NUMBER
-            </td>
-            <td>
-                @item.SECTION_DATE
-            </td>
-            <td>
-                @item.SECTION_TIME_START
-            </td>
-            <td>
-                @item.SECTION_TIME_END
-            </td>
-            <td>
-                @item.SECTION_CLASSROOM
-            </td>
-            <td>
-                @item.SECTION_PROFESSOR_SHORTNAME
-            </td>
-            <td>
-                @item.SECTION_BRANCH_NAME
-            </td>
-            <td>
-                @item.SEMESTER
-            </td>
-            <td>
-                @item.YEAR
-            </td>
-            <td>
-                <a href="@Url.Action("Edit","Edit",new { id = item.SECTION_ID })"><span class="btn btn-success fa fa-pencil"></span></a>
-            </td>
-            <td>
-            <a onclick="return confirm('Are you sure you want to delete record with id = @item.SECTION_ID')" href="@Url.Action("Delete","Manage",new { id = item.SECTION_ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
-            </td>
-        </tr>
-        }
+    <table class="w3-table-all" id="DataTable" name="DataTable">
+        <thead>
+            <tr class="w3-blue">
+                <th>รหัสวิชา</th>
+                <th>เลขเซค</th>
+                <th>วัน</th>
+                <th>เวลาเริ่ม</th>
+                <th>เวลาสิ้นสุด</th>
+                <th>ห้องเรียน</th>
+                <th>อักษรย่ออาจารย์</th>
+                <th>สาขาวิชา</th>
+                <th>ภาคการศึกษา</th>
+                <th>ปีการศึกษา</th>
+                <th>แก้ไข</th>
+                <th>ลบ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="TsubjectId_@item.SECTION_ID">
+                        @item.SUBJECT_ID
+                    </td>
+                    <td id="TsectionNumber_@item.SECTION_ID">
+                        @item.SECTION_NUMBER
+                    </td>
+                    <td id="TsectionDate_@item.SECTION_ID">
+                        @item.SECTION_DATE
+                    </td>
+                    <td id="TsectionTimeStart_@item.SECTION_ID">
+                        @item.SECTION_TIME_START
+                    </td>
+                    <td id="TsectionTimeEnd_@item.SECTION_ID">
+                        @item.SECTION_TIME_END
+                    </td>
+                    <td id="TsectionClassroom_@item.SECTION_ID">
+                        @item.SECTION_CLASSROOM
+                    </td>
+                    <td id="TsectionProfessotShortname_@item.SECTION_ID">
+                        @item.SECTION_PROFESSOR_SHORTNAME
+                    </td>
+                    <td id="TbranchName_@item.SECTION_ID">
+                        @item.SECTION_BRANCH_NAME
+                    </td>
+                    <td id="Tsemester_@item.SECTION_ID">
+                        @item.SEMESTER
+                    </td>
+                    <td id="Tyear_@item.SECTION_ID">
+                        @item.YEAR
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.SECTION_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.SECTION_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
+            }
         </tbody>
-</table>
+    </table>
+</div>
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="form">
+                    @using (Html.BeginForm("SaveSection", "Data", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            @Html.Hidden("SECTION_ID", 0)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_ID", "", new { @class = "form-control", @placeholder = "SUBJECT_ID" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_NUMBER", "", new { @class = "form-control", @placeholder = "SECTION_NUMBER" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_DATE", "", new { @class = "form-control", @placeholder = "SECTION_DATE" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_TIME_START", "", new { @class = "form-control", @placeholder = "SECTION_TIME_START" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_TIME_END", "", new { @class = "form-control", @placeholder = "SECTION_TIME_END" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_CLASSROOM", "", new { @class = "form-control", @placeholder = "SECTION_CLASSROOM" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_PROFESSOR_SHORTNAME", "", new { @class = "form-control", @placeholder = "SECTION_PROFESSOR_SHORTNAME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SECTION_BRANCH_NAME", "", new { @class = "form-control", @placeholder = "SECTION_BRANCH_NAME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SEMESTER", "", new { @class = "form-control", @placeholder = "SEMESTER" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("YEAR", "", new { @class = "form-control", @placeholder = "YEAR" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Delete This Record</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are You Sure? You Want To Delete This Record.</h4>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("DeleteSection", "Data", FormMethod.Post))
+                    {
+                        @Html.Hidden("Del_SECTION_ID", "")
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                        <input type="submit" value="Delete" href="#" class="btn btn-danger">
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Show The Popup Modal
+    function AddNew(SECTION_ID) {
+        $("#ID").val(0);
+        $("#SUBJECT_ID").val("");
+        $("#SECTION_NUMBER").val("");
+        $("#SECTION_DATE").val("");
+        $("#SECTION_TIME_START").val("");
+        $("#SECTION_TIME_END").val("");
+        $("#SECTION_CLASSROOM").val("");
+        $("#SECTION_PROFESSOR_SHORTNAME").val("");
+        $("#SECTION_BRANCH_NAME").val("");
+        $("#SEMESTER").val("");
+        $("#YEAR").val("");
+        $("#ModalTitle").html("Add New Subject");
+        $("#MyModal").modal();
+    }
+    function EditRecord(SECTION_ID) {
+        $("#ID").val(SECTION_ID);
+        $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID).html().trim());
+        $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID).html().trim());
+        $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID).html().trim());
+        $("#SECTION_TIME_START").val($("#TsectionTimeStart_" + SECTION_ID).html().trim());
+        $("#SECTION_TIME_END").val($("#TsectionTimeEnd_" + SECTION_ID).html().trim());
+        $("#SECTION_CLASSROOM").val($("#TsectionClassroom_" + SECTION_ID).html().trim());
+        $("#SECTION_PROFESSOR_SHORTNAME").val($("#TsectionProfessotShortname_" + SECTION_ID).html().trim());
+        $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID).html().trim());
+        $("#SEMESTER").val($("#Tsemester_" + SECTION_ID).html().trim());
+        $("#YEAR").val($("#Tyear_" + SECTION_ID).html().trim());
+        $("#ModalTitle").html("Update Subject Record");
+        $("#MyModal").modal();
+    }
+    function DeleteRecord(SECTION_ID) {
+        $("#Del_SECTION_ID").val(SECTION_ID);
+        $("#DeleteConfirmation").modal("show");
+    }
+    $('#DataTable').DataTable({
+        "pagingType": "full_numbers",
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+</script>

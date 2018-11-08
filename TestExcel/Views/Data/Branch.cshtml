@@ -1,62 +1,126 @@
 ﻿@model IEnumerable<TestExcel.Data.BRANCH>
 
-@{
+    @{
     ViewBag.Title = "Branch";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
-}
-<div class="w3-row w3-center fontup">
-    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
-</div>
-<br>
-<h2>Branch</h2>
-<br>
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="w3-table-all" id="DataTable" name="DataTable">
-    <thead>
-        <tr class="w3-blue">
-            <th>ชื่อสาขาวิชา</th>
-            <th>ชื่อภาควิชา</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-        </tr>
-    </thead>
-    <tbody>
+    }
+    <h2>Branch</h2>
+    <br>
+    <div class="w3-row w3-center fontup">
+        @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    </div>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.BRANCH_NAME
-                </td>
-                <td>
-                    @item.DEPARTMENT_NAME
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit","Edit",new { id = item.BRANCH_ID })"><span class="btn btn-success fa fa-pencil"></span></a>
-                </td>
-                <td>
-                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.BRANCH_ID')" href="@Url.Action("Delete","Manage",new { id = item.BRANCH_ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                </td>
-            </tr>
-        }
-    </tbody>
+    <div class="container">
+        <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
-</table>
-<div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 id="ModalTitle"></h4>
-            </div>
-            <div class="modal-body">
-                @using (Html.BeginForm("Import", "ImportExcel", FormMethod.Post))
+        <table class="w3-table-all" id="DataTable" name="DataTable">
+            <thead>
+                <tr class="w3-blue">
+                    <th>ชื่อภาควิชา</th>
+                    <th>ชื่อสาขาวิชา</th>
+                    <th>แก้ไข</th>
+                    <th>ลบ</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
                 {
-                    @Html.HiddenFor(Model => Model)
+                <tr>
+                    <td id="TdepartName_@item.BRANCH_ID">
+                        @item.DEPARTMENT_NAME
+                    </td>
+                    <td id="TbranchName_@item.BRANCH_ID">
+                        @item.BRANCH_NAME
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.BRANCH_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.BRANCH_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
                 }
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="modal fade" id="MyModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
                 </div>
+                <div class="modal-body">
+                    <div id="form">
+                        @using (Html.BeginForm("SaveBranch", "Data", FormMethod.Post))
+                        {
+                        <div class="form-group">
+                            @Html.Hidden("BRANCH_ID", 0)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "form-control", @placeholder = "DEPARTMENT_NAME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("BRANCH_NAME", "", new { @class = "form-control", @placeholder = "BRANCH_NAME" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete This Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    <div class="modal-footer">
+                        @using (Html.BeginForm("DeleteBranch", "Data", FormMethod.Post))
+                        {
+                            @Html.Hidden("Del_BRANCH_ID", "")
+                            <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                            <input type="submit" value="Delete" href="#" class="btn btn-danger">
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        //Show The Popup Modal
+        function AddNew(BranchId) {
+            $("#BRANCH_ID").val(0);
+            $("#BRANCH_NAME").val("");
+            $("#DEPARTMENT_NAME").val("");
+            $("#ModalTitle").html("Add New Branch");
+            $("#MyModal").modal();
+        }
+        function EditRecord(BranchId) {
+            $("#BRANCH_ID").val(BranchId);
+            $("#BRANCH_NAME").val($("#TbranchName_" + BranchId).html().trim());
+            $("#DEPARTMENT_NAME").val($("#TdepartName_" + BranchId).html().trim());
+            $("#ModalTitle").html("Update Branch Record");
+            $("#MyModal").modal();
+        }
+        function DeleteRecord(BranchId) {
+            $("#Del_BRANCH_ID").val(BranchId);
+            $("#DeleteConfirmation").modal("show");
+        }
+        $('#DataTable').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+    </script>

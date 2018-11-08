@@ -4,70 +4,183 @@
     ViewBag.Title = "Subject";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
+<h2>Subject</h2>
+<br>
 <div class="w3-row w3-center fontup">
     @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
 </div>
-<br>
-<h2>Subject</h2>
-<br>
+<div class="container">
+    <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="w3-table-all" id="DataTable" name="DataTable">
-    <thead>
-        <tr class="w3-blue">
-            <th>รหัสวิชา</th>
-            <th>ชื่อวิชา</th>
-            <th>หน่วยกิต</th>
-            <th>วันที่สอบกลางภาค</th>
-            <th>วันที่สอบปลายภาค</th>
-            <th>เวลาสอบกลางภาค</th>
-            <th>เวลาสอบปลายภาค</th>
-            <th>ภาคการศึกษา</th>
-            <th>ปีการศึกษา</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.SUBJECT_ID
-                </td>
-                <td>
-                    @item.SUBJECT_NAME
-                </td>
-                <td>
-                    @item.SUBJECT_CREDIT
-                </td>
-                <td>
-                    @item.SUBJECT_MIDTERM_DATE
-                </td>
-                <td>
-                    @item.SUBJECT_FINAL_DATE
-                </td>
-                <td>
-                    @item.SUBJECT_MIDTERM_TIME
-                </td>
-                <td>
-                    @item.SUBJECT_FINAL_TIME
-                </td>
-                <td>
-                    @item.SEMESTER
-                </td>
-                <td>
-                    @item.YEAR
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit","Edit",new { id = item.ID })"><span class="btn btn-success fa fa-pencil"></span></a>
-                </td>
-                <td>
-                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.ID')" href="@Url.Action("Delete","Manage",new { id = item.ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                </td>
+    <table class="w3-table-all" id="DataTable" name="DataTable">
+        <thead>
+            <tr class="w3-blue">
+                <th>รหัสวิชา</th>
+                <th>ชื่อวิชา</th>
+                <th>หน่วยกิต</th>
+                <th>วันที่สอบกลางภาค</th>
+                <th>เวลาสอบกลางภาค</th>
+                <th>วันที่สอบปลายภาค</th>
+                <th>เวลาสอบปลายภาค</th>
+                <th>ภาคการศึกษา</th>
+                <th>ปีการศึกษา</th>
+                <th>แก้ไข</th>
+                <th>ลบ</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="TsubjectId_@item.ID">
+                        @item.SUBJECT_ID
+                    </td>
+                    <td id="TsubjectName_@item.ID">
+                        @item.SUBJECT_NAME
+                    </td>
+                    <td id="TsubjectCredit_@item.ID">
+                        @item.SUBJECT_CREDIT
+                    </td>
+                    <td id="TsubjectMidDate_@item.ID">
+                        @item.SUBJECT_MIDTERM_DATE
+                    </td>
+                    <td id="TsubjectMidTime_@item.ID">
+                        @item.SUBJECT_MIDTERM_TIME
+                    </td>
+                    <td id="TsubjectFinalDate_@item.ID">
+                        @item.SUBJECT_FINAL_DATE
+                    </td>
+                    <td id="TsubjectFinalTime_@item.ID">
+                        @item.SUBJECT_FINAL_TIME
+                    </td>
+                    <td id="Tsemester_@item.ID">
+                        @item.SEMESTER
+                    </td>
+                    <td id="Tyear_@item.ID">
+                        @item.YEAR
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="form">
+                    @using (Html.BeginForm("SaveSubject", "Data", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            @Html.Hidden("ID", 0)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_ID", "", new { @class = "form-control", @placeholder = "SUBJECT_ID" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_NAME", "", new { @class = "form-control", @placeholder = "SUBJECT_NAME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_CREDIT", "", new { @class = "form-control", @placeholder = "SUBJECT_CREDIT" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_MIDTERM_DATE", "", new { @class = "form-control", @placeholder = "SUBJECT_MIDTERM_DATE" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_MIDTERM_TIME", "", new { @class = "form-control", @placeholder = "SUBJECT_MIDTERM_TIME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_FINAL_DATE", "", new { @class = "form-control", @placeholder = "SUBJECT_FINAL_DATE" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SUBJECT_FINAL_TIME", "", new { @class = "form-control", @placeholder = "SUBJECT_FINAL_TIME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("SEMESTER", "", new { @class = "form-control", @placeholder = "SEMESTER" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("YEAR", "", new { @class = "form-control", @placeholder = "YEAR" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Delete This Record</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are You Sure? You Want To Delete This Record.</h4>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("DeleteSubject", "Data", FormMethod.Post))
+                    {
+                        @Html.Hidden("Del_ID", "")
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                        <input type="submit" value="Delete" href="#" class="btn btn-danger">
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Show The Popup Modal
+    function AddNew(ID) {
+        $("#ID").val(0);
+        $("#SUBJECT_ID").val("");
+        $("#SUBJECT_NAME").val("");
+        $("#SUBJECT_CREDIT").val("");
+        $("#SUBJECT_MIDTERM_DATE").val("");
+        $("#SUBJECT_MIDTERM_TIME").val("");
+        $("#SUBJECT_FINAL_DATE").val("");
+        $("#SUBJECT_FINAL_TIME").val("");
+        $("#SEMESTER").val("");
+        $("#YEAR").val("");
+        $("#ModalTitle").html("Add New Subject");
+        $("#MyModal").modal();
+    }
+    function EditRecord(ID) {
+        $("#ID").val(ID);
+        $("#SUBJECT_ID").val($("#TsubjectId_" + ID).html().trim());
+        $("#SUBJECT_NAME").val($("#TsubjectName_" + ID).html().trim());
+        $("#SUBJECT_CREDIT").val($("#TsubjectCredit_" + ID).html().trim());
+        $("#SUBJECT_MIDTERM_DATE").val($("#TsubjectMidDate_" + ID).html().trim());
+        $("#SUBJECT_MIDTERM_TIME").val($("#TsubjectMidTime_" + ID).html().trim());
+        $("#SUBJECT_FINAL_DATE").val($("#TsubjectFinalDate_" + ID).html().trim());
+        $("#SUBJECT_FINAL_TIME").val($("#TsubjectFinalTime_" + ID).html().trim());
+        $("#SEMESTER").val($("#Tsemester_" + ID).html().trim());
+        $("#YEAR").val($("#Tyear_" + ID).html().trim());
+        $("#ModalTitle").html("Update Subject Record");
+        $("#MyModal").modal();
+    }
+    function DeleteRecord(ID) {
+        $("#Del_ID").val(ID);
+        $("#DeleteConfirmation").modal("show");
+    }
+    $('#DataTable').DataTable({
+        "pagingType": "full_numbers",
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+</script>

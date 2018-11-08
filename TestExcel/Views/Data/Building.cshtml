@@ -4,43 +4,122 @@
     ViewBag.Title = "Building";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
+<h2>Building</h2>
+<br>
 <div class="w3-row w3-center fontup">
     @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
 </div>
-<br>
-<h2>Building</h2>
-<br>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="w3-table-all" id="DataTable" name="DataTable">
-    <thead>
-        <tr class="w3-blue">
-            <th>อาคาร</th>
-            <th>ห้องเรียน</th>
-            <th>แก้ไข</th>
-            <th>ลบ</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.BUILDING_NAME
-                </td>
-                <td>
-                    @item.CLASSROOM_NAME
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit","Edit",new { id = item.BUILDING_ID })"><span class="btn btn-success fa fa-pencil"></span></a>
-                </td>
-                <td>
-                    <a onclick="return confirm('Are you sure you want to delete record with id = @item.BUILDING_ID')" href="@Url.Action("Delete","Manage",new { id = item.BUILDING_ID })"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                </td>
+<div class="container">
+    <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
+
+    <table class="w3-table-all" id="DataTable" name="DataTable">
+        <thead>
+            <tr class="w3-blue">
+                <th>อาคาร</th>
+                <th>ห้องเรียน</th>
+                <th>แก้ไข</th>
+                <th>ลบ</th>
             </tr>
-        }
-    </tbody>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="TbuildingName_@item.BUILDING_ID">
+                        @item.BUILDING_NAME
+                    </td>
+                    <td id="TclassroomName_@item.BUILDING_ID">
+                        @item.CLASSROOM_NAME
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.BUILDING_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-</table>
+    </table>
+</div>
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="form">
+                    @using (Html.BeginForm("SaveBuilding", "Data", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            @Html.Hidden("BUILDING_ID", 0)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("BUILDING_NAME", "", new { @class = "form-control", @placeholder = "BUILDING_NAME" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBox("CLASSROOM_NAME", "", new { @class = "form-control", @placeholder = "CLASSROOM_NAME" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Delete This Record</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Are You Sure? You Want To Delete This Record.</h4>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("DeleteBuilding", "Data", FormMethod.Post))
+                    {
+                        @Html.Hidden("Del_BUILDING_ID", "")
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                        <input type="submit" value="Delete" href="#" class="btn btn-danger">
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Show The Popup Modal
+    function AddNew(BUILDING_ID) {
+        $("#BUILDING_ID").val(0);
+        $("#BUILDING_NAME").val("");
+        $("#CLASSROOM_NAME").val("");
+        $("#ModalTitle").html("Add New Building");
+        $("#MyModal").modal();
+    }
+    function EditRecord(BUILDING_ID) {
+        $("#BUILDING_ID").val(BUILDING_ID);
+        $("#BUILDING_NAME").val($("#TbuildingName_" + BUILDING_ID).html().trim());
+        $("#CLASSROOM_NAME").val($("#TclassroomName_" + BUILDING_ID).html().trim());
+        $("#ModalTitle").html("Update Building Record");
+        $("#MyModal").modal();
+    }
+    function DeleteRecord(BUILDING_ID) {
+        $("#Del_BUILDING_ID").val(BUILDING_ID);
+        $("#DeleteConfirmation").modal("show");
+    }
+    $('#DataTable').DataTable({
+        "pagingType": "full_numbers",
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+</script>
