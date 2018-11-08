@@ -13,6 +13,7 @@ namespace TestExcel.Controllers
     [adminauthen]
     public class TimeScheduleController : Controller
     {
+        List<Department_Branch> _department_branch = new List<Department_Branch>();
         TestExcelEntities db = new TestExcelEntities();
         // GET: TimeSchedule
         public ActionResult Index()
@@ -41,7 +42,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
 
             ViewBag.BRANCH_NAME = BRANCH_NAMEs;
@@ -103,7 +106,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
             ViewBag.BRANCH_NAME = BRANCH_NAME;
             ViewBag.DDLSelected = Branch_id;
@@ -140,7 +145,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
             ViewBag.BUILDING_NAME = Building;
             ViewBag.BDDLSelected = Building;
@@ -183,7 +190,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
             ViewBag.BUILDING_NAME = Building_id.ToString();
             ViewBag.BDDLSelected = Building_id;
@@ -219,7 +228,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
             ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
             ViewBag.PDDLSelected = 1;
@@ -260,7 +271,9 @@ namespace TestExcel.Controllers
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
                                };
             ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
             ViewBag.PDDLSelected = Professor_id;

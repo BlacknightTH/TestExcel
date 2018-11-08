@@ -11,19 +11,46 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("TimeSchedule", "Index", "TimeSchedule")</li>
-                @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                @*
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                @if (Session["Username"] != null)
-                {
+            @if (Session["Username"] != null)
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" class="badge1" data-badge="27"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
                     <li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
-                    <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
-                }
-                else
-                {
-                    <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
-                }
-            </ul>
+                    <li><a href="@Url.Action(" Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+
+                </ul>
+            }
+            else
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action(" Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+                </ul>
+            }
+
         </div>
     </div>
 </div>
+<style>
+    .badge1 {
+        position: relative;
+    }
+
+        .badge1[data-badge]:after {
+            content: attr(data-badge);
+            position: absolute;
+            top: 5px;
+            right: 0px;
+            font-size: .7em;
+            background-color: red;
+            color: white;
+            width: 18px;
+            height: 18px;
+            text-align: center;
+            line-height: 18px;
+            border-radius: 50%;
+            box-shadow: 0 0 1px #333;
+        }
+</style>

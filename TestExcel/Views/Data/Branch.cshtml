@@ -44,3 +44,19 @@
     </tbody>
 
 </table>
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Import", "ImportExcel", FormMethod.Post))
+                {
+                    @Html.HiddenFor(Model => Model)
+                }
+                </div>
+        </div>
+    </div>
+    </div>

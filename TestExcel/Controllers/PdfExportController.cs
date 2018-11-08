@@ -15,6 +15,7 @@ namespace TestExcel.Controllers
 {
     public class PdfExportController : Controller
     {
+        string[] date = { "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์" };
         TestExcelEntities db = new TestExcelEntities();
         // GET: PdfExport
         public ActionResult Index()
@@ -29,6 +30,11 @@ namespace TestExcel.Controllers
             string year = collection["year"];
             PdfReport pdfReport = new PdfReport();
             byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
+
+            string FilePath = "D:" + "\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department_name + ".pdf";
+            string FileName = Path.GetFileName(FilePath);
+
+            //return File(abytes, "application/pdf", FileName);
             return File(abytes, "application/pdf");
         }
         public ActionResult TeReport(FormCollection collection)
@@ -38,6 +44,11 @@ namespace TestExcel.Controllers
             string year = collection["year"];
             PdfReport pdfReport = new PdfReport();
             byte[] abytes = pdfReport.TePrepareReport(Date,semester, year);
+
+            string FilePath = "D:\\" + "ตารางลงห้องเรียน_"+ date[Date] +"_"+ semester + "-" + year + ".pdf";
+            string FileName = Path.GetFileName(FilePath);
+
+            //return File(abytes, "application/pdf", FileName);
             return File(abytes, "application/pdf");
         }
     }
