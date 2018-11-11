@@ -10,6 +10,7 @@
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/EditStyle.css" rel="stylesheet" />
 </head>
 <body>
     @{
@@ -17,6 +18,12 @@
         //Html.RenderPartial("_Sidebar");
     }
     <div class="container body-content w3-margin-top">
+        <div class="w3-row w3-center fontup">
+            <a href="@Url.Action("Index","TimeSchedule")" style="color:blue;font-size:20px">คณะ/สาขา</a> |
+            <a href="@Url.Action("ClSchedule","TimeSchedule")" style="color:blue;font-size:20px">อาคาร/ห้องเรียน</a> |
+            <a href="@Url.Action("Section","Data")" style="color:blue;font-size:20px">แก้ไขข้อมูล</a> |
+            @*@Html.ActionLink("ครูผู้สอน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |*@
+        </div>
         @RenderBody()
         <hr />
         <footer>
