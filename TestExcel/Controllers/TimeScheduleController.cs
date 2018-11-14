@@ -153,8 +153,14 @@ namespace TestExcel.Controllers
             ViewBag.BDDLSelected = Building;
             ViewBag.DATE = 0;
             ViewBag.SYDDLSelected = "1/2560";
-            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
             var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").ToList();
+            string BuildingName = "";
+            foreach (var a in BUILDING)
+            {
+                BuildingName += a.CLASSROOM_NAME + " ";
+            }
+            ViewBag.PassName = BuildingName;
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }

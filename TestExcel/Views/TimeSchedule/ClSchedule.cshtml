@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "ClSchedule";
     string color;
+    string passName = ViewBag.PassName;
     string[] date = { "M", "T", "W", "H", "F", "S" };
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
@@ -11,7 +12,7 @@
             $("#DDL_DATE").val(@ViewBag.DATE);
             });
 </script>
-
+<input id="gate" name="gate" type="text" value="">
 @if ((string)ViewBag.BUILDING_NAME == "632")
 {
     <h2>ห้องเรียนอาคาร 63 (อาคารสีเทา ตึกใหม่)</h2>
@@ -20,39 +21,43 @@ else
 {
     <h2>ห้องเรียนอาคาร @ViewBag.BUILDING_NAME</h2>
 }
-
-
 @using (Html.BeginForm("ClSchedule", "TimeSchedule", FormMethod.Post, new { id = "BUILDING_FORM", name = "BUILDING_FORM" }))
 {
-    <div class="w3-row">
-        <div class="w3-col m1 l1" style="margin-right:50px">
-            @Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { style = "width:100px" })
-        </div>
-        <div class="w3-col m3 l2" style="margin-right:100px">
-            <select id="DDL_BUILDING" name="DDL_BUILDING" style="width:260px">
-                <option value="63">อาคารเรียน 63</option>
-                <option value="632">อาคารเรียน 63 (อาคารสีเทา ตึกใหม่)</option>
-                <option value="62">อาคารเรียน 62</option>
-                <option value="65">อาคารเรียน 65</option>
-                <option value="42">อาคารเรียน 42</option>
-                <option value="69">อาคารเรียน 69</option>
-                <option value="64">อาคารเรียน 64</option>
-            </select>
-        </div>
-        <div class="w3-col m1 l1" style="margin-right:50px">
-            <select id="DDL_DATE" name="DDL_DATE" style="width:100px">
-                <option value="0">วันจันทร์</option>
-                <option value="1">วันอังคาร</option>
-                <option value="2">วันพุธ</option>
-                <option value="3">วันพฤหัสบดี</option>
-                <option value="4">วันศุกร์</option>
-                <option value="5">วันเสาร์</option>
-            </select>
-        </div>
+    @Html.Hidden("building_name", passName)
+    <div style="overflow-x:auto">
+        <table border="0" align="left">
+            <tbody>
+                <tr>
+                    <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td align="right"><b>อาคารเรียน&nbsp;</b></td>
+                    <td colspan="5" style="padding-right:1em">
+                        <select class="form-control" id="DDL_BUILDING" name="DDL_BUILDING" style="">
+                            <option value="63">อาคารเรียน 63</option>
+                            <option value="632">อาคารเรียน 63 (อาคารสีเทา ตึกใหม่)</option>
+                            <option value="62">อาคารเรียน 62</option>
+                            <option value="65">อาคารเรียน 65</option>
+                            <option value="42">อาคารเรียน 42</option>
+                            <option value="69">อาคารเรียน 69</option>
+                            <option value="64">อาคารเรียน 64</option>
+                        </select>
+                    </td>
+                    <td colspan="5">
+                        <select class="form-control" id="DDL_DATE" name="DDL_DATE" style="">
+                            <option value="0">วันจันทร์</option>
+                            <option value="1">วันอังคาร</option>
+                            <option value="2">วันพุธ</option>
+                            <option value="3">วันพฤหัสบดี</option>
+                            <option value="4">วันศุกร์</option>
+                            <option value="5">วันเสาร์</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
+    <br><br><br>
 }
-<br>
 <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
     <thead>
         <tr bgcolor="#D3D3D3">

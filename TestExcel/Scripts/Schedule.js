@@ -35,20 +35,18 @@ function drag_drop() {
                     $("#" + tmp2).droppable("disable");
                 }
             }
-
             for (i = 0; i < 6; i++) {
                 for (l = 8; l <= 21; l++) {
                     tablecellcheck = $("#" + date2[i] + "id_" + l).children().children("p").text().trim();
                     if (tablecellcheck != "") {
                         var cols = $("#" + date2[i] + "id_" + l).attr("colspan");
-                        var stun2 = l - (parseInt(colspan) / 4);
+                        var stun2 = l - (parseInt(colspan) / 4) + 1;
                         for (k = stun2; k <= l; k++) {
                             $("#" + date2[i] + "id_" + k).droppable("disable");
                         }
                     }
                 }
             }
-
             for (i = a; i < j; i++) {
                 tmp6 = tmp[0] + "_" + i;
                 $("#" + tmp6).show();
@@ -85,7 +83,11 @@ function drag_drop() {
             var dropped = ui.draggable;
             var droppedOn = $(this);
             $(dropped).detach().css({ top: 0, left: 0 }).appendTo(droppedOn);
-            $(this).css("background-color", "");
+            for (i = 0; i < 6; i++) {
+                for (l = 8; l <= 21; l++) {
+                    $("#" + date2[i] + "id_" + l).css("background-color", "");
+                }
+            }
         }
         ,
         over: function (event, elem) {
@@ -97,7 +99,7 @@ function drag_drop() {
             }
             for (i = parseInt(tmp1[1]); i <= value; i++) {
                 tmp2 = tmp1[0] + "_" + i;
-                $("#" + tmp2 + ":visible").css("background-color", "#d6d9db");
+                $("#" + tmp2).css("background-color", "#d6d9db");
             }
             console.log("over");
         }
@@ -127,44 +129,47 @@ function drag_drop() {
             tmp6 = tmp1[0] + "_" + i;
             $("#" + tmp6).show();
         }
-
         $("#" + tmp_id).attr("colspan", "4");
 
     });
 }
 drag_drop();
-function Table1() {
     $("#TableLocation tbody tr").click(function () {
         if ($(this).find("input").is(':checked')) {
             $(this).css("background-color", "");
             $(this).find("input").prop('checked', false);
         }
         else {
-            $("#TableLocation tbody tr").find("input").prop('checked', false);
-            $("#TableLocation tbody tr").css("background-color", "");
-
-            $(this).css("background-color", "#d6d9db");
-            $(this).find("input").prop('checked', true);
+            var checkbool = false;
             subject_id = $(this).find("#subject_id").val();
             subject_name = $(this).find("#subject_name").val();
             subject_credit = $(this).find("#subject_credit").val();
             subject_number = $(this).find("#subject_number").val();
             subject_hour = $(this).find("#subject_hour").val();
             var s = subject_id + " " + subject_name;
+            $("#gate").val(checkbool);
             for (i = 0; i < 6; i++) {
                 for (j = 8; j <= 21; j++) {
                     tablecellcheck = $("#" + date2[i] + "id_" + j).children().children("p").text().trim();
-
                     if (tablecellcheck == s) {
-                        $("#TableLocation tbody tr").find("input").prop('checked', false);
-                        $("#TableLocation tbody tr").css("background-color", "");
+                        checkbool = true;
                     }
                 }
             }
+            if (checkbool == false) {
+                $("#TableLocation tbody tr").find("input").prop('checked', false);
+                $("#TableLocation tbody tr").css("background-color", "");
+
+                $(this).css("background-color", "#d6d9db");
+                $(this).find("input").prop('checked', true);
+            }
+            else {
+                $("#TableLocation tbody tr").find("input").prop('checked', false);
+                $("#TableLocation tbody tr").css("background-color", "");
+            }
+            $("#gate2").val(checkbool);
         }
     });
-}
-Table1();
 $("#TableLocation2").click(function () {
     if ($("#TableLocation tbody tr").find("input").is(':checked')) {
         $("#TableLocation tbody tr").find("input").prop('checked', false);
@@ -179,12 +184,15 @@ $("#TableLocation2").click(function () {
                 checkbool = true;
             }
         }
-        $("#gate").val(checkbool);
         tablecellcheck = $("#" + tmp_id).html().trim();
-        $("#gate2").val(tablecellcheck);
         if (tablecellcheck == "" && checkbool == false) {
             $("#" + tmp_id).attr('colspan', colspan);
-            $("#" + tmp_id).html('<div class="" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div> ' + subject_id + '  ' + subject_name + '</div>');
+            if (subject_credit == "3(3-0-6)") {
+                $("#" + tmp_id).html('<div class="" style="background-color:#25b0ee;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div><p>' + subject_id + ' ' + subject_name + '</p></div>');
+            }
+            else {
+                $("#" + tmp_id).html('<div class="" style="background-color:#D3D3D3;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div><p>' + subject_id + ' ' + subject_name + '</p></div>');
+            }
             $("#" + tmp_id).children().addClass("draggable");
 
             var tmp = $("#" + tmp_id).attr("id");
@@ -196,9 +204,14 @@ $("#TableLocation2").click(function () {
                 tmp6 = tmp[0] + "_" + i;
                 $("#" + tmp6).hide();
             }
+            //Table1();
             drag_drop();
         }
     }
+});
+$("#TableLocation2 tr td div").click(function () {
+    tmp_id = $(this).parent().attr("id");
+    $("#gate3").val(tmp_id);
 });
 $("#TableLocation2 tr td").hover(function () {
     tmp_id = $(this).attr("id");
