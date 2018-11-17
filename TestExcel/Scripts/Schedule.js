@@ -38,7 +38,7 @@ function drag_drop() {
             for (i = 0; i < 6; i++) {
                 for (l = 8; l <= 21; l++) {
                     tablecellcheck = $("#" + date2[i] + "id_" + l).children().children("p").text().trim();
-                    if (tablecellcheck != "") {
+                    if (tablecellcheck !== "") {
                         var cols = $("#" + date2[i] + "id_" + l).attr("colspan");
                         var stun2 = l - (parseInt(colspan) / 4) + 1;
                         for (k = stun2; k <= l; k++) {
@@ -93,7 +93,7 @@ function drag_drop() {
         over: function (event, elem) {
             tmp_id = $(this).attr("id");
             $(this).addClass("over");
-            if (tmp_id != null) {
+            if (tmp_id !== null) {
                 tmp1 = tmp_id.split("_");
                 value = (parseInt(tmp1[1]) - 1) + (parseInt(colspan) / 4);
             }
@@ -106,7 +106,7 @@ function drag_drop() {
         ,
         out: function (event, elem) {
             tmp_id = $(this).attr("id");
-            if (tmp_id != null) {
+            if (tmp_id !== null) {
                 tmp1 = tmp_id.split("_");
                 value = (parseInt(tmp1[1]) - 1) + (parseInt(colspan) / 4);
             }
@@ -151,12 +151,12 @@ drag_drop();
             for (i = 0; i < 6; i++) {
                 for (j = 8; j <= 21; j++) {
                     tablecellcheck = $("#" + date2[i] + "id_" + j).children().children("p").text().trim();
-                    if (tablecellcheck == s) {
+                    if (tablecellcheck === s) {
                         checkbool = true;
                     }
                 }
             }
-            if (checkbool == false) {
+            if (checkbool === false) {
                 $("#TableLocation tbody tr").find("input").prop('checked', false);
                 $("#TableLocation tbody tr").css("background-color", "");
 
@@ -180,14 +180,14 @@ $("#TableLocation2").click(function () {
         for (i = parseInt(tmp1[1]); i <= colspanvalue; i++) {
             var aa = tmp1[0] + "_" + i;
             tablecellcheck = $("#" + aa).html().trim();
-            if (tablecellcheck != "") {
+            if (tablecellcheck !== "") {
                 checkbool = true;
             }
         }
         tablecellcheck = $("#" + tmp_id).html().trim();
-        if (tablecellcheck == "" && checkbool == false) {
+        if (tablecellcheck === "" && checkbool === false) {
             $("#" + tmp_id).attr('colspan', colspan);
-            if (subject_credit == "3(3-0-6)") {
+            if (subject_credit === "3(3-0-6)") {
                 $("#" + tmp_id).html('<div class="" style="background-color:#25b0ee;width:100%;height:50px"><div id="x_button" class="btn x_button btn-default pull-right text-center">X</div><p>' + subject_id + ' ' + subject_name + '</p></div>');
             }
             else {
@@ -209,13 +209,47 @@ $("#TableLocation2").click(function () {
         }
     }
 });
+$('#FIRST_SAVE_TIMESTART').on("change", function () {
+    var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+    var optionlisting = "";
+    $('#FIRST_SAVE_TIMEEND option').remove();
+    for (i = parseInt(TimeStart) +1; i <= 21; i++) {
+        optionlisting = optionlisting + '<option value="'+ i +'">' + i + ":00" + '</option>';
+    }
+    $('#FIRST_SAVE_TIMEEND').html(optionlisting);
+});
 $("#TableLocation2 tr td div").click(function () {
-    tmp_id = $(this).parent().attr("id");
-    $("#gate3").val(tmp_id);
+    var tmp_id2 = $(this).parent().attr("id");
+    var tmp12 = tmp_id2.split("id_");
+    var first_id = $(this).find("#" + tmp12[0] + "id_" + tmp12[1]).val();
+    var first_subjectid = $(this).find("#" + tmp12[0] + "subjectid_" + tmp12[1]).val();
+    var first_name = $(this).find("#" + tmp12[0] + "name_" + tmp12[1]).val();
+    var first_number = $(this).find("#" + tmp12[0] + "number_" + tmp12[1]).val();
+    var first_branch = $(this).find("#" + tmp12[0] + "branch_" + tmp12[1]).val();
+    var first_professor = $(this).find("#" + tmp12[0] + "professor_" + tmp12[1]).val();
+    var first_timestart = $(this).find("#" + tmp12[0] + "timestart_" + tmp12[1]).val();
+    var first_timeend = $(this).find("#" + tmp12[0] + "timeend_" + tmp12[1]).val();
+    var first_date = $(this).find("#" + tmp12[0] + "date_" + tmp12[1]).val();
+    $("#First_Header").html(first_subjectid + " " + first_name);
+    $("#FIRST_SECTION_ID").val(first_id);
+    $("#FIRST_SAVE_NUMBER").val(first_number);
+    $("#FIRST_SAVE_DATE").val(first_date);
+    $("#FIRST_SAVE_TIMESTART").val(first_timestart);
+    var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+    var optionlisting = "";
+    $('#FIRST_SAVE_TIMEEND option').remove();
+    for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+        optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+    }
+    $('#FIRST_SAVE_TIMEEND').html(optionlisting);
+    $("#FIRST_SAVE_TIMEEND").val(first_timeend);
+    $("#FIRST_SAVE_PROFESSOR").val(first_professor);
+    $("#FIRST_SAVE_BRANCH").val(first_branch);
+
 });
 $("#TableLocation2 tr td").hover(function () {
     tmp_id = $(this).attr("id");
-    if (tmp_id != null) {
+    if (tmp_id !== null) {
         tmp1 = tmp_id.split("_");
         tmp2 = parseInt(tmp1[1]) - 1;
         tmp3 = tmp1[0] + "_" + tmp2;
@@ -231,7 +265,7 @@ $("#TableLocation2 tr td").hover(function () {
     }
 }, function () {
     tmp_id = $(this).attr("id");
-    if (tmp_id != null) {
+    if (tmp_id !== null) {
         tmp1 = tmp_id.split("_");
         tmp2 = parseInt(tmp1[1]) - 1;
         tmp3 = tmp1[0] + "_" + tmp2;

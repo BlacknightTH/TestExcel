@@ -1,5 +1,8 @@
-﻿.draggable{
-    cursor:move
+﻿.fix-font tbody tr td p{
+    font-size:12px;
+}
+.draggable {
+    cursor: move
 }
 .x_button {
     height: 50%;

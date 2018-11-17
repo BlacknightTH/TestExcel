@@ -17,6 +17,7 @@ namespace TestExcel.Report
         string[] date = { "M", "T", "W", "H", "F", "S" };
         //string[] building = { "63", "62", "W", "H", "F", "S" };
         string textcreadit = "", tmp;
+        string tab = "  ";
         int _totalColumn = 5, _totalColumn2 = 15;
         Document _document;
         Font _fontStyle, THSarabunfnt;
@@ -111,7 +112,7 @@ namespace TestExcel.Report
                         var TIME_END = int.Parse(tmp_TIME_END.ToString());
                         var TIME = TIME_END - TIME_START;
                         tmp = Tetemp(TIME);
-                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID, THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tab + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                         _pdfPCell.Colspan = TIME;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -135,7 +136,7 @@ namespace TestExcel.Report
                         {
                             var TIME = tmp_last - tmp_first;
                             tmp = Tetemp(TIME);
-                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + tmp + first.SUBJECT_ID, THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + tab + second.SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                             _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -151,7 +152,7 @@ namespace TestExcel.Report
                             var TIME = TIME_END - TIME_START;
                             tmp = Tetemp(TIME);
 
-                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID, THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tab + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                             _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -251,7 +252,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -340,7 +341,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -428,7 +429,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -515,7 +516,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -603,7 +604,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -691,7 +692,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -768,7 +769,7 @@ namespace TestExcel.Report
 
             for (int b = 8; b <= 21; b++)
             {
-                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ".00", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" " + b.ToString() + ":00", THSarabunfnt));
                 _pdfPCell.PaddingBottom = 9f;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1196,8 +1197,8 @@ namespace TestExcel.Report
                                     var TIME = TIME_END - TIME_START;
                                     tmp = temp(TIME);
 
-                                    THSarabunfnt = new Font(bf, 12, 0);
-                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID, THSarabunfnt));
+                                    THSarabunfnt = new Font(bf, 10, 0);
+                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + "\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                                     _pdfPCell.Colspan = TIME;
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1222,8 +1223,8 @@ namespace TestExcel.Report
                                     {
                                         var TIME = tmp_last - tmp_first;
                                         tmp = temp(TIME);
-                                        THSarabunfnt = new Font(bf, 12, 0);
-                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + tmp + first.SUBJECT_ID, THSarabunfnt));
+                                        THSarabunfnt = new Font(bf, 10, 0);
+                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "\n" + second.SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1239,8 +1240,8 @@ namespace TestExcel.Report
                                         var TIME = TIME_END - TIME_START;
                                         tmp = temp(TIME);
 
-                                        THSarabunfnt = new Font(bf, 12, 0);
-                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID, THSarabunfnt));
+                                        THSarabunfnt = new Font(bf, 10, 0);
+                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + "\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;

@@ -26,6 +26,7 @@ namespace TestExcel.Controllers
                         where e1.SECTION_BRANCH_NAME.Contains(BRANCH_NAMEs) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
                         select new Section_Subject
                         {
+                            SECTION_ID = e1.SECTION_ID,
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
@@ -51,6 +52,9 @@ namespace TestExcel.Controllers
             ViewBag.DDLSelected = 1;
             ViewBag.DepartDDLSelected = 1;
             ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.Semester = "1";
+            ViewBag.Year = "2560";
+
             ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == DEPART_NAMEs).ToList(), "BRANCH_ID", "BRANCH_NAME");
@@ -90,6 +94,7 @@ namespace TestExcel.Controllers
                         where e1.SECTION_BRANCH_NAME.Contains(contain) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {
+                            SECTION_ID = e1.SECTION_ID,
                             SUBJECT_ID = e1.SUBJECT_ID,
                             SUBJECT_NAME = e2.SUBJECT_NAME,
                             SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
@@ -114,6 +119,8 @@ namespace TestExcel.Controllers
             ViewBag.DDLSelected = Branch_id;
             ViewBag.DepartDDLSelected = Depart_id;
             ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
+            ViewBag.Semester = semester;
+            ViewBag.Year = year;
             ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
@@ -218,6 +225,7 @@ namespace TestExcel.Controllers
         //                where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
         //                select new Section_Subject
         //                {
+        //                    SECTION_ID = e1.SECTION_ID,
         //                    SUBJECT_ID = e1.SUBJECT_ID,
         //                    SUBJECT_NAME = e2.SUBJECT_NAME,
         //                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
@@ -261,6 +269,7 @@ namespace TestExcel.Controllers
         //                where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
         //                select new Section_Subject
         //                {
+        //                    SECTION_ID = e1.SECTION_ID,
         //                    SUBJECT_ID = e1.SUBJECT_ID,
         //                    SUBJECT_NAME = e2.SUBJECT_NAME,
         //                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,

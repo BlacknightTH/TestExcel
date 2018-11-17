@@ -5,6 +5,8 @@
     string color;
     string textcreadit = "";
     string[] date = { "M", "T", "W", "H", "F", "S" };
+    string SEMESTER = ViewBag.Semester;
+    string YEAR = ViewBag.Year;
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <script>
@@ -17,173 +19,318 @@
 
 @using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
 {
-<table border="0" align="left">
-    <tbody>
-        <tr>
-            <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-            <td colspan="5" style="padding-right:1em">@Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
-            <td align="right"><b>ภาควิชา&nbsp;</b></td>
-            <td colspan="5" style="padding-right:1em">
-                @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { @class = "form-control", style = "" })
-                        @Html.Hidden("Count", 0)
-                    </td>
-            <td align="right"><b>สาขาวิชา&nbsp;</b></td>
-            <td colspan="5">@Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { @class = "form-control", style = "" })</td>
-        </tr>
-    </tbody>
-</table>
-    <br><br><br>
-    }
-    <table class="table table-bordered" id="TableLocation">
-        <thead>
-            <tr>
-                <th width="3%"></th>
-                <th width="2%">
-                    <p>ลำดับ</p>
-                </th>
-                <th width="5%">
-                    <p>รหัสวิชา</p>
-                </th>
-                <th width="80%">
-                    <p>ชื่อวิชา</p>
-                </th>
-                <th width="10%">
-                    <p>หน่วยกิต</p>
-                </th>
-                <th width="10%">
-                    <p>ตอน</p>
-                </th>
-            </tr>
-        </thead>
+    <table border="0" align="left">
         <tbody>
-            @foreach (var item in Model)
+            <tr>
+                <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">@Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                <td align="right"><b>ภาควิชา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { @class = "form-control", style = "" })
+                    @Html.Hidden("Count", 0)
+                </td>
+                <td align="right"><b>สาขาวิชา&nbsp;</b></td>
+                <td colspan="5">@Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { @class = "form-control", style = "" })</td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br>
+}
+<table class="table table-bordered" id="TableLocation">
+    <thead>
+        <tr>
+            <th width="3%"></th>
+            <th width="2%">
+                <p>ลำดับ</p>
+            </th>
+            <th width="5%">
+                <p>รหัสวิชา</p>
+            </th>
+            <th width="80%">
+                <p>ชื่อวิชา</p>
+            </th>
+            <th width="10%">
+                <p>หน่วยกิต</p>
+            </th>
+            <th width="10%">
+                <p>ตอน</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.SECTION_NUMBER != "")
             {
-                if (item.SECTION_NUMBER != "")
+                i++;
+                string[] e = item.SUBJECT_CREDIT.Split('(', ')');
+                if (e[0] != "")
                 {
-                    i++;
-                    string[] e = item.SUBJECT_CREDIT.Split('(', ')');
-                    if (e[0] != "")
-                    {
-                        j += int.Parse(e[0]);
-                        string[] ee = e[1].Split('-');
-                        k += int.Parse(ee[0]);
-                        l += int.Parse(ee[1]);
-                        m += int.Parse(ee[2]);
+                    j += int.Parse(e[0]);
+                    string[] ee = e[1].Split('-');
+                    k += int.Parse(ee[0]);
+                    l += int.Parse(ee[1]);
+                    m += int.Parse(ee[2]);
 
-                        textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
-                    }
-                    else
-                    {
-                        textcreadit = "";
-                    }
+                    textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
+                }
+                else
+                {
+                    textcreadit = "";
+                }
 
-                    for (int a = 0; a < 6; a++)
+                for (int a = 0; a < 6; a++)
+                {
+                    var trigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
+                    if (trigger == 1)
                     {
-                        var trigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
-                        if (trigger == 1)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.CheckBox("check" + i)
-                                </td>
-                                <td>
-                                    @i
-                                </td>
-                                <td>
-                                    @item.SUBJECT_ID
-                                    @Html.Hidden("subject_id", item.SUBJECT_ID)
-                                    @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
-                                </td>
-                                <td>
-                                    @item.SUBJECT_NAME
-                                    @Html.Hidden("subject_name", item.SUBJECT_NAME)
-                                </td>
-                                <td>
-                                    @item.SUBJECT_CREDIT
-                                    @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
-                                </td>
-                                <td>
-                                    @item.SECTION_NUMBER
-                                    @Html.Hidden("subject_number", item.SECTION_NUMBER)
-                                </td>
-                            </tr>
-                        }
-                        else if (trigger == 2)
-                        {
-                            var first = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).First();
-                            var second = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).Last();
-                            int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                            int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
-                            var TIME = (tmp_last - tmp_first);
-                            <tr>
-                                <td>
-                                    @Html.CheckBox("check" + i)
-                                </td>
-                                <td>
-                                    @i
-                                </td>
-                                <td>
-                                    @item.SUBJECT_ID
-                                    @Html.Hidden("subject_id", item.SUBJECT_ID)
-                                    @Html.Hidden("subject_hour", TIME)
-                                </td>
-                                <td>
-                                    @item.SUBJECT_NAME
-                                    @Html.Hidden("subject_name", item.SUBJECT_NAME)
-                                </td>
-                                <td>
-                                    @item.SUBJECT_CREDIT
-                                    @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
-                                </td>
-                                <td>
-                                    @item.SECTION_NUMBER
-                                    @Html.Hidden("subject_number", item.SECTION_NUMBER)
-                                </td>
-                            </tr>
-                        }
+                        <tr>
+                            <td>
+                                @Html.CheckBox("check" + i)
+                            </td>
+                            <td>
+                                @i
+                            </td>
+                            <td>
+                                @item.SUBJECT_ID
+                                @Html.Hidden("subject_id", item.SUBJECT_ID)
+                                @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
+                            </td>
+                            <td>
+                                @item.SUBJECT_NAME
+                                @Html.Hidden("subject_name", item.SUBJECT_NAME)
+                            </td>
+                            <td>
+                                @item.SUBJECT_CREDIT
+                                @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
+                            </td>
+                            <td>
+                                @item.SECTION_NUMBER
+                                @Html.Hidden("subject_number", item.SECTION_NUMBER)
+                            </td>
+                        </tr>
+                    }
+                    else if (trigger == 2)
+                    {
+                        var first = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).First();
+                        var second = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).Last();
+                        int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                        int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                        var TIME = (tmp_last - tmp_first);
+                        <tr>
+                            <td>
+                                @Html.CheckBox("check" + i)
+                            </td>
+                            <td>
+                                @i
+                            </td>
+                            <td>
+                                @item.SUBJECT_ID
+                                @Html.Hidden("subject_id", item.SUBJECT_ID)
+                                @Html.Hidden("subject_hour", TIME)
+                            </td>
+                            <td>
+                                @item.SUBJECT_NAME
+                                @Html.Hidden("subject_name", item.SUBJECT_NAME)
+                            </td>
+                            <td>
+                                @item.SUBJECT_CREDIT
+                                @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
+                            </td>
+                            <td>
+                                @item.SECTION_NUMBER
+                                @Html.Hidden("subject_number", item.SECTION_NUMBER)
+                            </td>
+                        </tr>
                     }
                 }
             }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="text-right">
-                    รวม
-                </td>
-                <td>
-                    @textcreadit
-                </td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-    <br />
-    <br />
-    <input name="gate" id="gate" value="" />
-    <input name="gate2" id="gate2" value="" />
-    <input name="gate3" id="gate3" value="" />
-    <br>
-    <div class="w3-container w3-row-padding" style="width:100%">
-        <div class="w3-col m5 l5">
-            @Html.TextBox("FIRST_SAVE_TIMESTART", "", new { @class = "form-control", @placeholder = "", @style = "width:100%" })
-        </div>
-        <div class="w3-col m3 l3">
-            @Html.TextBox("FIRST_SAVE_TIMEEND", "", new { @class = "form-control", @placeholder = "", @style = "width:100%" })
-        </div>
-        <div class="w3-col m3 l3">
-            @Html.TextBox("FIRST_SAVE_TIMEFT", "", new { @class = "form-control", @placeholder = "", @style = "width:100%" })
-        </div>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-right">
+                รวม
+            </td>
+            <td>
+                @textcreadit
+            </td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<input id="gate" value="">
+<div class="w3-row">
+    <div class="col-lg-6 w3-container" style="background-color:aqua">
+        <table border="0" align="center" style="border-collapse:separate;border-spacing:5px">
+            <thead>
+                <tr>
+                    <td colspan="14" border="0" align="center">
+                        <p id="First_Header">First</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="right"><b>เซคชั่น&nbsp;</b></td>
+                    <td width="10%">
+                        @Html.Hidden("FIRST_SECTION_ID", "")
+                        @Html.TextBox("FIRST_SAVE_NUMBER", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
+                    <td align="right"><b>&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:2px">
+                        <select class="form-control" id="FIRST_SAVE_DATE" name="FIRST_SAVE_DATE" style="">
+                            <option value="0">วันจันทร์</option>
+                            <option value="1">วันอังคาร</option>
+                            <option value="2">วันพุธ</option>
+                            <option value="3">วันพฤหัสบดี</option>
+                            <option value="4">วันศุกร์</option>
+                            <option value="5">วันเสาร์</option>
+                        </select>
+                    </td>
+                    <td align="right"><b>เวลา&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:2px">
+                        <select class="form-control" id="FIRST_SAVE_TIMESTART" name="FIRST_SAVE_TIMESTART" style="width:6em">
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                        </select>
+                    </td>
+                    <td align="center"><b>-&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:1em">
+                        <select class="form-control" id="FIRST_SAVE_TIMEEND" name="FIRST_SAVE_TIMEEND" style="width:6em">
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><b>สาขาวิชา&nbsp;</b></td>
+                    <td colspan="5">
+                        @Html.TextBox("FIRST_SAVE_PROFESSOR", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
+                    <td align="right"><b>สาขาวิชา&nbsp;</b></td>
+                    <td colspan="5">
+                        @Html.TextBox("FIRST_SAVE_BRANCH", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
 
-        @*<input name="" id="" value="" style="width:40%" />
-            <input name="" id="" value="" style="width:30%" />
-            <input name="" id="" value="" style="width:30%" />*@
+                </tr>
+            </tbody>
+        </table>
     </div>
+    <div class="col-lg-6 w3-container">
+        <table border="0" align="center" style="border-collapse:separate;border-spacing:5px">
+            <thead>
+                <tr>
+                    <td colspan="14" border="0" align="center">
+                        <p id="Second_Header">Second</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="right"><b>เซคชั่น&nbsp;</b></td>
+                    <td width="10%">
+                        @Html.Hidden("SECOND_SECTION_ID", "")
+                        @Html.TextBox("SECOND_SAVE_NUMBER", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
+                    <td align="right"><b>&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:2px">
+                        <select class="form-control" id="SECOND_SAVE_DATE" name="FIRST_SAVE_DATE" style="">
+                            <option value="0">วันจันทร์</option>
+                            <option value="1">วันอังคาร</option>
+                            <option value="2">วันพุธ</option>
+                            <option value="3">วันพฤหัสบดี</option>
+                            <option value="4">วันศุกร์</option>
+                            <option value="5">วันเสาร์</option>
+                        </select>
+                    </td>
+                    <td align="right"><b>เวลา&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:2px">
+                        <select class="form-control" id="SECOND_SAVE_TIMESTART" name="FIRST_SAVE_TIMESTART" style="width:6em">
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                        </select>
+                    </td>
+                    <td align="center"><b>-&nbsp;</b></td>
+                    <td colspan="3" style="padding-right:1em">
+                        <select class="form-control" id="SECOND_SAVE_TIMEEND" name="FIRST_SAVE_TIMEEND" style="width:6em">
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><b>สาขาวิชา&nbsp;</b></td>
+                    <td colspan="5">
+                        @Html.TextBox("SECOND_SAVE_PROFESSOR", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
+                    <td align="right"><b>สาขาวิชา&nbsp;</b></td>
+                    <td colspan="5">
+                        @Html.TextBox("SECOND_SAVE_BRANCH", "", new { @class = "form-control", @placeholder = "" })
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <br>
     @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
     {
-        <table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+        @Html.Hidden("Semester", SEMESTER)
+        @Html.Hidden("Year", YEAR)
+        <table class="table table-responsive fix-font" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
             <thead>
                 <tr bgcolor="#D3D3D3">
                     <th><b>Day</b></th>
@@ -207,11 +354,18 @@
                 @for (int a = 0; a < 6; a++)
                 {
                     <tr id="@date[a]" name="@date[a]" class="@date[a]" width="60px">
-                        <td width="60px">@date[a]</td>
+                        <td bgcolor="#D3D3D3" width="60px">@date[a]</td>
                         @for (int b = 8; b <= 21; b++)
                         {
                             var tid = date[a] + "id_" + b;
-                            var tname = date[a] + "name" + b;
+                            var tsubjectid = date[a] + "subjectid_" + b;
+                            var tname = date[a] + "name_" + b;
+                            var tnumber = date[a] + "number_" + b;
+                            var tbranch = date[a] + "branch_" + b;
+                            var tprofessor = date[a] + "professor_" + b;
+                            var ttimestart = date[a] + "timestart_" + b;
+                            var ttimeend = date[a] + "timeend_" + b;
+                            var tdate = date[a] + "date_" + b;
                             var WhereTimeDate = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]);
                             var check = WhereTimeDate.LastOrDefault();
                             var Bcolor = Model.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
@@ -234,19 +388,25 @@
                                     var TIME_START = int.Parse(tmp_TIME_START.ToString());
                                     var TIME_END = int.Parse(tmp_TIME_END.ToString());
                                     var TIME = (TIME_END - TIME_START) * 4;
-                                    var uid = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
-                                    var uname = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
+                                    var Value = @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                                     <td id="@tid" colspan="@TIME" class="droppable revert" width="60px">
-                                        <div class="draggable" style="background-color:@color;width:100%;height:50px">
+                                        <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
                                             <div id="x_button" class="btn btn-default pull-right x_button text-center">
                                                 X
                                                 @Html.Hidden("x_value", TIME + "_" + date[a])
                                             </div>
-                                            @*@Html.Hidden(tid, uid)
-                                                @Html.Hidden(tname, uname)*@
                                             <p>
-                                                @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                                @Value.SUBJECT_ID @Value.SUBJECT_NAME
                                             </p>
+                                            @Html.Hidden(tid, Value.SECTION_ID)
+                                            @Html.Hidden(tsubjectid, Value.SUBJECT_ID)
+                                            @Html.Hidden(tname, Value.SUBJECT_NAME)
+                                            @Html.Hidden(tnumber, Value.SECTION_NUMBER)
+                                            @Html.Hidden(tbranch, Value.SECTION_BRANCH_NAME)
+                                            @Html.Hidden(tprofessor, Value.SECTION_PROFESSOR_SHORTNAME)
+                                            @Html.Hidden(ttimestart, Value.SECTION_TIME_START)
+                                            @Html.Hidden(ttimeend, Value.SECTION_TIME_END)
+                                            @Html.Hidden(tdate, Array.LastIndexOf(date, Value.SECTION_DATE))
                                         </div>
                                     </td>
                                 }
@@ -267,7 +427,7 @@
                                     {
                                         var TIME = (tmp_last - tmp_first) * 4;
                                         <td id="@tid" colspan="@TIME" width="60px" class="droppable">
-                                            <div class="draggable" style="background-color:@color;height:50px">
+                                            <div class="draggable getdata" style="background-color:@color;height:50px">
                                                 <div id="x_button" class="btn btn-default pull-right x_button text-center">
                                                     X
                                                     @Html.Hidden("x_value", TIME + "_" + date[a])
@@ -287,7 +447,7 @@
                                         var TIME = (TIME_END - TIME_START) * 4;
 
                                         <td id="@tid" colspan="@TIME" width="60px" class="droppable">
-                                            <div class="draggable" style="background-color:@color;width:100%;height:50px">
+                                            <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
                                                 <div id="x_button" class="btn btn-default pull-right x_button text-center">
                                                     X
                                                     @Html.Hidden("x_value", TIME + "_" + date[a])
