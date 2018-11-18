@@ -4,12 +4,16 @@
     ViewBag.Title = "Member";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
-<h2>User/Member</h2>
-<br>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
 </div>
-
+<br>
 <div class="container">
     <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
@@ -31,22 +35,22 @@
             {
             <tr>
                 <td id="Tusername_@item.ID">
-                    @item.USER_USERNAME
+                    <p>@item.USER_USERNAME</p>
                 </td>
                 <td id="Tpassword_@item.ID">
-                    @item.USER_PASSWORD
+                    <p>@item.USER_PASSWORD</p>
                 </td>
                 <td id="Temail_@item.ID">
-                    @item.USER_EMAIL
+                    <p>@item.USER_EMAIL</p>
                 </td>
                 <td id="Tfirstname_@item.ID">
-                    @item.USER_FIRSTNAME
+                    <p>@item.USER_FIRSTNAME</p>
                 </td>
                 <td id="Tlastname_@item.ID">
-                    @item.USER_LASTNAME
+                    <p>@item.USER_LASTNAME</p>
                 </td>
                 <td id="Tstatus_@item.ID">
-                    @item.USER_STATUS
+                    <p>@item.USER_STATUS</p>
                 </td>
                 <td>
                     <a href="#" onclick="EditRecord(@item.ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -140,12 +144,12 @@
     }
     function EditRecord(ID) {
         $("#DEPARTMENT_ID").val(ID);
-        $("#USER_USERNAME").val($("#Tusername_" + ID).html().trim());
-        $("#USER_PASSWORD").val($("#Tpassword_" + ID).html().trim());
-        $("#USER_EMAIL").val($("#Temail_" + ID).html().trim());
-        $("#USER_FIRSTNAME").val($("#Tfirstname_" + ID).html().trim());
-        $("#USER_LASTNAME").val($("#Tlastname_" + ID).html().trim());
-        $("#USER_STATUS").val($("#Tstatus_" + ID).html().trim());
+        $("#USER_USERNAME").val($("#Tusername_" + ID + " p").html().trim());
+        $("#USER_PASSWORD").val($("#Tpassword_" + ID + " p").html().trim());
+        $("#USER_EMAIL").val($("#Temail_" + ID + " p").html().trim());
+        $("#USER_FIRSTNAME").val($("#Tfirstname_" + ID + " p").html().trim());
+        $("#USER_LASTNAME").val($("#Tlastname_" + ID + " p").html().trim());
+        $("#USER_STATUS").val($("#Tstatus_" + ID + " p").html().trim());
         $("#ModalTitle").html("Update User/Member Record");
         $("#MyModal").modal();
     }

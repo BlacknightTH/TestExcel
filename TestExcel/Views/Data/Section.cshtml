@@ -4,14 +4,36 @@
     ViewBag.Title = "Section";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
-<h2>Section</h2>
-<br>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
 </div>
+<br>
 <div class="container">
-    <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
+    <a href="#" onclick="AddNew(0)" class="btn btn-info pull-right">Add New</a><br /><br />
 
+    <table border="0" cellspacing="5" cellpadding="5">
+        <tbody>
+            <tr>
+                <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    <select class="form-control" id="ddl_Semester" name="ddl_Semester">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
     <table class="w3-table-all" id="DataTable" name="DataTable">
         <thead>
             <tr class="w3-blue">
@@ -34,34 +56,34 @@
             {
                 <tr>
                     <td id="TsubjectId_@item.SECTION_ID">
-                        @item.SUBJECT_ID
+                        <p>@item.SUBJECT_ID</p>
                     </td>
                     <td id="TsectionNumber_@item.SECTION_ID">
-                        @item.SECTION_NUMBER
+                        <p>@item.SECTION_NUMBER</p>
                     </td>
                     <td id="TsectionDate_@item.SECTION_ID">
-                        @item.SECTION_DATE
+                        <p>@item.SECTION_DATE</p>
                     </td>
                     <td id="TsectionTimeStart_@item.SECTION_ID">
-                        @item.SECTION_TIME_START
+                        <p>@item.SECTION_TIME_START</p>
                     </td>
                     <td id="TsectionTimeEnd_@item.SECTION_ID">
-                        @item.SECTION_TIME_END
+                        <p>@item.SECTION_TIME_END</p>
                     </td>
                     <td id="TsectionClassroom_@item.SECTION_ID">
-                        @item.SECTION_CLASSROOM
+                        <p>@item.SECTION_CLASSROOM</p>
                     </td>
                     <td id="TsectionProfessotShortname_@item.SECTION_ID">
-                        @item.SECTION_PROFESSOR_SHORTNAME
+                        <p>@item.SECTION_PROFESSOR_SHORTNAME</p>
                     </td>
                     <td id="TbranchName_@item.SECTION_ID">
-                        @item.SECTION_BRANCH_NAME
+                        <p>@item.SECTION_BRANCH_NAME</p>
                     </td>
                     <td id="Tsemester_@item.SECTION_ID">
-                        @item.SEMESTER
+                        <p>@item.SEMESTER</p>
                     </td>
                     <td id="Tyear_@item.SECTION_ID">
-                        @item.YEAR
+                        <p>@item.YEAR</p>
                     </td>
                     <td>
                         <a href="#" onclick="EditRecord(@item.SECTION_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -153,6 +175,7 @@
 </div>
 
 <script>
+    $(document).ready(function () {
     //Show The Popup Modal
     function AddNew(SECTION_ID) {
         $("#ID").val(0);
@@ -171,25 +194,39 @@
     }
     function EditRecord(SECTION_ID) {
         $("#ID").val(SECTION_ID);
-        $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID).html().trim());
-        $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID).html().trim());
-        $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID).html().trim());
-        $("#SECTION_TIME_START").val($("#TsectionTimeStart_" + SECTION_ID).html().trim());
-        $("#SECTION_TIME_END").val($("#TsectionTimeEnd_" + SECTION_ID).html().trim());
-        $("#SECTION_CLASSROOM").val($("#TsectionClassroom_" + SECTION_ID).html().trim());
-        $("#SECTION_PROFESSOR_SHORTNAME").val($("#TsectionProfessotShortname_" + SECTION_ID).html().trim());
-        $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID).html().trim());
-        $("#SEMESTER").val($("#Tsemester_" + SECTION_ID).html().trim());
-        $("#YEAR").val($("#Tyear_" + SECTION_ID).html().trim());
+        $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_TIME_START").val($("#TsectionTimeStart_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_TIME_END").val($("#TsectionTimeEnd_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_CLASSROOM").val($("#TsectionClassroom_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_PROFESSOR_SHORTNAME").val($("#TsectionProfessotShortname_" + SECTION_ID + " p").html().trim());
+        $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID + " p").html().trim());
+        $("#SEMESTER").val($("#Tsemester_" + SECTION_ID + " p").html().trim());
+        $("#YEAR").val($("#Tyear_" + SECTION_ID + " p").html().trim());
         $("#ModalTitle").html("Update Subject Record");
         $("#MyModal").modal();
     }
     function DeleteRecord(SECTION_ID) {
         $("#Del_SECTION_ID").val(SECTION_ID);
         $("#DeleteConfirmation").modal("show");
-    }
-    $('#DataTable').DataTable({
-        "pagingType": "full_numbers",
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        }
+        var table = $('#DataTable').DataTable();
+    $('#ddl_Year, #ddl_Semester').change(function () {
+        table.draw();
+    }).change();
+    $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var Year = parseInt($('#ddl_Year').val());
+            var Semester = parseInt($('#ddl_Semester').val());
+            var data_semester = parseInt(data[8]);
+            var data_year = parseInt(data[9]);
+
+            if (Year == data_year && Semester == data_semester) {
+                return true;
+            }
+            return false;
+        }
+        );
     });
 </script>

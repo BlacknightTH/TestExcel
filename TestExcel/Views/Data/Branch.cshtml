@@ -4,12 +4,16 @@
     ViewBag.Title = "Branch";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
     }
-    <h2>Branch</h2>
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
+</div>
     <br>
-    <div class="w3-row w3-center fontup">
-        <a href="@Url.Action("Section")" style="color:blue;font-size:20px">คณะ/สาขา</a>
-    </div>
-
     <div class="container">
         <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
@@ -28,10 +32,10 @@
                 {
                 <tr>
                     <td id="TdepartName_@item.BRANCH_ID">
-                        @item.DEPARTMENT_NAME
+                        <p>@item.DEPARTMENT_NAME</p>
                     </td>
                     <td id="TbranchName_@item.BRANCH_ID">
-                        @item.BRANCH_NAME
+                        <p>@item.BRANCH_NAME</p>
                     </td>
                     <td>
                         <a href="#" onclick="EditRecord(@item.BRANCH_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -110,8 +114,8 @@
         }
         function EditRecord(BranchId) {
             $("#BRANCH_ID").val(BranchId);
-            $("#BRANCH_NAME").val($("#TbranchName_" + BranchId).html().trim());
-            $("#DEPARTMENT_NAME").val($("#TdepartName_" + BranchId).html().trim());
+            $("#BRANCH_NAME").val($("#TbranchName_" + BranchId + " p").html().trim());
+            $("#DEPARTMENT_NAME").val($("#TdepartName_" + BranchId + " p").html().trim());
             $("#ModalTitle").html("Update Branch Record");
             $("#MyModal").modal();
         }

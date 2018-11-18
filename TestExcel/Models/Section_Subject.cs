@@ -18,10 +18,6 @@ namespace TestExcel.Models
         public Nullable<double> SECTION_TIME_END { get; set; }
         public string SECTION_CLASSROOM { get; set; }
         public string SECTION_PROFESSOR_SHORTNAME { get; set; }
-        //public string SUBJECT_MIDTERM_DATE { get; set; }
-        //public string SUBJECT_FINAL_DATE { get; set; }
-        //public string SUBJECT_MIDTERM_TIME { get; set; }
-        //public string SUBJECT_FINAL_TIME { get; set; }
         public string SEMESTER { get; set; }
         public string YEAR { get; set; }
     }

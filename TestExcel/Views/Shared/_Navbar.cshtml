@@ -1,4 +1,8 @@
-﻿<div class="navbar navbar-default navbar-fixed-top">
+﻿<script src="~/Scripts/bootstrap.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/EditStyle.css" rel="stylesheet" />
+
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -10,39 +14,63 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("TimeSchedule", "Index", "TimeSchedule")</li>
+                <li>@Html.ActionLink("ตารางสอน", "Index", "TimeSchedule")</li>
+                <li>@Html.ActionLink("Import/Export Pdf/Excel", "Index", "Report")</li>
                 @*
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
             </ul>
             @if (Session["Username"] != null)
             {
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" class="badge1" data-badge="27"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle noti" data-toggle="dropdown" href="#">
+                            <span class="fa fa-bell" aria-hidden="true"><span class="" id="count"></span></span>
+                        </a>
+                        <ul class="dropdown-menu" id="notiContent">
+                        </ul>
+                    </li>
                     <li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
-                    <li><a href="@Url.Action(" Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
-
+                    <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
                 </ul>
             }
             else
             {
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="@Url.Action(" Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+                    <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
                 </ul>
             }
 
         </div>
     </div>
-</div>
+</nav>
 <style>
-    .badge1 {
-        position: relative;
+    ul#notiContent{
+        max-height:200px;
+        overflow:auto;
+        padding:0px;
+        margin:0px;
+        padding-left:20px;
     }
-
+    ul#notiContent li{
+        margin:3px;
+        padding:6px;
+        background:#fff;
+    }
+    #notiContent {
+        min-width: 300px;
+    }
+    .badge {
+        position:absolute;
+        background-color: red;
+        color: white;
+        bottom:25px;
+        right:1px;
+    }
         .badge1[data-badge]:after {
             content: attr(data-badge);
             position: absolute;
-            top: 5px;
-            right: 0px;
+            top: -10px;
+            right: -10px;
             font-size: .7em;
             background-color: red;
             color: white;
@@ -54,3 +82,67 @@
             box-shadow: 0 0 1px #333;
         }
 </style>
+<script>
+    $(document).ready(function () {
+        var date = ["M", "T", "W", "H", "F", "S"];
+        var datethai = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
+        $.ajax({
+            type: 'GET',
+            url: '/data/GetNotifications',
+            success: function (response) {
+                $("#notiContent").empty();
+                if (response.length == 0) {
+                    $("#notiContent").append($('<li>No data available</li>'));
+                }
+                else {
+                    var count = 0;
+                    count = response.length;
+                    $("#count").html(count);
+                    $("#count").addClass("badge");
+                }
+
+                $.each(response, function (index, value) {
+                    var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
+                    var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
+
+                    $("#notiContent").append($('<li>' + value.SUBJECT_ID_First + " " + datethai[parseInt(tmp_datefirst)] + " ตอน " + value.SECTION_NUMBER_First + "<br>"
+                        + value.SUBJECT_ID_Last + " " + datethai[parseInt(tmp_datelast)] + " " + value.SECTION_NUMBER_Last + '</li>'));
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        //$(".noti").click(function (e) {
+        //    var count = 0;
+        //    count = parseInt($(".badge1").html());
+        //        updatenotification();
+        //});
+        //function updatenotification() {
+        //    $("#notiContent").empty();
+        //    $("#notiContent").append($('<li>Loading...</li>'));
+        //    $.ajax({
+        //        type: 'GET',
+        //        url: '/data/GetNotifications',
+        //        success: function (response) {
+        //            $("#notiContent").empty();
+        //            if (response.length == 0) {
+        //                $("#notiContent").append($('<li>No data available</li>'));
+        //            }
+        //            else {
+        //                var count = 0;
+        //                count = response.length;
+        //                $("#count").html(count);
+        //            }
+
+        //            $.each(response, function (index, value) {
+        //                $("#notiContent").append($('<li>' + value.SUBJECT_ID_First + value.SECTION_DATE_First + '</li>'));
+        //            });
+        //        },
+        //        error: function (error) {
+        //            console.log(error);
+        //        }
+        //    });
+        //}
+    });
+</script>

@@ -1,4 +1,9 @@
-﻿.fix-font tbody tr td p{
+﻿.modal {
+    position: center;
+    top: 15%;
+}
+
+.fix-font tbody tr td p{
     font-size:12px;
 }
 .draggable {
@@ -115,3 +120,23 @@
         border-radius: 50%;
         box-shadow: 0 0 1px #333;
     }
+
+.space {
+    margin-right: 5px;
+    margin-left:-5px;
+}
+.space2 {
+    margin-left: 5px;
+    margin-right: -5px;
+}
+@media screen and (max-width: 1100px) {
+    .space {
+        margin-bottom: 10px;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    .space2 {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}

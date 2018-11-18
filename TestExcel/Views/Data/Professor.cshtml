@@ -4,11 +4,16 @@
     ViewBag.Title = "Professor";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
-<h2>Professor</h2>
-<br>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
 </div>
+<br>
 <div class="container">
     <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
@@ -29,19 +34,19 @@
             {
                 <tr>
                     <td id="TprofessorFirstName_@item.PROFESSOR_ID">
-                        @item.PROFESSOR_FIRSTNAME
+                        <p>@item.PROFESSOR_FIRSTNAME</p>
                     </td>
                     <td id="TprofessorLastName_@item.PROFESSOR_ID">
-                        @item.PROFESSOR_LASTNAME
+                        <p>@item.PROFESSOR_LASTNAME</p>
                     </td>
                     <td id="TprofessorShortName_@item.PROFESSOR_ID">
-                        @item.PROFESSOR_SHORTNAME
+                        <p>@item.PROFESSOR_SHORTNAME</p>
                     </td>
                     <td id="TprofessorStatus_@item.PROFESSOR_ID">
-                        @item.PROFESSOR_STATUS
+                        <p>@item.PROFESSOR_STATUS</p>
                     </td>
                     <td id="TdepartName_@item.PROFESSOR_ID">
-                        @item.DEPARTMENT_NAME
+                        <p>@item.DEPARTMENT_NAME</p>
                     </td>
                     <td>
                         <a href="#" onclick="EditRecord(@item.PROFESSOR_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -131,11 +136,11 @@
     }
     function EditRecord(PROFESSOR_ID) {
         $("#DEPARTMENT_ID").val(PROFESSOR_ID);
-        $("#PROFESSOR_FIRSTNAME").val($("#TprofessorFirstName_" + PROFESSOR_ID).html().trim());
-        $("#PROFESSOR_LASTNAME").val($("#TprofessorLastName_" + PROFESSOR_ID).html().trim());
-        $("#PROFESSOR_SHORTNAME").val($("#TprofessorShortName_" + PROFESSOR_ID).html().trim());
-        $("#PROFESSOR_STATUS").val($("#TprofessorStatus_" + PROFESSOR_ID).html().trim());
-        $("#DEPARTMENT_NAME").val($("#TdepartName_" + PROFESSOR_ID).html().trim());
+        $("#PROFESSOR_FIRSTNAME").val($("#TprofessorFirstName_" + PROFESSOR_ID + " p").html().trim());
+        $("#PROFESSOR_LASTNAME").val($("#TprofessorLastName_" + PROFESSOR_ID + " p").html().trim());
+        $("#PROFESSOR_SHORTNAME").val($("#TprofessorShortName_" + PROFESSOR_ID + " p").html().trim());
+        $("#PROFESSOR_STATUS").val($("#TprofessorStatus_" + PROFESSOR_ID + " p").html().trim());
+        $("#DEPARTMENT_NAME").val($("#TdepartName_" + PROFESSOR_ID + " p").html().trim());
         $("#ModalTitle").html("Update Professor Record");
         $("#MyModal").modal();
     }

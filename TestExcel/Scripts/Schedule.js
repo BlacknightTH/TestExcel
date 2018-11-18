@@ -7,7 +7,10 @@ $("#DDL_DEPARTMENT").change(function () {
     $("#Count").val(1);
     $("#BRANCH_FORM").submit();
 });
-$("#DDL_SEMESTERYEAR").change(function () {
+$("#ddl_Year").change(function () {
+    $("#BRANCH_FORM").submit();
+});
+$("#ddl_Semester").change(function () {
     $("#BRANCH_FORM").submit();
 });
 $("#DDL_BRANCH").change(function () {
@@ -218,34 +221,99 @@ $('#FIRST_SAVE_TIMESTART').on("change", function () {
     }
     $('#FIRST_SAVE_TIMEEND').html(optionlisting);
 });
-$("#TableLocation2 tr td div").click(function () {
-    var tmp_id2 = $(this).parent().attr("id");
-    var tmp12 = tmp_id2.split("id_");
-    var first_id = $(this).find("#" + tmp12[0] + "id_" + tmp12[1]).val();
-    var first_subjectid = $(this).find("#" + tmp12[0] + "subjectid_" + tmp12[1]).val();
-    var first_name = $(this).find("#" + tmp12[0] + "name_" + tmp12[1]).val();
-    var first_number = $(this).find("#" + tmp12[0] + "number_" + tmp12[1]).val();
-    var first_branch = $(this).find("#" + tmp12[0] + "branch_" + tmp12[1]).val();
-    var first_professor = $(this).find("#" + tmp12[0] + "professor_" + tmp12[1]).val();
-    var first_timestart = $(this).find("#" + tmp12[0] + "timestart_" + tmp12[1]).val();
-    var first_timeend = $(this).find("#" + tmp12[0] + "timeend_" + tmp12[1]).val();
-    var first_date = $(this).find("#" + tmp12[0] + "date_" + tmp12[1]).val();
-    $("#First_Header").html(first_subjectid + " " + first_name);
-    $("#FIRST_SECTION_ID").val(first_id);
-    $("#FIRST_SAVE_NUMBER").val(first_number);
-    $("#FIRST_SAVE_DATE").val(first_date);
-    $("#FIRST_SAVE_TIMESTART").val(first_timestart);
-    var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+$('#SECOND_SAVE_TIMESTART').on("change", function () {
+    var TimeStart = $('#SECOND_SAVE_TIMESTART').val();
     var optionlisting = "";
-    $('#FIRST_SAVE_TIMEEND option').remove();
+    $('#SECOND_SAVE_TIMEEND option').remove();
     for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
         optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
     }
-    $('#FIRST_SAVE_TIMEEND').html(optionlisting);
-    $("#FIRST_SAVE_TIMEEND").val(first_timeend);
-    $("#FIRST_SAVE_PROFESSOR").val(first_professor);
-    $("#FIRST_SAVE_BRANCH").val(first_branch);
+    $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+});
+$("#TableLocation2 tr td div").click(function () {
+    var optionlisting = "";
+    var TimeStart, tmp_id2, tmp12, first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
+    var second_id, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;
+    if ($(this).find("#Trigger").val() === 1) {
+            tmp_id2 = $(this).parent().attr("id");
+            tmp12 = tmp_id2.split("id_");
+            first_id = $(this).find("#" + tmp12[0] + "id_" + tmp12[1]).val();
+            first_subjectid = $(this).find("#" + tmp12[0] + "subjectid_" + tmp12[1]).val();
+            first_name = $(this).find("#" + tmp12[0] + "name_" + tmp12[1]).val();
+            first_number = $(this).find("#" + tmp12[0] + "number_" + tmp12[1]).val();
+            first_branch = $(this).find("#" + tmp12[0] + "branch_" + tmp12[1]).val();
+            first_professor = $(this).find("#" + tmp12[0] + "professor_" + tmp12[1]).val();
+            first_timestart = $(this).find("#" + tmp12[0] + "timestart_" + tmp12[1]).val();
+            first_timeend = $(this).find("#" + tmp12[0] + "timeend_" + tmp12[1]).val();
+            first_date = $(this).find("#" + tmp12[0] + "date_" + tmp12[1]).val();
+            $("#First_Header").html(first_subjectid + " " + first_name);
+            $("#FIRST_SECTION_ID").val(first_id);
+            $("#FIRST_SAVE_NUMBER").val(first_number);
+            $("#FIRST_SAVE_DATE").val(first_date);
+            $("#FIRST_SAVE_TIMESTART").val(first_timestart);
+            TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+            $('#FIRST_SAVE_TIMEEND option').remove();
+            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            }
+            $('#FIRST_SAVE_TIMEEND').html(optionlisting);
+            $("#FIRST_SAVE_TIMEEND").val(first_timeend);
+            $("#FIRST_SAVE_PROFESSOR").val(first_professor);
+            $("#FIRST_SAVE_BRANCH").val(first_branch);
+        }
+        else {
+            tmp_id2 = $(this).parent().attr("id");
+            tmp12 = tmp_id2.split("id_");
+            first_id = $(this).find("#First_" + tmp12[0] + "id_" + tmp12[1]).val();
+            first_subjectid = $(this).find("#First_" + tmp12[0] + "subjectid_" + tmp12[1]).val();
+            first_name = $(this).find("#First_" + tmp12[0] + "name_" + tmp12[1]).val();
+            first_number = $(this).find("#First_" + tmp12[0] + "number_" + tmp12[1]).val();
+            first_branch = $(this).find("#First_" + tmp12[0] + "branch_" + tmp12[1]).val();
+            first_professor = $(this).find("#First_" + tmp12[0] + "professor_" + tmp12[1]).val();
+            first_timestart = $(this).find("#First_" + tmp12[0] + "timestart_" + tmp12[1]).val();
+            first_timeend = $(this).find("#First_" + tmp12[0] + "timeend_" + tmp12[1]).val();
+            first_date = $(this).find("#First_" + tmp12[0] + "date_" + tmp12[1]).val();
 
+            second_id = $(this).find("#Second_" + tmp12[0] + "id_" + tmp12[1]).val();
+            second_subjectid = $(this).find("#Second_" + tmp12[0] + "subjectid_" + tmp12[1]).val();
+            second_name = $(this).find("#Second_" + tmp12[0] + "name_" + tmp12[1]).val();
+            second_number = $(this).find("#Second_" + tmp12[0] + "number_" + tmp12[1]).val();
+            second_branch = $(this).find("#Second_" + tmp12[0] + "branch_" + tmp12[1]).val();
+            second_professor = $(this).find("#Second_" + tmp12[0] + "professor_" + tmp12[1]).val();
+            second_timestart = $(this).find("#Second_" + tmp12[0] + "timestart_" + tmp12[1]).val();
+            second_timeend = $(this).find("#Second_" + tmp12[0] + "timeend_" + tmp12[1]).val();
+            second_date = $(this).find("#Second_" + tmp12[0] + "date_" + tmp12[1]).val();
+
+            $("#First_Header").html(first_subjectid + " " + first_name);
+            $("#FIRST_SECTION_ID").val(first_id);
+            $("#FIRST_SAVE_NUMBER").val(first_number);
+            $("#FIRST_SAVE_DATE").val(first_date);
+            $("#FIRST_SAVE_TIMESTART").val(first_timestart);
+            TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+            $('#FIRST_SAVE_TIMEEND option').remove();
+            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            }
+            $('#FIRST_SAVE_TIMEEND').html(optionlisting);
+            $("#FIRST_SAVE_TIMEEND").val(first_timeend);
+            $("#FIRST_SAVE_PROFESSOR").val(first_professor);
+            $("#FIRST_SAVE_BRANCH").val(first_branch);
+
+            $("#Second_Header").html(second_subjectid + " " + second_name);
+            $("#SECOND_SECTION_ID").val(second_id);
+            $("#SECOND_SAVE_NUMBER").val(second_number);
+            $("#SECOND_SAVE_DATE").val(second_date);
+            $("#SECOND_SAVE_TIMESTART").val(second_timestart);
+            TimeStart = $('#SECOND_SAVE_TIMESTART').val();
+            $('#SECOND_SAVE_TIMEEND option').remove();
+            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            }
+            $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+            $("#SECOND_SAVE_TIMEEND").val(second_timeend);
+            $("#SECOND_SAVE_PROFESSOR").val(second_professor);
+            $("#SECOND_SAVE_BRANCH").val(second_branch);
+        }
 });
 $("#TableLocation2 tr td").hover(function () {
     tmp_id = $(this).attr("id");

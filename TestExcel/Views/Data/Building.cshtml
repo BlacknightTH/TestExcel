@@ -3,19 +3,25 @@
 @{
     ViewBag.Title = "Building";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+    string buildingname;
 }
-<h2>Building</h2>
-<br>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("แก้ไขข้อมูล", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
 </div>
-
+<br>
 <div class="container">
     <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
 
     <table class="w3-table-all" id="DataTable" name="DataTable">
         <thead>
             <tr class="w3-blue">
+                <th>ID</th>
                 <th>อาคาร</th>
                 <th>ห้องเรียน</th>
                 <th>แก้ไข</th>
@@ -25,20 +31,31 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td id="TbuildingName_@item.BUILDING_ID">
-                        @item.BUILDING_NAME
-                    </td>
-                    <td id="TclassroomName_@item.BUILDING_ID">
-                        @item.CLASSROOM_NAME
-                    </td>
-                    <td>
-                        <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
-                    </td>
-                    <td>
-                        <a href="#" onclick="DeleteRecord(@item.BUILDING_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    <p>@item.BUILDING_ID</p>
+                </td>
+                <td id="TbuildingName_@item.BUILDING_ID">
+                    @if (item.BUILDING_NAME == "632")
+                    {
+                        buildingname = "อาคารเรียน " + item.CLASSROOM_NAME + "()";
+                    }
+                    else
+                    {
+                        buildingname = "อาคารเรียน " + item.CLASSROOM_NAME;
+                    }
+                    <p>@item.BUILDING_NAME</p>
+                </td>
+                <td id="TclassroomName_@item.BUILDING_ID">
+                    <p>@buildingname</p>
+                </td>
+                <td>
+                    <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                </td>
+                <td>
+                    <a href="#" onclick="DeleteRecord(@item.BUILDING_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                </td>
+            </tr>
             }
         </tbody>
 
@@ -109,8 +126,8 @@
     }
     function EditRecord(BUILDING_ID) {
         $("#BUILDING_ID").val(BUILDING_ID);
-        $("#BUILDING_NAME").val($("#TbuildingName_" + BUILDING_ID).html().trim());
-        $("#CLASSROOM_NAME").val($("#TclassroomName_" + BUILDING_ID).html().trim());
+        $("#BUILDING_NAME").val($("#TbuildingName_" + BUILDING_ID + " p").html().trim());
+        $("#CLASSROOM_NAME").val($("#TclassroomName_" + BUILDING_ID + " p").html().trim());
         $("#ModalTitle").html("Update Building Record");
         $("#MyModal").modal();
     }
