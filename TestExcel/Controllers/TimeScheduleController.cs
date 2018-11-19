@@ -41,11 +41,16 @@ namespace TestExcel.Controllers
             section_subject = query.ToList();
             return section_subject;
         }
-        public ActionResult Index()
+        public ActionResult Index(string BR_NAME, string BR_Semester, string BR_Year)
         {
+            if (BR_NAME == null && BR_Semester == null && BR_Year == null)
+            {
+                BR_Semester = "1";
+                BR_Year = "2560";
+            }
             var BRANCH_NAMEs = db.BRANCHes.Select(x => x.BRANCH_NAME).First();
             var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
-            var query = GetData(BRANCH_NAMEs,"1","2560");
+            var query = GetData(BRANCH_NAMEs, BR_Semester, BR_Year);
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -57,10 +62,10 @@ namespace TestExcel.Controllers
             ViewBag.BRANCH_NAME = BRANCH_NAMEs;
             ViewBag.DDLSelected = 1;
             ViewBag.DepartDDLSelected = 1;
-            ViewBag.Semester = "1";
-            ViewBag.Year = "2560";
+            ViewBag.Semester = BR_Semester;
+            ViewBag.Year = BR_Year;
 
-            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", "2560");
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == DEPART_NAMEs).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
@@ -280,6 +285,11 @@ namespace TestExcel.Controllers
             ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
             //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
             return View(query);
+        }
+        [HttpPost]
+        public ActionResult singleupdatedata(FormCollection collection)
+        {
+            return RedirectToAction("");
         }
         [HttpPost]
         public ActionResult updatedata(FormCollection collection)
