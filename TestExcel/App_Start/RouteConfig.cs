@@ -18,6 +18,11 @@ namespace TestExcel
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "ImportExcel", action = "Index", id = UrlParameter.Optional }
             );
+            //routes.MapRoute(
+            //    "TimeSchedule",
+            //    "TimeSchedule/Index/{BR_NAME}/{BR_Semester}/{BR_Year}",                            
+            //    new { controller = "TimeSchedule", action = "Index" ,BR_NAME = UrlParameter.Optional , BR_Semester = UrlParameter.Optional , BR_Year  = UrlParameter.Optional }  
+            //);
         }
     }
 }

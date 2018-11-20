@@ -8,16 +8,39 @@
     string SEMESTER = ViewBag.Semester;
     string YEAR = ViewBag.Year;
     string BRANCH_NAME = ViewBag.BRANCH_NAME;
+    string Message = ViewBag.Message;
+    string ErrorMessage = ViewBag.ErrorMessage;
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <script>
         $(document).ready(function () {
             $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
             $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
+            $("#ddl_Semester").val(@ViewBag.Semester);
+            $("#ddl_Year").val(@ViewBag.Year);
+            var Message = $("#Alert p").html();
+            var ErrorMessage = $("#ErrorAlert p").html();
+            if (Message != "") {
+                $("#Alert").show("fade");
+                setTimeout(function () {
+                    $("#Alert").hide("fade");
+                },3000);
+            }
+            if (ErrorMessage != "") {
+                $("#ErrorAlert").show("fade");
+                setTimeout(function () {
+                    $("#ErrorAlert").hide("fade");
+                }, 3000);
+            }
         });
 </script>
 <h2>@BRANCH_NAME</h2>
-<input id="gate" name="gate">
+<div id="Alert" class="alert alert-success collapse">
+    <p>@Message</p>
+</div>
+<div id="ErrorAlert" class="alert alert-danger collapse">
+    <p>@ErrorMessage</p>
+</div>
 @using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
 {
     <table border="0" align="left">
@@ -202,7 +225,6 @@
 {
     @Html.Hidden("BR_NAME", BRANCH_NAME);
     @Html.Hidden("Semester", SEMESTER)
-
     @Html.Hidden("Year", YEAR)
     <div class="w3-row">
         <div class="col-lg-6 w3-container w3-card space" style="background-color:#25b0ee">
@@ -286,12 +308,12 @@
                     <tr>
                         <td align="right"><b>ตอนเรียน&nbsp;</b></td>
                         <td width="10%">
-                            @Html.Hidden("SECOND_SECTION_ID", "")
+                            @Html.Hidden("SECOND_SECTION_ID", "0")
                             @Html.TextBox("SECOND_SAVE_NUMBER", "", new { @class = "form-control", @placeholder = "" })
                         </td>
                         <td align="right"><b>&nbsp;</b></td>
                         <td colspan="5">
-                            <select class="form-control" id="SECOND_SAVE_DATE" name="FIRST_SAVE_DATE">
+                            <select class="form-control" id="SECOND_SAVE_DATE" name="SECOND_SAVE_DATE">
                                 <option value="M">วันจันทร์</option>
                                 <option value="T">วันอังคาร</option>
                                 <option value="W">วันพุธ</option>
@@ -302,7 +324,7 @@
                         </td>
                         <td align="right"><b>เวลา&nbsp;</b></td>
                         <td colspan="2">
-                            <select class="form-control" id="SECOND_SAVE_TIMESTART" name="FIRST_SAVE_TIMESTART" style="width:6em">
+                            <select class="form-control" id="SECOND_SAVE_TIMESTART" name="SECOND_SAVE_TIMESTART" style="width:6em">
                                 <option value="8">08:00</option>
                                 <option value="9">09:00</option>
                                 <option value="10">10:00</option>
@@ -321,7 +343,7 @@
                         </td>
                         <td align="center"><b>-&nbsp;</b></td>
                         <td colspan="2">
-                            <select class="form-control" id="SECOND_SAVE_TIMEEND" name="FIRST_SAVE_TIMEEND" style="width:6em">
+                            <select class="form-control" id="SECOND_SAVE_TIMEEND" name="SECOND_SAVE_TIMEEND" style="width:6em">
                                 <option value="9">09:00</option>
                                 <option value="10">10:00</option>
                                 <option value="11">11:00</option>
@@ -520,6 +542,6 @@
         </tbody>
     </table>
     <div>
-        <input type="submit" value="submit" class="w3-btn w3-green w3-center registerbtn" />
+        <input type="submit" value="Save_All" class="w3-btn w3-green w3-center registerbtn pull-right" />
     </div>
 }

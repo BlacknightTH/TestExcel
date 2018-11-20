@@ -34,7 +34,7 @@
                 subject_timeend = $(this).find("#First_timeend_" + check_id).val();
                 hour = parseInt(subject_timeend) - parseInt(subject_timestart);
                 section_id = $(this).find("#Second_id_" + check_id).val();
-                if (section_id != null) {
+                if (section_id != "0") {
                     last_subject_timestart = $(this).find("#Second_timestart_" + check_id).val();
                     last_subject_timeend = $(this).find("#Second_timeend_" + check_id).val();
                     hour1 = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
@@ -93,7 +93,7 @@
                 $(this).find("#First_timestart_" + check_id).val(tmptimestart);
                 $(this).find("#First_timeend_" + check_id).val(hour);
                 $(this).find("#First_date_" + check_id).val(tmpdate);
-                if (section_id != null) {
+                if (section_id != "0") {
                     hour1 = hour + hour1;
                     $(this).find("#Second_timestart_" + check_id).val(hour);
                     $(this).find("#Second_timeend_" + check_id).val(hour1);
@@ -181,7 +181,7 @@
             subject_timeend = $(this).find("#subject_timeend").val();
             subject_date = $(this).find("#subject_date").val();
 
-            last_subject_id = "";
+            last_subject_id = "0";
             last_subject_name = "";
             last_subject_credit = "";
             last_subject_number = "";
@@ -200,6 +200,17 @@
                 last_subject_timeend = $(this).find("#Last_subject_timeend").val();
                 last_subject_date = $(this).find("#Last_subject_date").val();
             }
+            else {
+                last_subject_id = "0";
+                last_subject_name = "";
+                last_subject_credit = "";
+                last_subject_number = "";
+                last_subject_hour = "";
+                last_subject_timestart = "";
+                last_subject_timeend = "";
+                last_subject_date = "";
+            }
+
             var s = subject_id + " " + subject_name;
             for (i = 0; i < 6; i++) {
                 for (j = 8; j <= 21; j++) {
@@ -258,7 +269,7 @@
                     + '<input id="First_timeend_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                     + '<input id="First_date_' + section_id + '" value="' + tmpdate + '" type="hidden">';
 
-                if (last_subject_id != null) {
+                if (last_subject_id != "0") {
                     hour = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
                     last_subject_timeend = parseInt(subject_timeend) + parseInt(hour);
                     last_stringpart = '<div class"second_remove"><input id="Second_id_' + section_id + '" value="' + last_section_id + '" type="hidden">'
@@ -296,7 +307,13 @@
         var optionlisting = "";
         $('#FIRST_SAVE_TIMEEND option').remove();
         for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-            optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            if (i < 10) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+            }
+            else {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            }
+
         }
         $('#FIRST_SAVE_TIMEEND').html(optionlisting);
     });
@@ -305,10 +322,17 @@
         var optionlisting = "";
         $('#SECOND_SAVE_TIMEEND option').remove();
         for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-            optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            if (i < 10) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+            }
+            else {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+            }
+
         }
         $('#SECOND_SAVE_TIMEEND').html(optionlisting);
     });
+
     function replace() {
         $("#TableLocation2 tr td div").click(function () {
             var optionlisting = "";
@@ -331,20 +355,32 @@
             TimeStart = $('#FIRST_SAVE_TIMESTART').val();
             $('#FIRST_SAVE_TIMEEND option').remove();
             for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                if (i < 10) {
+                    optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                }
+
             }
             $('#FIRST_SAVE_TIMEEND').html(optionlisting);
             $("#FIRST_SAVE_TIMEEND").val(first_timeend);
 
             $("#Second_Header").html("Second");
-            $("#SECOND_SECTION_ID").val("");
+            $("#SECOND_SECTION_ID").val("0");
             $("#SECOND_SAVE_NUMBER").val("");
-            $("#SECOND_SAVE_DATE").val(0);
+            $("#SECOND_SAVE_DATE").val("M");
             $("#SECOND_SAVE_TIMESTART").val(8);
             TimeStart = $('#SECOND_SAVE_TIMESTART').val();
             $('#SECOND_SAVE_TIMEEND option').remove();
             for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                if (i < 10) {
+                    optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                }
+
             }
             $('#SECOND_SAVE_TIMEEND').html(optionlisting);
             $("#SECOND_SAVE_TIMEEND").val(9);
@@ -367,10 +403,36 @@
                 TimeStart = $('#SECOND_SAVE_TIMESTART').val();
                 $('#SECOND_SAVE_TIMEEND option').remove();
                 for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                    if (i < 10) {
+                        optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                    }
+                    else {
+                        optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                    }
+
                 }
                 $('#SECOND_SAVE_TIMEEND').html(optionlisting);
                 $("#SECOND_SAVE_TIMEEND").val(second_timeend);
+            }
+            else if (second_id == "0"){
+                $("#Second_Header").html("Second");
+                $("#SECOND_SECTION_ID").val("0");
+                $("#SECOND_SAVE_NUMBER").val("");
+                $("#SECOND_SAVE_DATE").val("M");
+                $("#SECOND_SAVE_TIMESTART").val(8);
+                TimeStart = $('#SECOND_SAVE_TIMESTART').val();
+                $('#SECOND_SAVE_TIMEEND option').remove();
+                for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                    if (i < 10) {
+                        optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                    }
+                    else {
+                        optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                    }
+
+                }
+                $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+                $("#SECOND_SAVE_TIMEEND").val(9);
             }
         });
     }

@@ -15,6 +15,7 @@ namespace TestExcel.Controllers
     {
         List<Department_Branch> _department_branch = new List<Department_Branch>();
         TestExcelEntities db = new TestExcelEntities();
+        int CheckMessage;
         // GET: TimeSchedule
         public List<Section_Subject> GetData(string Branch_Name, string semester, string year)
         {
@@ -41,16 +42,32 @@ namespace TestExcel.Controllers
             section_subject = query.ToList();
             return section_subject;
         }
-        public ActionResult Index(string BR_NAME, string BR_Semester, string BR_Year)
+        public ActionResult Index(string BR_NAME, string BR_Semester, string BR_Year,string Message)
         {
+            string select_Department, select_branch;
+            int select_Departmentid;
+            int select_branchid;
             if (BR_NAME == null && BR_Semester == null && BR_Year == null)
             {
                 BR_Semester = "1";
                 BR_Year = "2560";
+                select_branchid = 1;
+                select_branch = db.BRANCHes.First().BRANCH_NAME;
+                select_Department = db.DEPARTMENTs.First().DEPARTMENT_NAME;
+                select_Departmentid = 1;
             }
-            var BRANCH_NAMEs = db.BRANCHes.Select(x => x.BRANCH_NAME).First();
-            var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
-            var query = GetData(BRANCH_NAMEs, BR_Semester, BR_Year);
+            else
+            {
+                select_Department = db.BRANCHes.Where(x => x.BRANCH_NAME == BR_NAME).First().DEPARTMENT_NAME;
+                select_Departmentid = db.DEPARTMENTs.Where(x => x.DEPARTMENT_NAME == select_Department).First().DEPARTMENT_ID;
+                select_branch = BR_NAME;
+                select_branchid = db.BRANCHes.Where(x => x.BRANCH_NAME == select_branch).First().BRANCH_ID;
+            }
+            if(Message != null)
+            {
+                CheckMessage = int.Parse(Message);
+            }
+            var query = GetData(select_branch, BR_Semester, BR_Year);
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -59,15 +76,30 @@ namespace TestExcel.Controllers
                                    YEAR = d1.YEAR
                                };
 
-            ViewBag.BRANCH_NAME = BRANCH_NAMEs;
-            ViewBag.DDLSelected = 1;
-            ViewBag.DepartDDLSelected = 1;
+            ViewBag.BRANCH_NAME = select_branch;
+            ViewBag.DDLSelected = select_branchid;
+            ViewBag.DepartDDLSelected = select_Departmentid;
             ViewBag.Semester = BR_Semester;
             ViewBag.Year = BR_Year;
+            if (CheckMessage == 1)
+            {
+                ViewBag.Message = "Save Success";
+                ViewBag.ErrorMessage = "";
+            }
+            else if (CheckMessage == 2)
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "Error";
+            }
+            else
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "";
+            }
 
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
-            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == DEPART_NAMEs).ToList(), "BRANCH_ID", "BRANCH_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == select_Department).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         [HttpPost]
@@ -109,6 +141,8 @@ namespace TestExcel.Controllers
             ViewBag.DepartDDLSelected = Depart_id;
             ViewBag.Semester = ddl_Semester;
             ViewBag.Year = ddl_Year;
+
+
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
@@ -289,82 +323,136 @@ namespace TestExcel.Controllers
         [HttpPost]
         public ActionResult singleupdatedata(FormCollection collection)
         {
+            var Message = "0";
             var FIRST_SECTION_ID = collection["FIRST_SECTION_ID"];
             var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
-            if (FIRST_SECTION_ID != null && SECOND_SECTION_ID == null)
+            var BR_NAME = collection["BR_NAME"];
+            var Semester = collection["Semester"];
+            var Year = collection["Year"];
+
+            if (ModelState.IsValid && FIRST_SECTION_ID != "" && SECOND_SECTION_ID == "0")
             {
+                var tmp_FIRST_SECTION_ID = int.Parse(FIRST_SECTION_ID);
                 var FIRST_SAVE_NUMBER = collection["FIRST_SAVE_NUMBER"];
                 var FIRST_SAVE_DATE = collection["FIRST_SAVE_DATE"];
-                var FIRST_SAVE_TIMESTART = collection["FIRST_SAVE_TIMESTART"];
-                var FIRST_SAVE_TIMEEND = collection["FIRST_SAVE_TIMEEND"];
-                var FIRST_SAVE_PROFESSOR = collection["FIRST_SAVE_PROFESSOR"];
-                var FIRST_SAVE_BRANCH = collection["FIRST_SAVE_BRANCH"];
-                return View("Index");
+                var FIRST_SAVE_TIMESTART = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                var FIRST_SAVE_TIMEEND = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
+
+                var edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_FIRST_SECTION_ID).FirstOrDefault();
+                if(edit != null)
+                {
+                    edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
+                    edit.SECTION_DATE = FIRST_SAVE_DATE;
+                    edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
+                    edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
+                }
+                Message = "1";
             }
-            else if (FIRST_SECTION_ID != null && SECOND_SECTION_ID != null)
+            else if (ModelState.IsValid && FIRST_SECTION_ID != "" && SECOND_SECTION_ID != "0")
             {
                 var FIRST_SAVE_NUMBER = collection["FIRST_SAVE_NUMBER"];
                 var FIRST_SAVE_DATE = collection["FIRST_SAVE_DATE"];
-                var FIRST_SAVE_TIMESTART = collection["FIRST_SAVE_TIMESTART"];
-                var FIRST_SAVE_TIMEEND = collection["FIRST_SAVE_TIMEEND"];
-                var FIRST_SAVE_PROFESSOR = collection["FIRST_SAVE_PROFESSOR"];
-                var FIRST_SAVE_BRANCH = collection["FIRST_SAVE_BRANCH"];
+                var FIRST_SAVE_TIMESTART = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                var FIRST_SAVE_TIMEEND = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
+                var tmp_FIRST_SECTION_ID = int.Parse(FIRST_SECTION_ID);
+
+                var edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_FIRST_SECTION_ID).FirstOrDefault();
+                if (edit != null)
+                {
+                    edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
+                    edit.SECTION_DATE = FIRST_SAVE_DATE;
+                    edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
+                    edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
+                }
 
                 var SECOND_SAVE_NUMBER = collection["SECOND_SAVE_NUMBER"];
                 var SECOND_SAVE_DATE = collection["SECOND_SAVE_DATE"];
-                var SECOND_SAVE_TIMESTART = collection["SECOND_SAVE_TIMESTART"];
-                var SECOND_SAVE_TIMEEND = collection["SECOND_SAVE_TIMEEND"];
-                var SECOND_SAVE_PROFESSOR = collection["SECOND_SAVE_PROFESSOR"];
-                var SECOND_SAVE_BRANCH = collection["SECOND_SAVE_BRANCH"];
-                return View("Index");
+                var SECOND_SAVE_TIMESTART = double.Parse(collection["SECOND_SAVE_TIMESTART"]);
+                var SECOND_SAVE_TIMEEND = double.Parse(collection["SECOND_SAVE_TIMEEND"]);
+                var tmp_SECOND_SECTION_ID = int.Parse(SECOND_SECTION_ID);
+
+                var second_edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_SECOND_SECTION_ID).FirstOrDefault();
+                if (second_edit != null)
+                {
+                    second_edit.SECTION_NUMBER = SECOND_SAVE_NUMBER;
+                    second_edit.SECTION_DATE = SECOND_SAVE_DATE;
+                    second_edit.SECTION_TIME_START = SECOND_SAVE_TIMESTART;
+                    second_edit.SECTION_TIME_END = SECOND_SAVE_TIMEEND;
+                }
+                Message = "1";
             }
             else
             {
-                ViewBag.Message = "";
-                return View("Index");
+                Message = "2";
             }
+            db.SaveChanges();
+            return Redirect("/TimeSchedule/Index?BR_NAME=" + BR_NAME +"&BR_SEMESTER="+Semester+"&BR_YEAR="+Year+"&Message="+Message);
         }
         [HttpPost]
         public ActionResult updatedata(FormCollection collection)
         {
-            string[] date = { "M", "T", "W", "H", "F", "S" };
-            var Mname = "";
-            var Tname = "";
-            var Wname = "";
-            var Hname = "";
-            var Fname = "";
-            var Sname = "";
-            for (int a = 0; a < 6; a++)
+            var Message = "0";
+            var BR_NAME = collection["BR_NAME"];
+            var Semester = collection["Semester"];
+            var Year = collection["Year"];
+            var SearchId = collection["searchId"];
+            var split = SearchId.Split(',');
+            for (int i = 0; i < split.Length; i++)
             {
-                for (int b = 8; b < 22; b++)
+                var FIRST_SECTION_ID = int.Parse(collection["First_id_" + split[i]]);
+                var SECOND_SECTION_ID = collection["Second_id_" + split[i]];
+
+                if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID == null)
                 {
-                    if (a == 0)
+                    var FIRST_SAVE_DATE = collection["First_date_" + split[i]];
+                    var FIRST_SAVE_TIMESTART = double.Parse(collection["First_timestart_" + split[i]]);
+                    var FIRST_SAVE_TIMEEND = double.Parse(collection["First_timeend_" + split[i]]);
+
+                    var edit = db.SECTIONs.Where(x => x.SECTION_ID == FIRST_SECTION_ID).FirstOrDefault();
+                    if (edit != null)
                     {
-                        Mname = collection[date[a] + "name" + b];
+                        edit.SECTION_DATE = FIRST_SAVE_DATE;
+                        edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
+                        edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
                     }
-                    else if (a == 1)
+                    Message = "1";
+                }
+                else if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID != null)
+                {
+                    var tmp_SECOND_SECTION_ID = int.Parse(SECOND_SECTION_ID);
+
+                    var FIRST_SAVE_DATE = collection["First_date_" + split[i]];
+                    var FIRST_SAVE_TIMESTART = double.Parse(collection["First_timestart_" + split[i]]);
+                    var FIRST_SAVE_TIMEEND = double.Parse(collection["First_timeend_" + split[i]]);
+
+                    var edit = db.SECTIONs.Where(x => x.SECTION_ID == FIRST_SECTION_ID).FirstOrDefault();
+                    if (edit != null)
                     {
-                        Tname = collection[date[a] + "name" + b];
+                        edit.SECTION_DATE = FIRST_SAVE_DATE;
+                        edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
+                        edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
                     }
-                    else if (a == 2)
+
+                    var SECOND_SAVE_DATE = collection["Second_date_" + split[i]];
+                    var SECOND_SAVE_TIMESTART = double.Parse(collection["Second_timestart_" + split[i]]);
+                    var SECOND_SAVE_TIMEEND = double.Parse(collection["Second_timeend_" + split[i]]);
+
+                    var second_edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_SECOND_SECTION_ID).FirstOrDefault();
+                    if (second_edit != null)
                     {
-                        Wname = collection[date[a] + "name" + b];
+                        second_edit.SECTION_DATE = SECOND_SAVE_DATE;
+                        second_edit.SECTION_TIME_START = SECOND_SAVE_TIMESTART;
+                        second_edit.SECTION_TIME_END = SECOND_SAVE_TIMEEND;
                     }
-                    else if (a == 3)
-                    {
-                        Hname = collection[date[a] + "name" + b];
-                    }
-                    else if (a == 4)
-                    {
-                        Fname = collection[date[a] + "name" + b];
-                    }
-                    else if (a == 5)
-                    {
-                        Sname = collection[date[a] + "name" + b];
-                    }
+                    Message = "1";
+                }
+                else
+                {
+                    Message = "2";
                 }
             }
-            return RedirectToAction("Index");
+            db.SaveChanges();
+            return Redirect("/TimeSchedule/Index?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
         }
     }
 }

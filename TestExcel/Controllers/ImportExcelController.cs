@@ -19,12 +19,6 @@ namespace TestExcel.Controllers
         {
             return View();
         }
-        public ActionResult Success()
-        {
-            TestExcelEntities db = new TestExcelEntities();
-            var model = db.SUBJECTs.ToList();
-            return View(model);
-        }
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase excelfile)
         {

@@ -15,7 +15,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("ตารางสอน", "Index", "TimeSchedule")</li>
-                <li>@Html.ActionLink("Import/Export Pdf/Excel", "Index", "Report")</li>
+                <li><a href="@Url.Action("Index","Report")">Import/Export Pdf/Excel</a></li>
                 @*
         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
             </ul>
