@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
@@ -33,79 +33,70 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td id="Tusername_@item.ID">
-                    <p>@item.USER_USERNAME</p>
-                </td>
-                <td id="Tpassword_@item.ID">
-                    <p>@item.USER_PASSWORD</p>
-                </td>
-                <td id="Temail_@item.ID">
-                    <p>@item.USER_EMAIL</p>
-                </td>
-                <td id="Tfirstname_@item.ID">
-                    <p>@item.USER_FIRSTNAME</p>
-                </td>
-                <td id="Tlastname_@item.ID">
-                    <p>@item.USER_LASTNAME</p>
-                </td>
-                <td id="Tstatus_@item.ID">
-                    <p>@item.USER_STATUS</p>
-                </td>
-                <td>
-                    <a href="#" onclick="EditRecord(@item.ID)"><span class="btn btn-success fa fa-pencil"></span></a>
-                </td>
-                <td>
-                    <a href="#" onclick="DeleteRecord(@item.ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                </td>
-            </tr>
+                <tr>
+                    <td id="Tusername_@item.ID">
+                        <p>@item.USER_USERNAME</p>
+                    </td>
+                    <td id="Tpassword_@item.ID">
+                        <p>@item.USER_PASSWORD</p>
+                    </td>
+                    <td id="Temail_@item.ID">
+                        <p>@item.USER_EMAIL</p>
+                    </td>
+                    <td id="Tfirstname_@item.ID">
+                        <p>@item.USER_FIRSTNAME</p>
+                    </td>
+                    <td id="Tlastname_@item.ID">
+                        <p>@item.USER_LASTNAME</p>
+                    </td>
+                    <td id="Tstatus_@item.ID">
+                        <p>@item.USER_STATUS</p>
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
 </div>
-
-<div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 id="ModalTitle"></h4>
-            </div>
-            <div class="modal-body">
-                <div id="form">
-                    @using (Html.BeginForm("SaveMember", "Data", FormMethod.Post))
-                    {
-                        <div class="form-group">
-                            @Html.Hidden("ID", 0)
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_USERNAME", "", new { @class = "form-control", @placeholder = "USER_USERNAME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_PASSWORD", "", new { @class = "form-control", @placeholder = "USER_PASSWORD" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_EMAIL", "", new { @class = "form-control", @placeholder = "USER_EMAIL" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_FIRSTNAME", "", new { @class = "form-control", @placeholder = "USER_FIRSTNAME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_LASTNAME", "", new { @class = "form-control", @placeholder = "USER_LASTNAME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("USER_STATUS", "", new { @class = "form-control", @placeholder = "USER_STATUS" })
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
-                        </div>
-                    }
+@using (Html.BeginForm("SaveMember", "Data", FormMethod.Post))
+{
+    <div id="MyModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
+            <header class="w3-container w3-center w3-blue">
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright closes">&times;</span>
+                <h3 id="ModalTitle"></h3>
+            </header>
+            <div class="container form-horizontal">
+                <div class="w3-section">
+                    @Html.Hidden("ID", 0)
+                    <label>USERNAME</label>
+                    @Html.TextBox("USER_USERNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>PASSWORD</label>
+                    @Html.TextBox("USER_PASSWORD", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
+                    <label>EMAIL</label>
+                    @Html.TextBox("USER_EMAIL", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>ชื่อ</label>
+                    @Html.TextBox("USER_FIRSTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
+                    <label>นามสกุล</label>
+                    @Html.TextBox("USER_LASTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>สถานะ</label>
+                    @Html.TextBox("USER_STATUS", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
+
             </div>
+            <footer class="w3-container w3-row w3-light-grey w3-center">
+                <button type="button" class="closes w3-button w3-red w3-margin-bottom w3-margin-top" style="width:100px">Cancel</button>
+                &nbsp;
+                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom w3-margin-top" style="width:100px">Save</button>
+            </footer>
         </div>
     </div>
-</div>
-
+}
 <div class="modal fade" id="DeleteConfirmation">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,7 +131,7 @@
         $("#USER_LASTNAME").val("");
         $("#USER_STATUS").val("");
         $("#ModalTitle").html("Add New User/Member");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function EditRecord(ID) {
         $("#DEPARTMENT_ID").val(ID);
@@ -151,14 +142,16 @@
         $("#USER_LASTNAME").val($("#Tlastname_" + ID + " p").html().trim());
         $("#USER_STATUS").val($("#Tstatus_" + ID + " p").html().trim());
         $("#ModalTitle").html("Update User/Member Record");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function DeleteRecord(ID) {
         $("#Del_ID").val(ID);
         $("#DeleteConfirmation").modal("show");
     }
-    $('#DataTable').DataTable({
-        "pagingType": "full_numbers",
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+        $('.closes').click(function () {
+            $("#MyModal").css('display', 'none');
+        });
     });
 </script>

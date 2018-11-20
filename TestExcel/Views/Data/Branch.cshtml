@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
     }
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
@@ -50,36 +50,32 @@
         </table>
     </div>
 
-    <div class="modal fade" id="MyModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h4 id="ModalTitle"></h4>
+    @using (Html.BeginForm("SaveBranch", "Data", FormMethod.Post))
+    {
+    <div id="MyModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
+            <header class="w3-container w3-center w3-blue">
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright closes">&times;</span>
+                <h3 id="ModalTitle"></h3>
+            </header>
+            <div class="container form-horizontal">
+                <div class="w3-section">
+                    @Html.Hidden("BRANCH_ID", 0)
+                    <label>ภาควิชา</label>
+                    @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>สาขาวิชา</label>
+                    @Html.TextBox("BRANCH_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
-                <div class="modal-body">
-                    <div id="form">
-                        @using (Html.BeginForm("SaveBranch", "Data", FormMethod.Post))
-                        {
-                        <div class="form-group">
-                            @Html.Hidden("BRANCH_ID", 0)
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "form-control", @placeholder = "DEPARTMENT_NAME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("BRANCH_NAME", "", new { @class = "form-control", @placeholder = "BRANCH_NAME" })
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
-                        </div>
-                        }
-                    </div>
-                </div>
+
             </div>
+            <footer class="w3-container w3-row w3-light-grey w3-center">
+                <button type="button" class="closes w3-button w3-red w3-margin-bottom w3-margin-top" style="width:100px">Cancel</button>
+                &nbsp;
+                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom w3-margin-top" style="width:100px">Save</button>
+            </footer>
         </div>
     </div>
-
+    }
     <div class="modal fade" id="DeleteConfirmation">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -92,9 +88,9 @@
                     <div class="modal-footer">
                         @using (Html.BeginForm("DeleteBranch", "Data", FormMethod.Post))
                         {
-                            @Html.Hidden("Del_BRANCH_ID", "")
-                            <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
-                            <input type="submit" value="Delete" href="#" class="btn btn-danger">
+                        @Html.Hidden("Del_BRANCH_ID", "")
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                        <input type="submit" value="Delete" href="#" class="btn btn-danger">
                         }
                     </div>
 
@@ -110,21 +106,23 @@
             $("#BRANCH_NAME").val("");
             $("#DEPARTMENT_NAME").val("");
             $("#ModalTitle").html("Add New Branch");
-            $("#MyModal").modal();
+            $("#MyModal").css('display', 'block');
         }
         function EditRecord(BranchId) {
             $("#BRANCH_ID").val(BranchId);
             $("#BRANCH_NAME").val($("#TbranchName_" + BranchId + " p").html().trim());
             $("#DEPARTMENT_NAME").val($("#TdepartName_" + BranchId + " p").html().trim());
             $("#ModalTitle").html("Update Branch Record");
-            $("#MyModal").modal();
+            $("#MyModal").css('display', 'block');
         }
         function DeleteRecord(BranchId) {
             $("#Del_BRANCH_ID").val(BranchId);
             $("#DeleteConfirmation").modal("show");
         }
-        $('#DataTable').DataTable({
-            "pagingType": "full_numbers",
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        $(document).ready(function () {
+            $('#DataTable').DataTable();
+            $('.closes').click(function () {
+                $("#MyModal").css('display', 'none');
+            });
         });
     </script>

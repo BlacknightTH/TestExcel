@@ -6,7 +6,7 @@
     string buildingname;
 }
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
@@ -31,66 +31,62 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    <p>@item.BUILDING_ID</p>
-                </td>
-                <td id="TbuildingName_@item.BUILDING_ID">
-                    @if (item.BUILDING_NAME == "632")
-                    {
-                        buildingname = "อาคารเรียน " + item.CLASSROOM_NAME + "()";
-                    }
-                    else
-                    {
-                        buildingname = "อาคารเรียน " + item.CLASSROOM_NAME;
-                    }
-                    <p>@item.BUILDING_NAME</p>
-                </td>
-                <td id="TclassroomName_@item.BUILDING_ID">
-                    <p>@buildingname</p>
-                </td>
-                <td>
-                    <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
-                </td>
-                <td>
-                    <a href="#" onclick="DeleteRecord(@item.BUILDING_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <p>@item.BUILDING_ID</p>
+                    </td>
+                    <td id="TbuildingName_@item.BUILDING_ID">
+                        @if (item.BUILDING_NAME == "632")
+                        {
+                            buildingname = "อาคารเรียน " + item.CLASSROOM_NAME + "()";
+                        }
+                        else
+                        {
+                            buildingname = "อาคารเรียน " + item.CLASSROOM_NAME;
+                        }
+                        <p>@item.BUILDING_NAME</p>
+                    </td>
+                    <td id="TclassroomName_@item.BUILDING_ID">
+                        <p>@buildingname</p>
+                    </td>
+                    <td>
+                        <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="#" onclick="DeleteRecord(@item.BUILDING_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
             }
         </tbody>
 
     </table>
 </div>
-
-<div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 id="ModalTitle"></h4>
-            </div>
-            <div class="modal-body">
-                <div id="form">
-                    @using (Html.BeginForm("SaveBuilding", "Data", FormMethod.Post))
-                    {
-                        <div class="form-group">
-                            @Html.Hidden("BUILDING_ID", 0)
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("BUILDING_NAME", "", new { @class = "form-control", @placeholder = "BUILDING_NAME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("CLASSROOM_NAME", "", new { @class = "form-control", @placeholder = "CLASSROOM_NAME" })
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
-                        </div>
-                    }
+@using (Html.BeginForm("SaveBuilding", "Data", FormMethod.Post))
+{
+    <div id="MyModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
+            <header class="w3-container w3-center w3-blue">
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright closes">&times;</span>
+                <h3 id="ModalTitle"></h3>
+            </header>
+            <div class="container">
+                <div class="w3-section">
+                    @Html.Hidden("BUILDING_ID", 0)
+                    <label>อาคาร</label>
+                    @Html.TextBox("BUILDING_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>ห้องเรียน</label>
+                    @Html.TextBox("CLASSROOM_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
+
             </div>
+            <footer class="w3-container w3-row w3-light-grey w3-center">
+                <button type="button" class="closes w3-button w3-red w3-margin-bottom w3-margin-top" style="width:100px">Cancel</button>
+                &nbsp;
+                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom w3-margin-top" style="width:100px">Save</button>
+            </footer>
         </div>
     </div>
-</div>
+}
 
 <div class="modal fade" id="DeleteConfirmation">
     <div class="modal-dialog">
@@ -122,21 +118,23 @@
         $("#BUILDING_NAME").val("");
         $("#CLASSROOM_NAME").val("");
         $("#ModalTitle").html("Add New Building");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function EditRecord(BUILDING_ID) {
         $("#BUILDING_ID").val(BUILDING_ID);
         $("#BUILDING_NAME").val($("#TbuildingName_" + BUILDING_ID + " p").html().trim());
         $("#CLASSROOM_NAME").val($("#TclassroomName_" + BUILDING_ID + " p").html().trim());
         $("#ModalTitle").html("Update Building Record");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function DeleteRecord(BUILDING_ID) {
         $("#Del_BUILDING_ID").val(BUILDING_ID);
         $("#DeleteConfirmation").modal("show");
     }
-    $('#DataTable').DataTable({
-        "pagingType": "full_numbers",
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    $(document).ready(function () {
+        $('#DataTable').DataTable();
+        $('.closes').click(function () {
+            $("#MyModal").css('display', 'none');
+        });
     });
 </script>

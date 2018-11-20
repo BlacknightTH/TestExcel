@@ -92,10 +92,12 @@
                 hour = parseInt(hour) + parseInt(tmptimestart);
                 $(this).find("#First_timestart_" + check_id).val(tmptimestart);
                 $(this).find("#First_timeend_" + check_id).val(hour);
+                $(this).find("#First_date_" + check_id).val(tmpdate);
                 if (section_id != null) {
                     hour1 = hour + hour1;
                     $(this).find("#Second_timestart_" + check_id).val(hour);
                     $(this).find("#Second_timeend_" + check_id).val(hour1);
+                    $(this).find("#Second_date_" + check_id).val(tmpdate);
                 }
             }
         });
@@ -105,7 +107,7 @@
                 console.log("drop");
                 tmp_id = $(this).attr("id");
                 tmp7 = tmp_id.split("id_");
-                tmpdate = date2.indexOf(tmp7[0]);
+                tmpdate = tmp7[0];
                 tmptimestart = parseInt(tmp7[1]);
                 $(this).removeClass("border").removeClass("over");
                 var dropped = ui.draggable;
@@ -177,8 +179,6 @@
             subject_hour = $(this).find("#subject_hour").val();
             subject_timestart = $(this).find("#subject_timestart").val();
             subject_timeend = $(this).find("#subject_timeend").val();
-            subject_professor = $(this).find("#subject_professor").val();
-            subject_branch = $(this).find("#subject_branch").val();
             subject_date = $(this).find("#subject_date").val();
 
             last_subject_id = "";
@@ -188,8 +188,6 @@
             last_subject_hour = "";
             last_subject_timestart = "";
             last_subject_timeend = "";
-            last_subject_professor = "";
-            last_subject_branch = "";
             last_subject_date = "";
 
             last_section_id = $(this).find("#Last_sub_id").val();
@@ -200,8 +198,6 @@
                 last_subject_number = $(this).find("#Last_subject_number").val();
                 last_subject_timestart = $(this).find("#Last_subject_timestart").val();
                 last_subject_timeend = $(this).find("#Last_subject_timeend").val();
-                last_subject_professor = $(this).find("#Last_subject_professor").val();
-                last_subject_branch = $(this).find("#Last_subject_branch").val();
                 last_subject_date = $(this).find("#Last_subject_date").val();
             }
             var s = subject_id + " " + subject_name;
@@ -258,8 +254,6 @@
                     + '<input id="First_subjectid_' + section_id + '" value="' + subject_id + '" type="hidden">'
                     + '<input id="First_name_' + section_id + '" value="' + subject_name + '" type="hidden">'
                     + '<input id="First_number_' + section_id + '" value="' + subject_number + '" type="hidden">'
-                    + '<input id="First_branch_' + section_id + '" value="' + subject_branch + '" type="hidden">'
-                    + '<input id="First_professor_' + section_id + '" value="' + subject_professor + '" type="hidden">'
                     + '<input id="First_timestart_' + section_id + '" value="' + tmptimestart + '" type="hidden">'
                     + '<input id="First_timeend_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                     + '<input id="First_date_' + section_id + '" value="' + tmpdate + '" type="hidden">';
@@ -271,8 +265,6 @@
                         + '<input id="Second_subjectid_' + section_id + '" value="' + last_subject_id + '" type="hidden">'
                         + '<input id="Second_name_' + section_id + '" value="' + last_subject_name + '" type="hidden">'
                         + '<input id="Second_number_' + section_id + '" value="' + last_subject_number + '" type="hidden">'
-                        + '<input id="Second_branch_' + section_id + '" value="' + last_subject_branch + '" type="hidden">'
-                        + '<input id="Second_professor_' + section_id + '" value="' + last_subject_professor + '" type="hidden">'
                         + '<input id="Second_timestart_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                         + '<input id="Second_timeend_' + section_id + '" value="' + last_subject_timeend + '" type="hidden">'
                         + '<input id="Second_date_' + section_id + '" value="' + tmpdate + '" type="hidden"></div>';
@@ -327,8 +319,6 @@
             first_subjectid = $(this).find("#First_" + "subjectid_" + check_id).val();
             first_name = $(this).find("#First_" + "name_" + check_id).val();
             first_number = $(this).find("#First_" + "number_" + check_id).val();
-            first_branch = $(this).find("#First_" + "branch_" + check_id).val();
-            first_professor = $(this).find("#First_" + "professor_" + check_id).val();
             first_timestart = $(this).find("#First_" + "timestart_" + check_id).val();
             first_timeend = $(this).find("#First_" + "timeend_" + check_id).val();
             first_date = $(this).find("#First_" + "date_" + check_id).val();
@@ -345,12 +335,10 @@
             }
             $('#FIRST_SAVE_TIMEEND').html(optionlisting);
             $("#FIRST_SAVE_TIMEEND").val(first_timeend);
-            $("#FIRST_SAVE_PROFESSOR").val(first_professor);
-            $("#FIRST_SAVE_BRANCH").val(first_branch);
 
             $("#Second_Header").html("Second");
-            $("#SECOND_SECTION_ID").val(" ");
-            $("#SECOND_SAVE_NUMBER").val(" ");
+            $("#SECOND_SECTION_ID").val("");
+            $("#SECOND_SAVE_NUMBER").val("");
             $("#SECOND_SAVE_DATE").val(0);
             $("#SECOND_SAVE_TIMESTART").val(8);
             TimeStart = $('#SECOND_SAVE_TIMESTART').val();
@@ -360,8 +348,6 @@
             }
             $('#SECOND_SAVE_TIMEEND').html(optionlisting);
             $("#SECOND_SAVE_TIMEEND").val(9);
-            $("#SECOND_SAVE_PROFESSOR").val("");
-            $("#SECOND_SAVE_BRANCH").val("");
 
             second_id = $(this).find("#Second_" + "id_" + check_id).val();
             if (second_id != null) {
@@ -369,8 +355,6 @@
                 second_subjectid = $(this).find("#Second_" + "subjectid_" + check_id).val();
                 second_name = $(this).find("#Second_" + "name_" + check_id).val();
                 second_number = $(this).find("#Second_" + "number_" + check_id).val();
-                second_branch = $(this).find("#Second_" + "branch_" + check_id).val();
-                second_professor = $(this).find("#Second_" + "professor_" + check_id).val();
                 second_timestart = $(this).find("#Second_" + "timestart_" + check_id).val();
                 second_timeend = $(this).find("#Second_" + "timeend_" + check_id).val();
                 second_date = $(this).find("#Second_" + "date_" + check_id).val();
@@ -387,8 +371,6 @@
                 }
                 $('#SECOND_SAVE_TIMEEND').html(optionlisting);
                 $("#SECOND_SAVE_TIMEEND").val(second_timeend);
-                $("#SECOND_SAVE_PROFESSOR").val(second_professor);
-                $("#SECOND_SAVE_BRANCH").val(second_branch);
             }
         });
     }
@@ -403,7 +385,7 @@
             tmp5 = tmp1[0] + "_" + tmp4;
 
             tmp7 = tmp_id.split("id_");
-            tmpdate = date2.indexOf(tmp7[0]);
+            tmpdate = tmp7[0];
             tmptimestart = parseInt(tmp7[1]);
 
             colspanvalue = (parseInt(tmp1[1]) - 1) + parseInt(subject_hour);
@@ -424,7 +406,7 @@
             tmp5 = tmp1[0] + "_" + tmp4;
 
             tmp7 = tmp_id.split("id_");
-            tmpdate = date2.indexOf(tmp7[0]);
+            tmpdate = tmp7[0];
             tmptimestart = parseInt(tmp7[1]);
 
             colspanvalue = (parseInt(tmp1[1]) - 1) + parseInt(subject_hour);
@@ -451,10 +433,4 @@
     });
     //-----------------------------------------------------------//
 
-    // หน้าข้อมูล //
-    //$('#DataTable').DataTable({
-    //    "pagingType": "full_numbers",
-    //    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
-    //});
-    //-----------------------------------------------------------//
 });

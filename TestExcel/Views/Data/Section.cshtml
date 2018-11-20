@@ -1,59 +1,59 @@
 ﻿@model IEnumerable<TestExcel.Data.SECTION>
 
-@{
+    @{
     ViewBag.Title = "Section";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
-}
-<div class="w3-row w3-center fontup">
-    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
-</div>
-<br>
-<div class="container">
-    <a href="#" onclick="AddNew(0)" class="btn btn-info pull-right">Add New</a><br /><br />
-
-    <table border="0" cellspacing="5" cellpadding="5">
-        <tbody>
-            <tr>
-                <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
-                <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
-                <td colspan="5" style="padding-right:1em">
-                    <select class="form-control" id="ddl_Semester" name="ddl_Semester">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    }
+    <div class="w3-row w3-center fontup">
+        @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
+        @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
+    </div>
     <br>
-    <table class="w3-table-all" id="DataTable" name="DataTable">
-        <thead>
-            <tr class="w3-blue">
-                <th>รหัสวิชา</th>
-                <th>เลขเซค</th>
-                <th>วัน</th>
-                <th>เวลาเริ่ม</th>
-                <th>เวลาสิ้นสุด</th>
-                <th>ห้องเรียน</th>
-                <th>อักษรย่ออาจารย์</th>
-                <th>สาขาวิชา</th>
-                <th>ภาคการศึกษา</th>
-                <th>ปีการศึกษา</th>
-                <th>แก้ไข</th>
-                <th>ลบ</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="container">
+        <a href="#" onclick="AddNew(0)" class="btn btn-info pull-right">Add New</a><br /><br />
+
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody>
+                <tr>
+                    <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
+                    <td colspan="5" style="padding-right:1em">
+                        <select class="form-control" id="ddl_Semester" name="ddl_Semester">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <table class="w3-table-all" id="DataTable" name="DataTable">
+            <thead>
+                <tr class="w3-blue">
+                    <th>รหัสวิชา</th>
+                    <th>เลขเซค</th>
+                    <th>วัน</th>
+                    <th>เวลาเริ่ม</th>
+                    <th>เวลาสิ้นสุด</th>
+                    <th>ห้องเรียน</th>
+                    <th>อักษรย่ออาจารย์</th>
+                    <th>สาขาวิชา</th>
+                    <th>ภาคการศึกษา</th>
+                    <th>ปีการศึกษา</th>
+                    <th>แก้ไข</th>
+                    <th>ลบ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                 <tr>
                     <td id="TsubjectId_@item.SECTION_ID">
                         <p>@item.SUBJECT_ID</p>
@@ -92,141 +92,219 @@
                         <a href="#" onclick="DeleteRecord(@item.SECTION_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 id="ModalTitle"></h4>
-            </div>
-            <div class="modal-body">
-                <div id="form">
-                    @using (Html.BeginForm("SaveSection", "Data", FormMethod.Post))
-                    {
-                        <div class="form-group">
-                            @Html.Hidden("SECTION_ID", 0)
+                }
+            </tbody>
+        </table>
+    </div>
+    @using (Html.BeginForm("SaveSection", "Data", FormMethod.Post))
+    {
+    <div id="MyModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
+            <header class="w3-container w3-center w3-blue">
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright closes">&times;</span>
+                <h3 id="ModalTitle"></h3>
+            </header>
+            <div class="container">
+                <div class="w3-section">
+                    @Html.Hidden("SECTION_ID", 0)
+                    <div class="w3-row">
+                        <div class="w3-half" style="max-width:230px">
+                            <label>รหัสวิชา</label>
+                            @Html.TextBox("SUBJECT_ID", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_ID", "", new { @class = "form-control", @placeholder = "SUBJECT_ID" })
+                        <div class="w3-half" style="max-width:230px;margin-left:50px">
+                            <label>ตอนเรียน</label>
+                            @Html.TextBox("SECTION_NUMBER", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_NUMBER", "", new { @class = "form-control", @placeholder = "SECTION_NUMBER" })
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-third" style="max-width:160px">
+                            <label>วัน</label>
+                            <select class="w3-select w3-border w3-margin-bottom" id="SECTION_DATE" name="SECTION_DATE">
+                                <option value="M">วันจันทร์</option>
+                                <option value="T">วันอังคาร</option>
+                                <option value="W">วันพุธ</option>
+                                <option value="H">วันพฤหัสบดี</option>
+                                <option value="F">วันศุกร์</option>
+                                <option value="S">วันเสาร์</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_DATE", "", new { @class = "form-control", @placeholder = "SECTION_DATE" })
+                        <div class="w3-third" style="max-width:160px;margin-left:20px">
+                            <label>เวลาเริ่มเรียน</label>
+                            <select class="w3-select w3-border w3-margin-bottom" id="SECTION_TIME_START" name="SECTION_TIME_START">
+                                <option value="8">08:00</option>
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_TIME_START", "", new { @class = "form-control", @placeholder = "SECTION_TIME_START" })
+                        <div class="w3-third" style="max-width:160px;margin-left:20px">
+                            <label>เวลาหมดคาบเรียน</label>
+                            <select class="w3-select w3-border w3-margin-bottom" id="SECTION_TIME_END" name="SECTION_TIME_END">
+                                <option value="8">08:00</option>
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_TIME_END", "", new { @class = "form-control", @placeholder = "SECTION_TIME_END" })
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-third" style="max-width:160px">
+                            <label>วันสอบปลายภาค</label>
+                            @Html.TextBox("SECTION_CLASSROOM", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_CLASSROOM", "", new { @class = "form-control", @placeholder = "SECTION_CLASSROOM" })
+                        <div class="w3-third" style="max-width:160px;margin-left:20px">
+                            <label>เวลาสอบปลายภาค</label>
+                            @Html.TextBox("SECTION_PROFESSOR_SHORTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_PROFESSOR_SHORTNAME", "", new { @class = "form-control", @placeholder = "SECTION_PROFESSOR_SHORTNAME" })
+                        <div class="w3-third" style="max-width:160px;margin-left:20px">
+                            <label>วันสอบปลายภาค</label>
+                            @Html.TextBox("SECTION_BRANCH_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SECTION_BRANCH_NAME", "", new { @class = "form-control", @placeholder = "SECTION_BRANCH_NAME" })
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-third" style="max-width:230px">
+                            <label>ภาคการศึกษา</label>
+                            <select class="w3-select w3-border w3-margin-bottom" id="SEMESTER" name="SEMESTER">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="H">วันพฤหัสบดี</option>
+                                <option value="F">วันศุกร์</option>
+                                <option value="S">วันเสาร์</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SEMESTER", "", new { @class = "form-control", @placeholder = "SEMESTER" })
+                        <div class="w3-half" style="max-width:230px;margin-left:50px">
+                            <label>ปีการศึกษา</label>
+                            @Html.TextBox("YEAR", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("YEAR", "", new { @class = "form-control", @placeholder = "YEAR" })
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
-                        </div>
-                    }
+                    </div>
                 </div>
+
             </div>
+            <footer class="w3-container w3-row w3-light-grey w3-center">
+                <button type="button" class="closes w3-button w3-red w3-margin-bottom w3-margin-top" style="width:100px">Cancel</button>
+                &nbsp;
+                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom w3-margin-top" style="width:100px">Save</button>
+            </footer>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="DeleteConfirmation">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4>Delete This Record</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Are You Sure? You Want To Delete This Record.</h4>
-                <div class="modal-footer">
-                    @using (Html.BeginForm("DeleteSection", "Data", FormMethod.Post))
-                    {
+    }
+    <div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete This Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    <div class="modal-footer">
+                        @using (Html.BeginForm("DeleteSection", "Data", FormMethod.Post))
+                        {
                         @Html.Hidden("Del_SECTION_ID", "")
                         <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
                         <input type="submit" value="Delete" href="#" class="btn btn-danger">
-                    }
-                </div>
+                        }
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function () {
-    //Show The Popup Modal
-    function AddNew(SECTION_ID) {
-        $("#ID").val(0);
-        $("#SUBJECT_ID").val("");
-        $("#SECTION_NUMBER").val("");
-        $("#SECTION_DATE").val("");
-        $("#SECTION_TIME_START").val("");
-        $("#SECTION_TIME_END").val("");
-        $("#SECTION_CLASSROOM").val("");
-        $("#SECTION_PROFESSOR_SHORTNAME").val("");
-        $("#SECTION_BRANCH_NAME").val("");
-        $("#SEMESTER").val("");
-        $("#YEAR").val("");
-        $("#ModalTitle").html("Add New Subject");
-        $("#MyModal").modal();
-    }
-    function EditRecord(SECTION_ID) {
-        $("#ID").val(SECTION_ID);
-        $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_TIME_START").val($("#TsectionTimeStart_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_TIME_END").val($("#TsectionTimeEnd_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_CLASSROOM").val($("#TsectionClassroom_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_PROFESSOR_SHORTNAME").val($("#TsectionProfessotShortname_" + SECTION_ID + " p").html().trim());
-        $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID + " p").html().trim());
-        $("#SEMESTER").val($("#Tsemester_" + SECTION_ID + " p").html().trim());
-        $("#YEAR").val($("#Tyear_" + SECTION_ID + " p").html().trim());
-        $("#ModalTitle").html("Update Subject Record");
-        $("#MyModal").modal();
-    }
-    function DeleteRecord(SECTION_ID) {
-        $("#Del_SECTION_ID").val(SECTION_ID);
-        $("#DeleteConfirmation").modal("show");
+    <script>
+        //Show The Popup Modal
+        function AddNew(SECTION_ID) {
+            $("#ID").val(0);
+            $("#SUBJECT_ID").val("");
+            $("#SECTION_NUMBER").val("");
+            $("#SECTION_DATE").val("");
+            $("#SECTION_TIME_START").val("");
+            $("#SECTION_TIME_END").val("");
+            $("#SECTION_CLASSROOM").val("");
+            $("#SECTION_PROFESSOR_SHORTNAME").val("");
+            $("#SECTION_BRANCH_NAME").val("");
+            $("#SEMESTER").val("");
+            $("#YEAR").val("");
+            $("#ModalTitle").html("Add New Subject");
+            $("#MyModal").css('display', 'block');
         }
-        var table = $('#DataTable').DataTable();
-    $('#ddl_Year, #ddl_Semester').change(function () {
-        table.draw();
-    }).change();
-    $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-            var Year = parseInt($('#ddl_Year').val());
-            var Semester = parseInt($('#ddl_Semester').val());
-            var data_semester = parseInt(data[8]);
-            var data_year = parseInt(data[9]);
-
-            if (Year == data_year && Semester == data_semester) {
-                return true;
+        function EditRecord(SECTION_ID) {
+            $("#ID").val(SECTION_ID);
+            $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_TIME_START").val($("#TsectionTimeStart_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_CLASSROOM").val($("#TsectionClassroom_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_PROFESSOR_SHORTNAME").val($("#TsectionProfessotShortname_" + SECTION_ID + " p").html().trim());
+            $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID + " p").html().trim());
+            $("#SEMESTER").val($("#Tsemester_" + SECTION_ID + " p").html().trim());
+            $("#YEAR").val($("#Tyear_" + SECTION_ID + " p").html().trim());
+            $("#ModalTitle").html("Update Subject Record");
+            $("#MyModal").css('display', 'block');
+            var TimeStart = $('#SECTION_TIME_START').val();
+            var optionlisting = "";
+            $('#SECTION_TIME_END option').remove();
+            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
             }
-            return false;
+            $('#SECTION_TIME_END').html(optionlisting);
+            $("#SECTION_TIME_END").val($("#TsectionTimeEnd_" + SECTION_ID + " p").html().trim());
         }
-        );
-    });
-</script>
+        function DeleteRecord(SECTION_ID) {
+            $("#Del_SECTION_ID").val(SECTION_ID);
+            $("#DeleteConfirmation").modal("show");
+        }
+        $(document).ready(function () {
+            $('#SECTION_TIME_START').on("change", function () {
+                var TimeStart = $('#SECTION_TIME_START').val();
+                var optionlisting = "";
+                $('#SECTION_TIME_END option').remove();
+                for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                }
+                $('#SECTION_TIME_END').html(optionlisting);
+            });
+            var table = $('#DataTable').DataTable();
+            $('#ddl_Year, #ddl_Semester').change(function () {
+                table.draw();
+            }).change();
+            $.fn.dataTable.ext.search.push(
+                function (settings, data, dataIndex) {
+                    var Year = parseInt($('#ddl_Year').val());
+                    var Semester = parseInt($('#ddl_Semester').val());
+                    var data_semester = parseInt(data[8]);
+                    var data_year = parseInt(data[9]);
+
+                    if (Year == data_year && Semester == data_semester) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            $('.closes').click(function () {
+                $("#MyModal").css('display', 'none');
+            });
+        });
+    </script>

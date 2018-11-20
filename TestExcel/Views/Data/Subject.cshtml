@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("เซคชั่น", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
@@ -92,57 +92,64 @@
     </table>
 </div>
 
-<div class="modal fade" id="MyModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" class="close" data-dismiss="modal">&times;</a>
-                <h4 id="ModalTitle"></h4>
-            </div>
-            <div class="modal-body">
-                <div id="form">
-                    @using (Html.BeginForm("SaveSubject", "Data", FormMethod.Post))
-                    {
-                        <div class="form-group">
-                            @Html.Hidden("ID", 0)
+@using (Html.BeginForm("SaveSubject", "Data", FormMethod.Post))
+{
+    <div id="MyModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
+            <header class="w3-container w3-center w3-blue">
+                <span class="w3-button w3-xlarge w3-hover-red w3-display-topright closes">&times;</span>
+                <h3 id="ModalTitle"></h3>
+            </header>
+            <div class="container">
+                <div class="w3-section">
+                    @Html.Hidden("ID", 0)
+                    <label>รหัสวิชา</label>
+                    @Html.TextBox("SUBJECT_ID", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <label>ชื่อวิชา</label>
+                    @Html.TextBox("SUBJECT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
+                    <label>หน่วยกิต</label>
+                    @Html.TextBox("SUBJECT_CREDIT", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    <div class="w3-row">
+                        <div class="w3-half" style="max-width:230px">
+                            <label>วันสอบกลางภาค</label>
+                            @Html.TextBox("SUBJECT_MIDTERM_DATE", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_ID", "", new { @class = "form-control", @placeholder = "SUBJECT_ID" })
+                        <div class="w3-half" style="max-width:230px;margin-left:50px">
+                            <label>เวลาสอบกลางภาค</label>
+                            @Html.TextBox("SUBJECT_MIDTERM_TIME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_NAME", "", new { @class = "form-control", @placeholder = "SUBJECT_NAME" })
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half" style="max-width:230px">
+                            <label>วันสอบปลายภาค</label>
+                            @Html.TextBox("SUBJECT_FINAL_DATE", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_CREDIT", "", new { @class = "form-control", @placeholder = "SUBJECT_CREDIT" })
+                        <div class="w3-half" style="max-width:230px;margin-left:50px">
+                            <label>เวลาสอบปลายภาค</label>
+                            @Html.TextBox("SUBJECT_FINAL_TIME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_MIDTERM_DATE", "", new { @class = "form-control", @placeholder = "SUBJECT_MIDTERM_DATE" })
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half" style="max-width:230px">
+                            <label>ภาคการศึกษา</label>
+                            @Html.TextBox("SEMESTER", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_MIDTERM_TIME", "", new { @class = "form-control", @placeholder = "SUBJECT_MIDTERM_TIME" })
+                        <div class="w3-half" style="max-width:230px;margin-left:50px">
+                            <label>ปีการศึกษา</label>
+                            @Html.TextBox("YEAR", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME" })
                         </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_FINAL_DATE", "", new { @class = "form-control", @placeholder = "SUBJECT_FINAL_DATE" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("SUBJECT_FINAL_TIME", "", new { @class = "form-control", @placeholder = "SUBJECT_FINAL_TIME" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("SEMESTER", "", new { @class = "form-control", @placeholder = "SEMESTER" })
-                        </div>
-                        <div class="form-group">
-                            @Html.TextBox("YEAR", "", new { @class = "form-control", @placeholder = "YEAR" })
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" href="#" class="btn btn-block btn-success">
-                        </div>
-                    }
+                    </div>
                 </div>
+
             </div>
+            <footer class="w3-container w3-row w3-light-grey w3-center">
+                <button type="button" class="closes w3-button w3-red w3-margin-bottom w3-margin-top" style="width:100px">Cancel</button>
+                &nbsp;
+                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom w3-margin-top" style="width:100px">Save</button>
+            </footer>
         </div>
     </div>
-</div>
-
+}
 <div class="modal fade" id="DeleteConfirmation">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -167,7 +174,6 @@
 </div>
 
 <script>
-    $(document).ready(function () {
     //Show The Popup Modal
     function AddNew(ID) {
         $("#ID").val(0);
@@ -181,7 +187,7 @@
         $("#SEMESTER").val("");
         $("#YEAR").val("");
         $("#ModalTitle").html("Add New Subject");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function EditRecord(ID) {
         $("#ID").val(ID);
@@ -195,28 +201,32 @@
         $("#SEMESTER").val($("#Tsemester_" + ID + " p").html().trim());
         $("#YEAR").val($("#Tyear_" + ID + " p").html().trim());
         $("#ModalTitle").html("Update Subject Record");
-        $("#MyModal").modal();
+        $("#MyModal").css('display', 'block');
     }
     function DeleteRecord(ID) {
         $("#Del_ID").val(ID);
         $("#DeleteConfirmation").modal("show");
     }
-    var table = $('#DataTable').DataTable();
-    $('#ddl_Year, #ddl_Semester').change(function () {
-        table.draw();
-    }).change();
-    $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-            var Year = parseInt($('#ddl_Year').val());
-            var Semester = parseInt($('#ddl_Semester').val());
-            var data_semester = parseInt(data[7]);
-            var data_year = parseInt(data[8]);
+    $(document).ready(function () {
+        var table = $('#DataTable').DataTable();
+        $('#ddl_Year, #ddl_Semester').change(function () {
+            table.draw();
+        }).change();
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var Year = parseInt($('#ddl_Year').val());
+                var Semester = parseInt($('#ddl_Semester').val());
+                var data_semester = parseInt(data[7]);
+                var data_year = parseInt(data[8]);
 
-            if (Year == data_year && Semester == data_semester) {
-                return true;
+                if (Year == data_year && Semester == data_semester) {
+                    return true;
+                }
+                return false;
             }
-            return false;
-        }
-    );
+        );
+        $('.closes').click(function () {
+            $("#MyModal").css('display', 'none');
+        });
     });
 </script>
