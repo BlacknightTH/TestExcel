@@ -29,7 +29,7 @@ namespace TestExcel.Controllers
                 {
                     Session["Username"] = obj.USER_USERNAME.ToString();
                     Session["status"] = obj.USER_STATUS.ToString();
-                    return RedirectToAction("Index", "TimeSchedule");
+                    return RedirectToAction("DSchedule", "TimeSchedule");
                 }
                 else
                 {

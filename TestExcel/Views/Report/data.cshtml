@@ -1,0 +1,218 @@
+﻿@{
+    Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+}
+<style>
+
+    .image-preview-input {
+        position: relative;
+        overflow: hidden;
+        margin: 0px;
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+    }
+
+        .image-preview-input input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+    .image-preview-input-title {
+        margin-left: 2px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#year").val(@ViewBag.Year);
+    });
+    $(document).on('click', '#close-preview', function () {
+        $('.image-preview').popover('hide');
+        // Hover befor close the preview
+        $('.image-preview').hover(
+            function () {
+                $('.image-preview').popover('show');
+            },
+            function () {
+                $('.image-preview').popover('hide');
+            }
+        );
+    });
+
+    $(function () {
+        // Create the close button
+        var closebtn = $('<button/>', {
+            type: "button",
+            text: 'x',
+            id: 'close-preview',
+            style: 'font-size: initial;',
+        });
+        closebtn.attr("class", "close pull-right");
+
+        // Clear event
+        $('.image-preview-clear').click(function () {
+            $('.image-preview-filename').val("");
+            $('.image-preview-clear').hide();
+            $('.image-preview-input input:file').val("");
+            $(".image-preview-input-title").text("Browse");
+        });
+        $(".image-preview-input input:file").change(function () {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(".image-preview-clear").show();
+                $(".image-preview-filename").val(file.name);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+<div class="container" style="padding-top:60px">
+    <div class="w3-row">
+        <div class="w3-half w3-margin-bottom">
+            <div class="w3-container">
+                <div class="w3-card-4" style="max-width:400px;height:400px">
+                    <header class="w3-container w3-blue">
+                        <h2 class="w3-center">Import Excel</h2>
+                    </header>
+                    <div class="w3-container">
+                        <h4 class="w3-center">อัพโหลดไฟล์ Excel</h4>
+                        <hr>
+                        <div><p>*หมายเหตุ:การอัพโหลดไฟล์ใช้เวลาประมาณ 2 นาที</p></div>
+                        @using (Html.BeginForm("Import", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.Raw(ViewBag.Error)
+                            <div class="input-group image-preview">
+                                <input type="text" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                                <span class="input-group-btn">
+                                    <!-- image-preview-clear button -->
+                                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                                        <span class="glyphicon glyphicon-remove"></span> Clear
+                                    </button>
+                                    <!-- image-preview-input -->
+                                    <span class="btn btn-default image-preview-input">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                        <span class="image-preview-input-title">Browse</span>
+                                        <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="excelfile" />
+                                    </span>
+                                </span>
+                            </div>
+                            <br />
+                            <div class="w3-center" style="padding-top:90px">
+                                <hr>
+                                <input type="submit" value="UPLOAD" class="w3-btn w3-green">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w3-half w3-margin-bottom">
+            <div class="w3-container">
+                <div class="w3-card-4" style="max-width:400px;height:400px">
+                    <header class="w3-container w3-blue">
+                        <h2 class="w3-center">Export Excel</h2>
+                    </header>
+                    <div class="w3-container">
+                        <h4 class="w3-center">ดาวน์โหลดไฟล์ Excel</h4>
+                        <hr>
+                        <div><p>*หมายเหตุ:การดาวน์โหลดไฟล์ใช้เวลาประมาณ 2 นาที</p></div>
+                        @using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                        {
+                            <div class="w3-container">
+                                <label>ภาคการศึกษา</label>
+                                <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                                <label>ปีการศึกษา</label>
+                                @Html.DropDownList("year_export", (SelectList)ViewBag.ddl_Year, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                                <hr>
+                                <div class="w3-center">
+                                    <input type="submit" value="DOWNLOAD" class="w3-btn w3-green w3-margin-bottom">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-half w3-margin-bottom">
+            <div class="w3-container">
+                <div class="w3-card-4" style="max-width:400px;height:400px">
+                    <header class="w3-container w3-blue">
+                        <h1>PDF สาขาวิชา</h1>
+                    </header>
+                    @using (Html.BeginForm("Report", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                    {
+                        <div class="w3-container">
+                            <div class="w3-container">
+                                <label class="w3-margin-top">ภาควิชา</label>
+                                @Html.DropDownList("department_name", (SelectList)ViewBag.ddl_Department, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                                <label>ภาคการศึกษา</label>
+                                <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                                <br>
+                                <label>ปีการศึกษา</label>
+                                @Html.DropDownList("year", (SelectList)ViewBag.ddl_Year, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                                <div class="w3-center w3-margin-top">
+                                    <hr>
+                                    <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom">DOWNLOAD</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="w3-half">
+            <div class="w3-container">
+                <div class="w3-card-4" style="max-width:400px;height:400px">
+                    <header class="w3-container w3-blue">
+                        <h1>PDF อาคารเรียน</h1>
+                    </header>
+                    @using (Html.BeginForm("TeReport", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                    {
+                    <div class="w3-container">
+                        <label class="w3-margin-top">เลือกวัน</label>
+                        <br>
+                        <select class="w3-select w3-border w3-margin-bottom" id="DDL_DATE" name="DDL_DATE">
+                            <option value="0">วันจันทร์</option>
+                            <option value="1">วันอังคาร</option>
+                            <option value="2">วันพุธ</option>
+                            <option value="3">วันพฤหัสบดี</option>
+                            <option value="4">วันศุกร์</option>
+                            <option value="5">วันเสาร์</option>
+                        </select>
+                        <label>ภาคการศึกษา</label>
+                        <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                        <br>
+                        <label>ปีการศึกษา</label>
+                        @Html.DropDownList("year", (SelectList)ViewBag.ddl_Year, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                        <div class="w3-center w3-margin-top">
+                            <hr>
+                            <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom">DOWNLOAD</button>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -479,16 +479,6 @@
         }
     });
     //-----------------------------------------------------------//
-
-    // หน้า อาคารเรียน/ห้องเรียน //
-    $("#DDL_BUILDING").change(function () {
-        $("#BUILDING_FORM").submit();
-    });
-    $("#DDL_DATE").change(function () {
-        $("#BUILDING_FORM").submit();
-    });
-    //-----------------------------------------------------------//
-
     // หน้า ครูผู้สอน //
     $("#DDL_PROFESSOR").change(function () {
         $("#PROFESSOR_FORM").submit();

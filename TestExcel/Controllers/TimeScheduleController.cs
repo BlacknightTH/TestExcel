@@ -42,7 +42,7 @@ namespace TestExcel.Controllers
             section_subject = query.ToList();
             return section_subject;
         }
-        public ActionResult Index(string BR_NAME, string BR_Semester, string BR_Year,string Message)
+        public ActionResult DSchedule(string BR_NAME, string BR_Semester, string BR_Year,string Message)
         {
             string select_Department, select_branch;
             int select_Departmentid;
@@ -103,7 +103,7 @@ namespace TestExcel.Controllers
             return View(query);
         }
         [HttpPost]
-        public ActionResult Index(FormCollection collection)
+        public ActionResult Dschedule(FormCollection collection)
         {
             int Branch_id = int.Parse(collection["DDL_BRANCH"]);
             int Depart_id = int.Parse(collection["DDL_DEPARTMENT"]);
@@ -181,7 +181,9 @@ namespace TestExcel.Controllers
             ViewBag.BUILDING_NAME = Building;
             ViewBag.BDDLSelected = Building;
             ViewBag.DATE = 0;
-            ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.Semester = "1";
+            ViewBag.Year = "2560";
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
             var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").ToList();
             string BuildingName = "";
             foreach (var a in BUILDING)
@@ -189,7 +191,6 @@ namespace TestExcel.Controllers
                 BuildingName += a.CLASSROOM_NAME + " ";
             }
             ViewBag.PassName = BuildingName;
-            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }
@@ -198,14 +199,13 @@ namespace TestExcel.Controllers
         {
             int Building_id = int.Parse(collection["DDL_BUILDING"]);
             int Date = int.Parse(collection["DDL_DATE"]);
-            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
-            string[] dl = DDL_SEMESTERYEAR.Split('/');
-            string semester = dl[0];
-            string year = dl[1];
+            string semester = collection["ddl_Semester"];
+            string year = collection["ddl_Year"];
+
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
-                        where e3.BUILDING_NAME.Contains(Building_id.ToString())
+                        where e3.BUILDING_NAME.Contains(Building_id.ToString()) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -232,94 +232,95 @@ namespace TestExcel.Controllers
             ViewBag.BUILDING_NAME = Building_id.ToString();
             ViewBag.BDDLSelected = Building_id;
             ViewBag.DATE = Date;
-            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
-            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
+            ViewBag.Semester = semester;
+            ViewBag.Year = year;
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
             var BUILDING = db.BUILDINGs.Where(x => x.BUILDING_NAME == Building_id.ToString()).ToList();
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }
-        //public ActionResult TeSchedule()
-        //{
-        //    var PROFESSOR_SHORTNAME = db.PROFESSORs.Select(x => x.PROFESSOR_SHORTNAME).First();
+        public ActionResult TeSchedule()
+        {
+            var PROFESSOR_SHORTNAME = db.PROFESSORs.Select(x => x.PROFESSOR_SHORTNAME).First();
 
-        //    var query = from e1 in db.SECTIONs
-        //                join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-        //                where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
-        //                select new Section_Subject
-        //                {
-        //                    SECTION_ID = e1.SECTION_ID,
-        //                    SUBJECT_ID = e1.SUBJECT_ID,
-        //                    SUBJECT_NAME = e2.SUBJECT_NAME,
-        //                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-        //                    SECTION_NUMBER = e1.SECTION_NUMBER,
-        //                    SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-        //                    SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-        //                    SECTION_DATE = e1.SECTION_DATE,
-        //                    SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-        //                    SECTION_TIME_START = e1.SECTION_TIME_START,
-        //                    SECTION_TIME_END = e1.SECTION_TIME_END,
-        //                    SEMESTER = e1.SEMESTER,
-        //                    YEAR = e1.YEAR
-        //                };
-        //    var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
-        //                       select new SemesterYear
-        //                       {
-        //                           SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
-        //                           SEMESTER = d1.SEMESTER,
-        //                           YEAR = d1.YEAR
-        //                       };
-        //    ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
-        //    ViewBag.PDDLSelected = 1;
-        //    ViewBag.SYDDLSelected = "1/2560";
-        //    ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
-        //    ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
-        //    //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
-        //    return View(query);
-        //}
-        //[HttpPost]
-        //public ActionResult TeSchedule(FormCollection collection)
-        //{
-        //    int Professor_id = int.Parse(collection["DDL_PROFESSOR"]);
-        //    string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
-        //    string[] dl = DDL_SEMESTERYEAR.Split('/');
-        //    string semester = dl[0];
-        //    string year = dl[1];
-        //    var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.PROFESSOR_ID == Professor_id).First().PROFESSOR_SHORTNAME;
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
+                        select new Section_Subject
+                        {
+                            SECTION_ID = e1.SECTION_ID,
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
+                        };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
+                               };
+            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
+            ViewBag.PDDLSelected = 1;
+            ViewBag.SYDDLSelected = "1/2560";
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
+            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            return View(query);
+        }
+        [HttpPost]
+        public ActionResult TeSchedule(FormCollection collection)
+        {
+            int Professor_id = int.Parse(collection["DDL_PROFESSOR"]);
+            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
+            string[] dl = DDL_SEMESTERYEAR.Split('/');
+            string semester = dl[0];
+            string year = dl[1];
+            var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.PROFESSOR_ID == Professor_id).First().PROFESSOR_SHORTNAME;
 
-        //    var query = from e1 in db.SECTIONs
-        //                join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-        //                where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
-        //                select new Section_Subject
-        //                {
-        //                    SECTION_ID = e1.SECTION_ID,
-        //                    SUBJECT_ID = e1.SUBJECT_ID,
-        //                    SUBJECT_NAME = e2.SUBJECT_NAME,
-        //                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-        //                    SECTION_NUMBER = e1.SECTION_NUMBER,
-        //                    SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-        //                    SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-        //                    SECTION_DATE = e1.SECTION_DATE,
-        //                    SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-        //                    SECTION_TIME_START = e1.SECTION_TIME_START,
-        //                    SECTION_TIME_END = e1.SECTION_TIME_END,
-        //                    SEMESTER = e1.SEMESTER,
-        //                    YEAR = e1.YEAR
-        //                };
-        //    var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
-        //                       select new SemesterYear
-        //                       {
-        //                           SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
-        //                           SEMESTER = d1.SEMESTER,
-        //                           YEAR = d1.YEAR
-        //                       };
-        //    ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
-        //    ViewBag.PDDLSelected = Professor_id;
-        //    ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
-        //    ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
-        //    ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
-        //    //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
-        //    return View(query);
-        //}
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
+                        select new Section_Subject
+                        {
+                            SECTION_ID = e1.SECTION_ID,
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
+                        };
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
+                               };
+            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
+            ViewBag.PDDLSelected = Professor_id;
+            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
+            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
+            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
+            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            return View(query);
+        }
         [HttpPost]
         public ActionResult singleupdatedata(FormCollection collection)
         {
@@ -386,7 +387,7 @@ namespace TestExcel.Controllers
                 Message = "2";
             }
             db.SaveChanges();
-            return Redirect("/TimeSchedule/Index?BR_NAME=" + BR_NAME +"&BR_SEMESTER="+Semester+"&BR_YEAR="+Year+"&Message="+Message);
+            return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME +"&BR_SEMESTER="+Semester+"&BR_YEAR="+Year+"&Message="+Message);
         }
         [HttpPost]
         public ActionResult updatedata(FormCollection collection)
@@ -452,7 +453,7 @@ namespace TestExcel.Controllers
                 }
             }
             db.SaveChanges();
-            return Redirect("/TimeSchedule/Index?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
         }
     }
 }

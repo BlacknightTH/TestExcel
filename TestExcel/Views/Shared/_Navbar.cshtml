@@ -14,8 +14,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("ตารางสอน", "Index", "TimeSchedule")</li>
-                <li><a href="@Url.Action("Index","Report")">Import/Export Pdf/Excel</a></li>
+                <li>@Html.ActionLink("ตารางเรียน", "DSchedule", "TimeSchedule")</li>
+                <li><a href="@Url.Action("data","Report")">Import/Export Pdf/Excel</a></li>
                 @*
         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
             </ul>
@@ -57,7 +57,7 @@
         background:#fff;
     }
     #notiContent {
-        min-width: 300px;
+        min-width: 500px;
     }
     .badge {
         position:absolute;
@@ -112,6 +112,9 @@
             error: function (error) {
                 console.log(error);
             }
+        });
+        $(".noti").click(function () {
+            $("#notiContent").toggle();
         });
         //$(".noti").click(function (e) {
         //    var count = 0;

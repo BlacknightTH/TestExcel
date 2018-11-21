@@ -21,7 +21,7 @@
             <tbody>
                 <tr>
                     <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "" })</td>
                     <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                     <td colspan="5" style="padding-right:1em">
                         <select class="form-control" id="ddl_Semester" name="ddl_Semester">
@@ -183,7 +183,7 @@
                         </div>
                     </div>
                     <div class="w3-row">
-                        <div class="w3-third" style="max-width:230px">
+                        <div class="w3-half" style="max-width:230px">
                             <label>ภาคการศึกษา</label>
                             <select class="w3-select w3-border w3-margin-bottom" id="SEMESTER" name="SEMESTER">
                                 <option value="1">1</option>

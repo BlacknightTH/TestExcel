@@ -34,6 +34,11 @@
             }
         });
 </script>
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
+</div>
 <h2>@BRANCH_NAME</h2>
 <div id="Alert" class="alert alert-success collapse">
     <p>@Message</p>
@@ -41,7 +46,7 @@
 <div id="ErrorAlert" class="alert alert-danger collapse">
     <p>@ErrorMessage</p>
 </div>
-@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
+@using (Html.BeginForm("DSchedule", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
 {
     <table border="0" align="left">
         <tbody>
@@ -404,7 +409,6 @@
                         var tid = date[a] + "id_" + b;
                         var WhereTimeDate = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]);
                         var check = WhereTimeDate.LastOrDefault();
-                        var Bcolor = Model.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
                         if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
                         {
                             color = "#25b0ee";

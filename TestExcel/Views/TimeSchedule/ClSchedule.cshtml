@@ -10,9 +10,27 @@
         $(document).ready(function () {
             $("#DDL_BUILDING").val(@ViewBag.BDDLSelected);
             $("#DDL_DATE").val(@ViewBag.DATE);
+            $("#ddl_Year").val(@ViewBag.year);
+            $("#ddl_Semester").val(@ViewBag.Semester);
+            $("#DDL_BUILDING").change(function () {
+                $("#BUILDING_FORM").submit();
+            });
+            $("#DDL_DATE").change(function () {
+                $("#BUILDING_FORM").submit();
+            });
+            $("#ddl_Semester").change(function () {
+                $("#BUILDING_FORM").submit();
+            });
+            $("#ddl_Year").change(function () {
+                $("#BUILDING_FORM").submit();
+            });
             });
 </script>
-<input id="gate" name="gate" type="text" value="">
+<div class="w3-row w3-center fontup">
+    @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
+    @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
+</div>
 @if ((string)ViewBag.BUILDING_NAME == "632")
 {
     <h2>ห้องเรียนอาคาร 63 (อาคารสีเทา ตึกใหม่)</h2>
@@ -29,7 +47,15 @@ else
             <tbody>
                 <tr>
                     <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("DDL_SEMESTERYEAR", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
+                    <td colspan="5" style="padding-right:1em">
+                        <select class="form-control" id="ddl_Semester" name="ddl_Semester">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </td>
                     <td align="right"><b>อาคารเรียน&nbsp;</b></td>
                     <td colspan="5" style="padding-right:1em">
                         <select class="form-control" id="DDL_BUILDING" name="DDL_BUILDING" style="">
@@ -56,9 +82,9 @@ else
             </tbody>
         </table>
     </div>
-    <br><br><br>
+    <br>
 }
-<table class="table table-responsive" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+<table class="table table-responsive" id="TableLocation2" style="font-size:12px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
     <thead>
         <tr bgcolor="#D3D3D3">
             <td width="80px"><b>Day</b></td>
@@ -113,18 +139,10 @@ else
                                 var TIME_START = int.Parse(tmp_TIME_START.ToString());
                                 var TIME_END = int.Parse(tmp_TIME_END.ToString());
                                 var TIME = (TIME_END - TIME_START) * 4;
-                                var uid = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID;
-                                var uname = WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME;
-                                <td id="@tid" colspan="@TIME" class="droppable" width="60px">
-                                    <div class="draggable" style="background-color:@color;width:100%;height:50px">
-                                        <div id="x_button" class="btn btn-default pull-right x_button text-center">
-                                            X
-                                            @Html.Hidden("x_value", TIME + "_" + date[ViewBag.DATE])
-                                        </div>
-                                        @*@Html.Hidden(tid, uid)
-                                            @Html.Hidden(tname, uname)*@
+                                <td id="@tid" colspan="@TIME" width="60px">
+                                    <div class="" style="background-color:@color;width:100%;height:50px">
                                         <p>
-                                            @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                            @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
                                         </p>
                                     </div>
                                 </td>
@@ -140,17 +158,13 @@ else
                                 int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
                                 if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                                 {
-                                    <td id="@tid" class="droppable" width="60px" height="50px" colspan="4" style="display:none"></td>
+                                    <td id="@tid" width="60px" height="50px" colspan="4" style="display:none"></td>
                                 }
                                 else if (tmpl_first == tmpl_last)
                                 {
                                     var TIME = (tmp_last - tmp_first) * 4;
-                                    <td id="@tid" colspan="@TIME" class="droppable" width="60px">
-                                        <div class="draggable" style="background-color:@color;height:50px">
-                                            <div id="x_button" class="btn btn-default pull-right x_button text-center">
-                                                X
-                                                @Html.Hidden("x_value", TIME + "_" + date[ViewBag.DATE])
-                                            </div>
+                                    <td id="@tid" colspan="@TIME" width="60px">
+                                        <div style="background-color:@color;height:50px">
                                             <p>
                                                 @first.SUBJECT_ID @first.SUBJECT_NAME
                                             </p>
@@ -165,14 +179,10 @@ else
                                     var TIME_END = int.Parse(tmp_TIME_END.ToString());
                                     var TIME = (TIME_END - TIME_START) * 4;
 
-                                    <td id="@tid" colspan="@TIME" class="droppable" width="60px">
-                                        <div class="draggable" style="background-color:@color;width:100%;height:50px">
-                                            <div id="x_button" class="btn btn-default pull-right x_button text-center">
-                                                X
-                                                @Html.Hidden("x_value", TIME + "_" + date[ViewBag.DATE])
-                                            </div>
+                                    <td id="@tid" colspan="@TIME" width="60px">
+                                        <div style="background-color:@color;width:100%;height:50px">
                                             <p>
-                                                @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID @WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_NAME
+                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
                                             </p>
                                         </div>
                                     </td>
@@ -183,11 +193,11 @@ else
                         {
                             if (check1 == null)
                             {
-                                <td id="@tid" class="droppable" height="50px" width="60px" colspan="4"></td>
+                                <td id="@tid" height="50px" width="60px" colspan="4"></td>
                             }
                             else
                             {
-                                <td id="@tid" class="droppable" height="50px" width="60px" colspan="4" style="display:none"></td>
+                                <td id="@tid" height="50px" width="60px" colspan="4" style="display:none"></td>
                             }
                         }
                     }

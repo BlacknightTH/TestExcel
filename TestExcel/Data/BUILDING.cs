@@ -17,5 +17,6 @@ namespace TestExcel.Data
         public int BUILDING_ID { get; set; }
         public string BUILDING_NAME { get; set; }
         public string CLASSROOM_NAME { get; set; }
+        public string NUMBER_SEATS { get; set; }
     }
 }

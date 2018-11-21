@@ -12,6 +12,7 @@ using TestExcel.Models;
 
 namespace TestExcel.Controllers
 {
+    [adminauthen]
     public class DataController : Controller
     {
         TestExcelEntities db = new TestExcelEntities();
@@ -494,7 +495,7 @@ namespace TestExcel.Controllers
                     _section_subject = GetModel(i.SEMESTER, i.YEAR);
                 foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == i.SEMESTER && x.YEAR == i.YEAR).ToList())
                 {
-                    var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && x.SECTION_NUMBER != j.SECTION_NUMBER).OrderBy(x => x.SECTION_TIME_START);
+                    var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_CLASSROOM.Contains(j.SECTION_CLASSROOM) && x.SECTION_NUMBER != j.SECTION_NUMBER).OrderBy(x => x.SECTION_TIME_START);
                     if (WhereTimeDate.Count() > 1)
                     {
                         var Firsttimestart = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;

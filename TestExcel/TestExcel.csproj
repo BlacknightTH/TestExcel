@@ -53,6 +53,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
     </Reference>
@@ -169,10 +172,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DataController.cs" />
-    <Compile Include="Controllers\ExportExcelController.cs" />
-    <Compile Include="Controllers\ImportExcelController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\PdfExportController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TimeScheduleController.cs" />
     <Compile Include="Data\BRANCH.cs">
@@ -587,10 +587,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\ImportExcel\Index.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
-    <Content Include="Views\TimeSchedule\Index.cshtml" />
-    <Content Include="Views\ImportExcel\Success.cshtml" />
+    <Content Include="Views\TimeSchedule\DSchedule.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
     <Content Include="Views\Shared\_TimeScheduleLayout.cshtml" />
@@ -603,9 +601,7 @@
     <Content Include="Views\Data\Department.cshtml" />
     <Content Include="Views\Data\Building.cshtml" />
     <Content Include="Views\Data\Branch.cshtml" />
-    <Content Include="Views\PdfExport\Index.cshtml" />
-    <Content Include="Views\ExportExcel\Index.cshtml" />
-    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Report\data.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
