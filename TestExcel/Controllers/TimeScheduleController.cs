@@ -239,9 +239,10 @@ namespace TestExcel.Controllers
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }
-        public ActionResult TeSchedule(string id,string SUBJECTid, string BR_Semester, string BR_Year, string Message,string color)
+        public ActionResult TeSchedule(string id,string classroom,string SUBJECTid, string BR_Semester, string BR_Year, string Message,string color)
         {
             SUBJECT SUBJECT = new SUBJECT();
+            IQueryable<Section_Subject> query;
             if (SUBJECTid == null && BR_Semester == null && BR_Year == null)
             {
                 BR_Semester = "1";
@@ -272,25 +273,50 @@ namespace TestExcel.Controllers
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "";
             }
-            var query = from e1 in db.SECTIONs
-                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
-                        select new Section_Subject
-                        {
-                            SECTION_ID = e1.SECTION_ID,
-                            SUBJECT_ID = e1.SUBJECT_ID,
-                            SUBJECT_NAME = e2.SUBJECT_NAME,
-                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                            SECTION_NUMBER = e1.SECTION_NUMBER,
-                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                            SECTION_DATE = e1.SECTION_DATE,
-                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                            SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END,
-                            SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
-                        };
+            if (classroom != null)
+            {
+               query = from e1 in db.SECTIONs
+                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                            where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SECTION_CLASSROOM.Contains(classroom) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            select new Section_Subject
+                            {
+                                SECTION_ID = e1.SECTION_ID,
+                                SUBJECT_ID = e1.SUBJECT_ID,
+                                SUBJECT_NAME = e2.SUBJECT_NAME,
+                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                SECTION_NUMBER = e1.SECTION_NUMBER,
+                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                SECTION_DATE = e1.SECTION_DATE,
+                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                SECTION_TIME_START = e1.SECTION_TIME_START,
+                                SECTION_TIME_END = e1.SECTION_TIME_END,
+                                SEMESTER = e1.SEMESTER,
+                                YEAR = e1.YEAR
+                            };
+            }
+            else
+            {
+               query = from e1 in db.SECTIONs
+                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                            where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            select new Section_Subject
+                            {
+                                SECTION_ID = e1.SECTION_ID,
+                                SUBJECT_ID = e1.SUBJECT_ID,
+                                SUBJECT_NAME = e2.SUBJECT_NAME,
+                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                SECTION_NUMBER = e1.SECTION_NUMBER,
+                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                SECTION_DATE = e1.SECTION_DATE,
+                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                SECTION_TIME_START = e1.SECTION_TIME_START,
+                                SECTION_TIME_END = e1.SECTION_TIME_END,
+                                SEMESTER = e1.SEMESTER,
+                                YEAR = e1.YEAR
+                            };
+            }
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -302,6 +328,10 @@ namespace TestExcel.Controllers
             {
                 ViewBag.color = "#ff0000";
                 ViewBag.Number = id;
+            }
+            else
+            {
+                ViewBag.Number = "";
             }
             ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
             ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;

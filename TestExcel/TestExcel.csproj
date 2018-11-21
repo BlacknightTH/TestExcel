@@ -216,6 +216,7 @@
     </Compile>
     <Compile Include="Models\Building_Classroom.cs" />
     <Compile Include="Models\Department_Branch.cs" />
+    <Compile Include="Models\DistinctBuilding.cs" />
     <Compile Include="Models\Section_Subject.cs" />
     <Compile Include="Models\SemesterYear.cs" />
     <Compile Include="Models\TimeCrash.cs" />

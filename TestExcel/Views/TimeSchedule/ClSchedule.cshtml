@@ -47,10 +47,10 @@ else
             <tbody>
                 <tr>
                     <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "" })</td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "width:80px" })</td>
                     <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                     <td colspan="5" style="padding-right:1em">
-                        <select class="form-control" id="ddl_Semester" name="ddl_Semester">
+                        <select class="form-control" id="ddl_Semester" name="ddl_Semester"style="width:70px">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -69,7 +69,7 @@ else
                         </select>
                     </td>
                     <td colspan="5">
-                        <select class="form-control" id="DDL_DATE" name="DDL_DATE" style="">
+                        <select class="form-control" id="DDL_DATE" name="DDL_DATE" style="width:120px">
                             <option value="0">วันจันทร์</option>
                             <option value="1">วันอังคาร</option>
                             <option value="2">วันพุธ</option>

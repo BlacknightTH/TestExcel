@@ -337,6 +337,7 @@
             first_timeend = $(this).find("#First_" + "timeend_" + check_id).val();
             first_date = $(this).find("#First_" + "date_" + check_id).val();
             first_classroom = $(this).find("#First_" + "classroom_" + check_id).val();
+            first_branch = $(this).find("#First_" + "branch_" + check_id).val();
 
             $("#First_Header").html(first_subjectid + " " + first_name);
             $("#FIRST_SECTION_ID").val(first_id);
@@ -344,6 +345,7 @@
             $("#FIRST_SAVE_DATE").val(first_date);
             $("#FIRST_SAVE_TIMESTART").val(first_timestart);
             $("#FIRST_SAVE_CLASSROOM").val(first_classroom);
+            $("#FIRST_SAVE_BRANCH").val(first_branch);
             TimeStart = $('#FIRST_SAVE_TIMESTART').val();
             $('#FIRST_SAVE_TIMEEND option').remove();
             for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
@@ -364,6 +366,7 @@
             $("#SECOND_SAVE_DATE").val("M");
             $("#SECOND_SAVE_CLASSROOM").val("");
             $("#SECOND_SAVE_TIMESTART").val(8);
+            $("#SECOND_SAVE_BRANCH").val("");
             TimeStart = $('#SECOND_SAVE_TIMESTART').val();
             $('#SECOND_SAVE_TIMEEND option').remove();
             for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
@@ -388,6 +391,7 @@
                 second_timeend = $(this).find("#Second_" + "timeend_" + check_id).val();
                 second_date = $(this).find("#Second_" + "date_" + check_id).val();
                 second_classroom = $(this).find("#Second_" + "classroom_" + check_id).val();
+                second_branch = $(this).find("#Second_" + "branch_" + check_id).val();
 
                 $("#Second_Header").html(second_subjectid + " " + second_name);
                 $("#SECOND_SECTION_ID").val(second_id);
@@ -395,6 +399,7 @@
                 $("#SECOND_SAVE_DATE").val(second_date);
                 $("#SECOND_SAVE_TIMESTART").val(second_timestart);
                 $("#SECOND_SAVE_CLASSROOM").val(second_classroom);
+                $("#SECOND_SAVE_BRANCH").val(second_branch);
                 TimeStart = $('#SECOND_SAVE_TIMESTART').val();
                 $('#SECOND_SAVE_TIMEEND option').remove();
                 for (i = parseInt(TimeStart) + 1; i <= 21; i++) {

@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("Home", "Index", "ImportExcel", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Home", "DSchedule", "TimeSchedule", new { area = "" }, new { @class = "navbar-brand" })
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -45,19 +45,19 @@
 </nav>
 <style>
     ul#notiContent{
-        max-height:200px;
+        max-height:240px;
         overflow:auto;
         padding:0px;
         margin:0px;
-        padding-left:20px;
     }
-    ul#notiContent li{
-        margin:3px;
-        padding:6px;
-        background:#fff;
-    }
+        ul#notiContent li {
+            border-bottom: 2px solid black;
+            background-color: #cccccc;
+            color: white;
+            font-size: 18px;
+        }
     #notiContent {
-        min-width: 500px;
+        min-width: 400px;
     }
     .badge {
         position:absolute;
@@ -105,14 +105,14 @@
                     var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
                     var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
 
-                    $("#notiContent").append($('<li><a href="/TimeSchedule/TeSchedule/' + value.SECTION_ID_First+'?SUBJECTid='
+                    $("#notiContent").append($('<li><a href="/TimeSchedule/TeSchedule/' + value.SECTION_ID_First + '/' + value.SECTION_CLASSROOM_First + '?SUBJECTid='
                         + value.SUBJECT_ID_First + '&BR_SEMESTER=' + value.SEMESTER + '&BR_YEAR='
                         + value.YEAR + '&color=#ff0000">'
                         + value.SUBJECT_ID_First + " " + datethai[parseInt(tmp_datefirst)] + " ตอน "
-                        + value.SECTION_NUMBER_First + " ห้อง " + value.SECTION_CLASSROOM_First +"<br>"
+                        + value.SECTION_NUMBER_First + " ห้อง " + value.SECTION_CLASSROOM_First + " " + value.SEMESTER + "/" + value.YEAR + "<br>"
                         + value.SUBJECT_ID_Last + " "
                         + datethai[parseInt(tmp_datelast)]
-                        + " ตอน " + value.SECTION_NUMBER_Last + '</a></li>'));
+                        + " ตอน " + value.SECTION_NUMBER_Last + " ห้อง " + value.SECTION_CLASSROOM_Last + " " + value.SEMESTER + "/" + value.YEAR +  '</a></li>'));
                 });
             },
             error: function (error) {

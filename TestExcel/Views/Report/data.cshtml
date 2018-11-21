@@ -152,7 +152,7 @@
                     <header class="w3-container w3-blue">
                         <h1>PDF สาขาวิชา</h1>
                     </header>
-                    @using (Html.BeginForm("Report", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                    @using (Html.BeginForm("Report", "Report", FormMethod.Post, new { @class = "form-horizontal"}))
                     {
                         <div class="w3-container">
                             <div class="w3-container">
@@ -183,7 +183,7 @@
                     <header class="w3-container w3-blue">
                         <h1>PDF อาคารเรียน</h1>
                     </header>
-                    @using (Html.BeginForm("TeReport", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                    @using (Html.BeginForm("TeReport", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                     {
                     <div class="w3-container">
                         <label class="w3-margin-top">เลือกวัน</label>

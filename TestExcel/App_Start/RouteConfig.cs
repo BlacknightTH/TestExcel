@@ -15,8 +15,8 @@ namespace TestExcel
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "TimeSchedule", action = "DSchedule", id = UrlParameter.Optional }
+                url: "{controller}/{action}/{id}/{classroom}",
+                defaults: new { controller = "TimeSchedule", action = "DSchedule", id = UrlParameter.Optional , classroom = UrlParameter.Optional }
             );
             //routes.MapRoute(
             //    "TimeSchedule",
