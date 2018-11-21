@@ -495,7 +495,7 @@ namespace TestExcel.Controllers
                     _section_subject = GetModel(i.SEMESTER, i.YEAR);
                 foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == i.SEMESTER && x.YEAR == i.YEAR).ToList())
                 {
-                    var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_CLASSROOM.Contains(j.SECTION_CLASSROOM) && x.SECTION_NUMBER != j.SECTION_NUMBER).OrderBy(x => x.SECTION_TIME_START);
+                    var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_CLASSROOM.Contains(j.SECTION_CLASSROOM) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && x.SECTION_NUMBER != j.SECTION_NUMBER && x.SECTION_NUMBER != "" && x.SUBJECT_ID != j.SUBJECT_ID).OrderBy(x => x.SECTION_TIME_START);
                     if (WhereTimeDate.Count() > 1)
                     {
                         var Firsttimestart = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
@@ -524,6 +524,9 @@ namespace TestExcel.Controllers
                             item.SECTION_TIME_END_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
                             item.SECTION_CLASSROOM_Last = WhereTimeDate.LastOrDefault().SECTION_CLASSROOM;
                             item.SECTION_BRANCH_NAME_Last = WhereTimeDate.LastOrDefault().SECTION_BRANCH_NAME;
+
+                            item.SEMESTER = i.SEMESTER;
+                            item.YEAR = i.YEAR;
                             _TimeCrash.Add(item);
                         }
 

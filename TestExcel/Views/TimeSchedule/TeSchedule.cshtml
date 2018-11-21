@@ -2,31 +2,71 @@
 @{
     ViewBag.Title = "TeSchedule";
     string color;
+    string number = ViewBag.Number;
     string[] date = { "M", "T", "W", "H", "F", "S" };
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
+    string Subject_id = ViewBag.SUBJECT;
     string SEMESTER = ViewBag.Semester;
     string YEAR = ViewBag.Year;
+    string Message = ViewBag.Message;
+    string ErrorMessage = ViewBag.ErrorMessage;
 }
 <script>
         $(document).ready(function () {
-            $("#DDL_PROFESSOR").val(@ViewBag.PDDLSelected);
+            $("#ddl_Semester").val(@SEMESTER);
+            $("#ddl_Year").val(@YEAR);
+            $("#SUBJECT_NAME").val($("#SUBJECT").val());
+            $("#ddl_Semester").change(function () {
+                $("#SUBJECT_FORM").submit();
             });
+            $("#SUBJECT").change(function () {
+                $("#SUBJECT_FORM").submit();
+            });
+            $("#ddl_Year").change(function () {
+                $("#SUBJECT_FORM").submit();
+            });
+            var Message = $("#Alert p").html();
+            var ErrorMessage = $("#ErrorAlert p").html();
+            if (Message != "") {
+                $("#Alert").show("fade");
+                setTimeout(function () {
+                    $("#Alert").hide("fade");
+                }, 3000);
+            }
+            if (ErrorMessage != "") {
+                $("#ErrorAlert").show("fade");
+                setTimeout(function () {
+                    $("#ErrorAlert").hide("fade");
+                }, 3000);
+            }
+            var num = @number;
+            if (num != "") {
+                $("#TableLocation2 tr td div input[value='" + num + "']").parent().css('background-color', '#ff0000');
+                $("#TableLocation2 tr td div input[value='" + num + "']").parent().css('color', 'white');
+            }
+            });
+
 </script>
 <div class="w3-row w3-center fontup">
     @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
     @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
 </div>
-
-<h2>@ViewBag.PROFESSOR_SHORTNAME</h2>
-
-@using (Html.BeginForm("Index", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
+@number
+<h3>@ViewBag.SUBJECT @ViewBag.SUBJECT_NAME</h3>
+<div id="Alert" class="alert alert-success collapse">
+    <p>@Message</p>
+</div>
+<div id="ErrorAlert" class="alert alert-danger collapse">
+    <p>@ErrorMessage</p>
+</div>
+@using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = "SUBJECT_FORM", name = "SUBJECT_FORM" }))
 {
     <table border="0" align="left">
         <tbody>
             <tr>
                 <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "" })</td>
                 <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
                     <select class="form-control" id="ddl_Semester" name="ddl_Semester">
@@ -35,21 +75,183 @@
                         <option value="3">3</option>
                     </select>
                 </td>
-                <td align="right"><b>ภาควิชา&nbsp;</b></td>
+                <td align="right"><b>รหัสวิชา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
-                    @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { @class = "form-control", style = "" })
-                    @Html.Hidden("Count", 0)
+                    @Html.DropDownList("SUBJECT", (SelectList)ViewBag.ddl_Subject, new { @class = "form-control", style = "" })
                 </td>
-                <td align="right"><b>สาขาวิชา&nbsp;</b></td>
-                <td colspan="5">@Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { @class = "form-control", style = "" })</td>
+                <td align="right"><b>วิชา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("SUBJECT_NAME", (SelectList)ViewBag.ddl_Subject_Name, new { @class = "form-control", style = "", disabled = "disabled" })
+                </td>
             </tr>
         </tbody>
     </table>
-    <br><br><br>
+    <br>
+}
+<br>
+@using (Html.BeginForm("singleupdatedata", "TimeSchedule", FormMethod.Post))
+{
+    @Html.Hidden("SUBJECTid", Subject_id);
+    @Html.Hidden("Semester", SEMESTER)
+    @Html.Hidden("Year", YEAR)
+    <div class="w3-row">
+        <div class="col-lg-6 w3-container w3-card space" style="background-color:#25b0ee">
+            <table border="0" align="center" style="border-collapse:separate;border-spacing:5px">
+                <thead>
+                    <tr>
+                        <td colspan="14" border="0" align="center">
+                            <p id="First_Header">First</p>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="right"><b>ตอนเรียน&nbsp;</b></td>
+                        <td width="10%">
+                            @Html.Hidden("FIRST_SECTION_ID", "")
+                            @Html.TextBox("FIRST_SAVE_NUMBER", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                        <td align="right"><b>&nbsp;</b></td>
+                        <td colspan="3" style="padding-right:2px">
+                            <select class="form-control" id="FIRST_SAVE_DATE" name="FIRST_SAVE_DATE" style="">
+                                <option value="M">วันจันทร์</option>
+                                <option value="T">วันอังคาร</option>
+                                <option value="W">วันพุธ</option>
+                                <option value="H">วันพฤหัสบดี</option>
+                                <option value="F">วันศุกร์</option>
+                                <option value="S">วันเสาร์</option>
+                            </select>
+                        </td>
+                        <td align="right"><b>เวลา&nbsp;</b></td>
+                        <td colspan="3" style="padding-right:2px">
+                            <select class="form-control" id="FIRST_SAVE_TIMESTART" name="FIRST_SAVE_TIMESTART" style="width:6em">
+                                <option value="8">08:00</option>
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
+                        </td>
+                        <td align="center"><b>-&nbsp;</b></td>
+                        <td colspan="3" style="padding-right:1em">
+                            <select class="form-control" id="FIRST_SAVE_TIMEEND" name="FIRST_SAVE_TIMEEND" style="width:6em">
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>ห้องเรียน&nbsp;</b></td>
+                        <td colspan="13">
+                            @Html.TextBox("FIRST_SAVE_CLASSROOM", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 w3-container w3-card space2" style="background-color:#25b0ee">
+            <table border="0" align="center" style="border-collapse:separate;border-spacing:5px">
+                <thead>
+                    <tr>
+                        <td colspan="14" border="0" align="center">
+                            <p id="Second_Header">Second</p>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="right"><b>ตอนเรียน&nbsp;</b></td>
+                        <td width="10%">
+                            @Html.Hidden("SECOND_SECTION_ID", "0")
+                            @Html.TextBox("SECOND_SAVE_NUMBER", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                        <td align="right"><b>&nbsp;</b></td>
+                        <td colspan="5">
+                            <select class="form-control" id="SECOND_SAVE_DATE" name="SECOND_SAVE_DATE">
+                                <option value="M">วันจันทร์</option>
+                                <option value="T">วันอังคาร</option>
+                                <option value="W">วันพุธ</option>
+                                <option value="H">วันพฤหัสบดี</option>
+                                <option value="F">วันศุกร์</option>
+                                <option value="S">วันเสาร์</option>
+                            </select>
+                        </td>
+                        <td align="right"><b>เวลา&nbsp;</b></td>
+                        <td colspan="2">
+                            <select class="form-control" id="SECOND_SAVE_TIMESTART" name="SECOND_SAVE_TIMESTART" style="width:6em">
+                                <option value="8">08:00</option>
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
+                        </td>
+                        <td align="center"><b>-&nbsp;</b></td>
+                        <td colspan="2">
+                            <select class="form-control" id="SECOND_SAVE_TIMEEND" name="SECOND_SAVE_TIMEEND" style="width:6em">
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>ห้องเรียน&nbsp;</b></td>
+                        <td colspan="13">
+                            @Html.TextBox("SECOND_SAVE_CLASSROOM", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <input type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
+    <br>
 }
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
+    @Html.Hidden("SUBJECTid", Subject_id);
     @Html.Hidden("Semester", SEMESTER)
     @Html.Hidden("Year", YEAR)
     <table class="table table-responsive fix-font" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
@@ -101,6 +303,7 @@
                             var ttimestart = "timestart_" + search_id;
                             var ttimeend = "timeend_" + search_id;
                             var tdate = "date_" + search_id;
+                            var tclassroom = "classroom_" + search_id;
                             var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
                             if (trigger == 1)
                             {
@@ -116,7 +319,7 @@
                                             @Html.Hidden("x_value", TIME + "_" + date[a])
                                         </div>
                                         <p>
-                                            @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
+                                            @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
                                         </p>
                                         @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
                                         @Html.Hidden("First_" + tsearchid, WhereTimeDate.First().SECTION_ID)
@@ -126,6 +329,7 @@
                                         @Html.Hidden("First_" + ttimestart, WhereTimeDate.First().SECTION_TIME_START)
                                         @Html.Hidden("First_" + ttimeend, WhereTimeDate.First().SECTION_TIME_END)
                                         @Html.Hidden("First_" + tdate, WhereTimeDate.First().SECTION_DATE)
+                                        @Html.Hidden("First_" + tclassroom, WhereTimeDate.First().SECTION_CLASSROOM)
                                     </div>
                                 </td>
                             }
@@ -152,7 +356,7 @@
                                                 @Html.Hidden("x_value", TIME + "_" + date[a])
                                             </div>
                                             <p>
-                                                @first.SUBJECT_ID @first.SUBJECT_NAME
+                                                @first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER
                                             </p>
                                             @Html.Hidden("searchId", first.SECTION_ID)
                                             @Html.Hidden("First_" + tsearchid, first.SECTION_ID)
@@ -162,6 +366,7 @@
                                             @Html.Hidden("First_" + ttimestart, first.SECTION_TIME_START)
                                             @Html.Hidden("First_" + ttimeend, first.SECTION_TIME_END)
                                             @Html.Hidden("First_" + tdate, first.SECTION_DATE)
+                                            @Html.Hidden("First_" + tclassroom, first.SECTION_CLASSROOM)
 
                                             @Html.Hidden("Second_" + tsearchid, second.SECTION_ID)
                                             @Html.Hidden("Second_" + tsubjectid, second.SUBJECT_ID)
@@ -170,6 +375,7 @@
                                             @Html.Hidden("Second_" + ttimestart, second.SECTION_TIME_START)
                                             @Html.Hidden("Second_" + ttimeend, second.SECTION_TIME_END)
                                             @Html.Hidden("Second_" + tdate, second.SECTION_DATE)
+                                            @Html.Hidden("Second_" + tclassroom, second.SECTION_CLASSROOM)
                                         </div>
                                     </td>
                                 }
@@ -187,7 +393,7 @@
                                                 @Html.Hidden("x_value", TIME + "_" + date[a])
                                             </div>
                                             <p>
-                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
+                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
                                             </p>
                                             @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
                                             @Html.Hidden("First_" + tsearchid, WhereTimeDate.First().SECTION_ID)
@@ -197,6 +403,7 @@
                                             @Html.Hidden("First_" + ttimestart, WhereTimeDate.First().SECTION_TIME_START)
                                             @Html.Hidden("First_" + ttimeend, WhereTimeDate.First().SECTION_TIME_END)
                                             @Html.Hidden("First_" + tdate, WhereTimeDate.First().SECTION_DATE)
+                                            @Html.Hidden("First_" + tclassroom, WhereTimeDate.First().SECTION_CLASSROOM)
                                         </div>
                                     </td>
                                 }

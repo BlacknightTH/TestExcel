@@ -32,7 +32,8 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-            string first_Year = semesteryear.First().YEAR;
+            string first_Year;
+                first_Year = "2560";
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
             return View();

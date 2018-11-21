@@ -32,7 +32,20 @@
                     $("#ErrorAlert").hide("fade");
                 }, 3000);
             }
-        });
+    });
+    $("#DDL_DEPARTMENT").change(function () {
+        $("#Count").val(1);
+        $("#BRANCH_FORM").submit();
+    });
+    $("#ddl_Year").change(function () {
+        $("#BRANCH_FORM").submit();
+    });
+    $("#ddl_Semester").change(function () {
+        $("#BRANCH_FORM").submit();
+    });
+    $("#DDL_BRANCH").change(function () {
+        $("#BRANCH_FORM").submit();
+    });
 </script>
 <div class="w3-row w3-center fontup">
     @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
@@ -52,7 +65,7 @@
         <tbody>
             <tr>
                 <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "" })</td>
                 <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
                     <select class="form-control" id="ddl_Semester" name="ddl_Semester">
@@ -297,6 +310,12 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td align="right"><b>ห้องเรียน&nbsp;</b></td>
+                        <td colspan="13">
+                            @Html.TextBox("FIRST_SAVE_CLASSROOM", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -365,6 +384,12 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td align="right"><b>ห้องเรียน&nbsp;</b></td>
+                        <td colspan="13">
+                            @Html.TextBox("SECOND_SAVE_CLASSROOM", "", new { @class = "form-control", @placeholder = "" })
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -379,7 +404,7 @@
     @Html.Hidden("BR_NAME", BRANCH_NAME);
     @Html.Hidden("Semester", SEMESTER)
     @Html.Hidden("Year", YEAR)
-    <table class="table table-responsive fix-font" id="TableLocation2" style="font-size:14px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
+    <table class="table table-responsive fix-font" id="TableLocation2" style="font-size:12px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>
         <thead>
             <tr bgcolor="#D3D3D3">
                 <th><b>Day</b></th>
@@ -428,6 +453,7 @@
                             var ttimestart = "timestart_" + search_id;
                             var ttimeend = "timeend_" + search_id;
                             var tdate = "date_" + search_id;
+                            var tclassroom = "classroom_" + search_id;
                             var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
                             if (trigger == 1)
                             {
@@ -453,6 +479,7 @@
                                         @Html.Hidden("First_" + ttimestart, WhereTimeDate.First().SECTION_TIME_START)
                                         @Html.Hidden("First_" + ttimeend, WhereTimeDate.First().SECTION_TIME_END)
                                         @Html.Hidden("First_" + tdate, WhereTimeDate.First().SECTION_DATE)
+                                        @Html.Hidden("First_" + tclassroom, WhereTimeDate.First().SECTION_CLASSROOM)
                                     </div>
                                 </td>
                             }
@@ -489,6 +516,7 @@
                                             @Html.Hidden("First_" + ttimestart, first.SECTION_TIME_START)
                                             @Html.Hidden("First_" + ttimeend, first.SECTION_TIME_END)
                                             @Html.Hidden("First_" + tdate, first.SECTION_DATE)
+                                            @Html.Hidden("First_" + tclassroom, first.SECTION_CLASSROOM)
 
                                             @Html.Hidden("Second_" + tsearchid, second.SECTION_ID)
                                             @Html.Hidden("Second_" + tsubjectid, second.SUBJECT_ID)
@@ -497,6 +525,7 @@
                                             @Html.Hidden("Second_" + ttimestart, second.SECTION_TIME_START)
                                             @Html.Hidden("Second_" + ttimeend, second.SECTION_TIME_END)
                                             @Html.Hidden("Second_" + tdate, second.SECTION_DATE)
+                                            @Html.Hidden("Second_" + tclassroom, second.SECTION_CLASSROOM)
                                         </div>
                                     </td>
                                 }
@@ -524,6 +553,7 @@
                                             @Html.Hidden("First_" + ttimestart, WhereTimeDate.First().SECTION_TIME_START)
                                             @Html.Hidden("First_" + ttimeend, WhereTimeDate.First().SECTION_TIME_END)
                                             @Html.Hidden("First_" + tdate, WhereTimeDate.First().SECTION_DATE)
+                                            @Html.Hidden("First_" + tclassroom, WhereTimeDate.First().SECTION_CLASSROOM)
                                         </div>
                                     </td>
                                 }

@@ -239,13 +239,42 @@ namespace TestExcel.Controllers
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }
-        public ActionResult TeSchedule()
+        public ActionResult TeSchedule(string id,string SUBJECTid, string BR_Semester, string BR_Year, string Message,string color)
         {
-            var PROFESSOR_SHORTNAME = db.PROFESSORs.Select(x => x.PROFESSOR_SHORTNAME).First();
-
+            SUBJECT SUBJECT = new SUBJECT();
+            if (SUBJECTid == null && BR_Semester == null && BR_Year == null)
+            {
+                BR_Semester = "1";
+                BR_Year = "2560";
+                SUBJECT = db.SUBJECTs.First();
+                color = "";
+            }
+            else
+            {
+                SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == SUBJECTid).First();
+            }
+            if (Message != null)
+            {
+                CheckMessage = int.Parse(Message);
+            }
+            if (CheckMessage == 1)
+            {
+                ViewBag.Message = "Save Success";
+                ViewBag.ErrorMessage = "";
+            }
+            else if (CheckMessage == 2)
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "Error";
+            }
+            else
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "";
+            }
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME) && e1.SEMESTER.Contains("1") && e2.SEMESTER.Contains("1") && e1.YEAR.Contains("2560") && e2.YEAR.Contains("2560")
+                        where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                         select new Section_Subject
                         {
                             SECTION_ID = e1.SECTION_ID,
@@ -269,27 +298,32 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
-            ViewBag.PDDLSelected = 1;
-            ViewBag.SYDDLSelected = "1/2560";
-            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", "1/2560");
-            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
-            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            if (id != "" && color != null)
+            {
+                ViewBag.color = "#ff0000";
+                ViewBag.Number = id;
+            }
+            ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
+            ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
+            ViewBag.Semester = BR_Semester;
+            ViewBag.Year = BR_Year;
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
+            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_ID", SUBJECT.SUBJECT_ID);
+            ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", SUBJECT.SUBJECT_ID);
             return View(query);
         }
         [HttpPost]
         public ActionResult TeSchedule(FormCollection collection)
         {
-            int Professor_id = int.Parse(collection["DDL_PROFESSOR"]);
-            string DDL_SEMESTERYEAR = collection["DDL_SEMESTERYEAR"];
-            string[] dl = DDL_SEMESTERYEAR.Split('/');
-            string semester = dl[0];
-            string year = dl[1];
-            var PROFESSOR_SHORTNAME = db.PROFESSORs.Where(x => x.PROFESSOR_ID == Professor_id).First().PROFESSOR_SHORTNAME;
+            var DDL_SUBJECT = collection["SUBJECT"];
+            var ddl_Semester = collection["ddl_Semester"];
+            var ddl_Year = collection["ddl_Year"];
+
+            var SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == DDL_SUBJECT).First();
 
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(PROFESSOR_SHORTNAME)
+                        where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(ddl_Semester) && e2.SEMESTER.Contains(ddl_Semester) && e1.YEAR.Contains(ddl_Year) && e2.YEAR.Contains(ddl_Year)
                         select new Section_Subject
                         {
                             SECTION_ID = e1.SECTION_ID,
@@ -313,12 +347,13 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-            ViewBag.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
-            ViewBag.PDDLSelected = Professor_id;
-            ViewBag.SYDDLSelected = DDL_SEMESTERYEAR;
-            ViewBag.ddl_SemesterYear = new SelectList(semesteryear.OrderBy(x => x.SEMESTER_YEAR), "SEMESTER_YEAR", "SEMESTER_YEAR", DDL_SEMESTERYEAR);
-            ViewBag.ddl_Professor = new SelectList(db.PROFESSORs.ToList(), "PROFESSOR_ID", "PROFESSOR_SHORTNAME");
-            //ViewBag.ddl_Classroom = new SelectList(db.BUILDINGs.Where(x => x.BUILDING_NAME == 63).ToList(), "ID", "CLASSROOM_NAME");
+            ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
+            ViewBag.SUBJECT = DDL_SUBJECT;
+            ViewBag.Semester = ddl_Semester;
+            ViewBag.Year = ddl_Year;
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
+            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_ID", DDL_SUBJECT);
+            ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", DDL_SUBJECT);
             return View(query);
         }
         [HttpPost]
@@ -327,6 +362,7 @@ namespace TestExcel.Controllers
             var Message = "0";
             var FIRST_SECTION_ID = collection["FIRST_SECTION_ID"];
             var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
+            var SUBJECTid = collection["SUBJECTid"];
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
             var Year = collection["Year"];
@@ -336,6 +372,7 @@ namespace TestExcel.Controllers
                 var tmp_FIRST_SECTION_ID = int.Parse(FIRST_SECTION_ID);
                 var FIRST_SAVE_NUMBER = collection["FIRST_SAVE_NUMBER"];
                 var FIRST_SAVE_DATE = collection["FIRST_SAVE_DATE"];
+                var FIRST_SAVE_CLASSROOM = collection["FIRST_SAVE_CLASSROOM"];
                 var FIRST_SAVE_TIMESTART = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
                 var FIRST_SAVE_TIMEEND = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
 
@@ -344,6 +381,7 @@ namespace TestExcel.Controllers
                 {
                     edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
                     edit.SECTION_DATE = FIRST_SAVE_DATE;
+                    edit.SECTION_CLASSROOM = FIRST_SAVE_CLASSROOM;
                     edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
                     edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
                 }
@@ -353,6 +391,7 @@ namespace TestExcel.Controllers
             {
                 var FIRST_SAVE_NUMBER = collection["FIRST_SAVE_NUMBER"];
                 var FIRST_SAVE_DATE = collection["FIRST_SAVE_DATE"];
+                var FIRST_SAVE_CLASSROOM = collection["FIRST_SAVE_CLASSROOM"];
                 var FIRST_SAVE_TIMESTART = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
                 var FIRST_SAVE_TIMEEND = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
                 var tmp_FIRST_SECTION_ID = int.Parse(FIRST_SECTION_ID);
@@ -362,12 +401,14 @@ namespace TestExcel.Controllers
                 {
                     edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
                     edit.SECTION_DATE = FIRST_SAVE_DATE;
+                    edit.SECTION_CLASSROOM = FIRST_SAVE_CLASSROOM;
                     edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
                     edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
                 }
 
                 var SECOND_SAVE_NUMBER = collection["SECOND_SAVE_NUMBER"];
                 var SECOND_SAVE_DATE = collection["SECOND_SAVE_DATE"];
+                var SECOND_SAVE_CLASSROOM = collection["SECOND_SAVE_CLASSROOM"];
                 var SECOND_SAVE_TIMESTART = double.Parse(collection["SECOND_SAVE_TIMESTART"]);
                 var SECOND_SAVE_TIMEEND = double.Parse(collection["SECOND_SAVE_TIMEEND"]);
                 var tmp_SECOND_SECTION_ID = int.Parse(SECOND_SECTION_ID);
@@ -377,6 +418,7 @@ namespace TestExcel.Controllers
                 {
                     second_edit.SECTION_NUMBER = SECOND_SAVE_NUMBER;
                     second_edit.SECTION_DATE = SECOND_SAVE_DATE;
+                    edit.SECTION_CLASSROOM = SECOND_SAVE_CLASSROOM;
                     second_edit.SECTION_TIME_START = SECOND_SAVE_TIMESTART;
                     second_edit.SECTION_TIME_END = SECOND_SAVE_TIMEEND;
                 }
@@ -387,12 +429,20 @@ namespace TestExcel.Controllers
                 Message = "2";
             }
             db.SaveChanges();
-            return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME +"&BR_SEMESTER="+Semester+"&BR_YEAR="+Year+"&Message="+Message);
+            if (BR_NAME != null && SUBJECTid == null)
+            {
+                return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
+            else
+            {
+                return Redirect("/TimeSchedule/TeSchedule?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
         }
         [HttpPost]
         public ActionResult updatedata(FormCollection collection)
         {
             var Message = "0";
+            var SUBJECTid = collection["SUBJECTid"];
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
             var Year = collection["Year"];
@@ -453,7 +503,14 @@ namespace TestExcel.Controllers
                 }
             }
             db.SaveChanges();
-            return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            if (BR_NAME != null && SUBJECTid == null)
+            {
+                return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
+            else
+            {
+                return Redirect("/TimeSchedule/TeSchedule?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
         }
     }
 }

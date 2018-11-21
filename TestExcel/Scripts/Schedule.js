@@ -1,24 +1,9 @@
 ﻿$(document).ready(function () {
     var colspan, tmp_id, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6,tmp7,tmpdate,tmptimestart,tmptimeend, j, k, l, a, i, value, valdate, tablecellcheck, colspanvalue;
-    var section_id, subject_id, subject_name, subject_credit, subject_number, subject_hour, subject_timestart, subject_timeend, subject_professor, subject_branch, subject_date;
-    var check_id,last_section_id, last_subject_id, last_subject_name, last_subject_credit, last_subject_number, last_subject_hour, last_subject_timestart, last_subject_timeend, last_subject_professor, last_subject_branch, last_subject_date;
+    var section_id, subject_classroom, subject_id, subject_name, subject_credit, subject_number, subject_hour, subject_timestart, subject_timeend, subject_professor, subject_branch, subject_date;
+    var check_id, last_section_id, last_subject_classroom, last_subject_id, last_subject_name, last_subject_credit, last_subject_number, last_subject_hour, last_subject_timestart, last_subject_timeend, last_subject_professor, last_subject_branch, last_subject_date;
     var date2 = ["M", "T", "W", "H", "F", "S"];
     var hour,hour1;
-    // หน้า TimeSchedule //
-    $("#DDL_DEPARTMENT").change(function () {
-        $("#Count").val(1);
-        $("#BRANCH_FORM").submit();
-    });
-    $("#ddl_Year").change(function () {
-        $("#BRANCH_FORM").submit();
-    });
-    $("#ddl_Semester").change(function () {
-        $("#BRANCH_FORM").submit();
-    });
-    $("#DDL_BRANCH").change(function () {
-        $("#BRANCH_FORM").submit();
-    });
-
     function drag_drop() {
 
         $(".draggable").draggable({
@@ -180,6 +165,7 @@
             subject_timestart = $(this).find("#subject_timestart").val();
             subject_timeend = $(this).find("#subject_timeend").val();
             subject_date = $(this).find("#subject_date").val();
+            subject_classroom = $(this).find("#subject_classroom").val();
 
             last_subject_id = "0";
             last_subject_name = "";
@@ -199,6 +185,7 @@
                 last_subject_timestart = $(this).find("#Last_subject_timestart").val();
                 last_subject_timeend = $(this).find("#Last_subject_timeend").val();
                 last_subject_date = $(this).find("#Last_subject_date").val();
+                last_subject_classroom = $(this).find("#Last_subject_classroom").val();
             }
             else {
                 last_subject_id = "0";
@@ -209,6 +196,7 @@
                 last_subject_timestart = "";
                 last_subject_timeend = "";
                 last_subject_date = "";
+                last_subject_classroom = "";
             }
 
             var s = subject_id + " " + subject_name;
@@ -267,18 +255,21 @@
                     + '<input id="First_number_' + section_id + '" value="' + subject_number + '" type="hidden">'
                     + '<input id="First_timestart_' + section_id + '" value="' + tmptimestart + '" type="hidden">'
                     + '<input id="First_timeend_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
-                    + '<input id="First_date_' + section_id + '" value="' + tmpdate + '" type="hidden">';
+                    + '<input id="First_date_' + section_id + '" value="' + tmpdate + '" type="hidden">'
+                    + '<input id="First_classroom_' + section_id + '" value="' + subject_classroom + '" type="hidden">';
 
                 if (last_subject_id != "0") {
                     hour = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
                     last_subject_timeend = parseInt(subject_timeend) + parseInt(hour);
-                    last_stringpart = '<div class"second_remove"><input id="Second_id_' + section_id + '" value="' + last_section_id + '" type="hidden">'
+                    last_stringpart = '<input id="Second_id_' + section_id + '" value="' + last_section_id + '" type="hidden">'
                         + '<input id="Second_subjectid_' + section_id + '" value="' + last_subject_id + '" type="hidden">'
                         + '<input id="Second_name_' + section_id + '" value="' + last_subject_name + '" type="hidden">'
                         + '<input id="Second_number_' + section_id + '" value="' + last_subject_number + '" type="hidden">'
                         + '<input id="Second_timestart_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                         + '<input id="Second_timeend_' + section_id + '" value="' + last_subject_timeend + '" type="hidden">'
-                        + '<input id="Second_date_' + section_id + '" value="' + tmpdate + '" type="hidden"></div>';
+                        + '<input id="Second_date_' + section_id + '" value="' + tmpdate + '" type="hidden">'
+                        + '<input id="Second_clasroom_' + section_id + '" value="' + last_subject_classroom + '" type="hidden">';
+
                     $("#" + tmp_id).html('<div class="" style="background-color:' + color + ';width:100%;height:50px">' + stringpart + last_stringpart + '</div>');
                 }
                 else {
@@ -298,7 +289,6 @@
                 //Table1();
                 replace();
                 drag_drop();
-                $(".second_remove").remove();
             }
         }
     });
@@ -336,8 +326,8 @@
     function replace() {
         $("#TableLocation2 tr td div").click(function () {
             var optionlisting = "";
-            var TimeStart, tmp_id2, tmp12, first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
-            var second_id, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;
+            var TimeStart, tmp_id2, tmp12, first_classroom,first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
+            var second_id, second_classroom, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;
             check_id = $(this).find("#searchId").val();
             first_id = $(this).find("#First_" + "id_" + check_id).val();
             first_subjectid = $(this).find("#First_" + "subjectid_" + check_id).val();
@@ -346,12 +336,14 @@
             first_timestart = $(this).find("#First_" + "timestart_" + check_id).val();
             first_timeend = $(this).find("#First_" + "timeend_" + check_id).val();
             first_date = $(this).find("#First_" + "date_" + check_id).val();
+            first_classroom = $(this).find("#First_" + "classroom_" + check_id).val();
 
             $("#First_Header").html(first_subjectid + " " + first_name);
             $("#FIRST_SECTION_ID").val(first_id);
             $("#FIRST_SAVE_NUMBER").val(first_number);
             $("#FIRST_SAVE_DATE").val(first_date);
             $("#FIRST_SAVE_TIMESTART").val(first_timestart);
+            $("#FIRST_SAVE_CLASSROOM").val(first_classroom);
             TimeStart = $('#FIRST_SAVE_TIMESTART').val();
             $('#FIRST_SAVE_TIMEEND option').remove();
             for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
@@ -370,6 +362,7 @@
             $("#SECOND_SECTION_ID").val("0");
             $("#SECOND_SAVE_NUMBER").val("");
             $("#SECOND_SAVE_DATE").val("M");
+            $("#SECOND_SAVE_CLASSROOM").val("");
             $("#SECOND_SAVE_TIMESTART").val(8);
             TimeStart = $('#SECOND_SAVE_TIMESTART').val();
             $('#SECOND_SAVE_TIMEEND option').remove();
@@ -394,12 +387,14 @@
                 second_timestart = $(this).find("#Second_" + "timestart_" + check_id).val();
                 second_timeend = $(this).find("#Second_" + "timeend_" + check_id).val();
                 second_date = $(this).find("#Second_" + "date_" + check_id).val();
+                second_classroom = $(this).find("#Second_" + "classroom_" + check_id).val();
 
                 $("#Second_Header").html(second_subjectid + " " + second_name);
                 $("#SECOND_SECTION_ID").val(second_id);
                 $("#SECOND_SAVE_NUMBER").val(second_number);
                 $("#SECOND_SAVE_DATE").val(second_date);
                 $("#SECOND_SAVE_TIMESTART").val(second_timestart);
+                $("#SECOND_SAVE_CLASSROOM").val(second_classroom);
                 TimeStart = $('#SECOND_SAVE_TIMESTART').val();
                 $('#SECOND_SAVE_TIMEEND option').remove();
                 for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
@@ -478,11 +473,5 @@
             }
         }
     });
-    //-----------------------------------------------------------//
-    // หน้า ครูผู้สอน //
-    $("#DDL_PROFESSOR").change(function () {
-        $("#PROFESSOR_FORM").submit();
-    });
-    //-----------------------------------------------------------//
 
 });

@@ -47,7 +47,7 @@ else
             <tbody>
                 <tr>
                     <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_SemesterYear, new { @class = "form-control", style = "" })</td>
+                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "" })</td>
                     <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                     <td colspan="5" style="padding-right:1em">
                         <select class="form-control" id="ddl_Semester" name="ddl_Semester">
@@ -110,7 +110,7 @@ else
             var temp1 = Model.Item2.Select(x => x.BUILDING_ID);
             for (int a = temp1.First(); a <= temp1.Last(); a++)
             {
-                var classroom = @Model.Item2.Where(x => x.BUILDING_ID == a).FirstOrDefault().CLASSROOM_NAME;
+                var classroom = @Model.Item2.Where(x => x.BUILDING_ID == a).OrderBy(x => x.CLASSROOM_NAME).FirstOrDefault().CLASSROOM_NAME;
                 <tr width="60px">
                     <td width="60px">@classroom</td>
                     @for (int b = 8; b <= 21; b++)
@@ -142,7 +142,7 @@ else
                                 <td id="@tid" colspan="@TIME" width="60px">
                                     <div class="" style="background-color:@color;width:100%;height:50px">
                                         <p>
-                                            @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
+                                            @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอนเรียน @WhereTimeDate.First().SECTION_NUMBER
                                         </p>
                                     </div>
                                 </td>
@@ -166,7 +166,7 @@ else
                                     <td id="@tid" colspan="@TIME" width="60px">
                                         <div style="background-color:@color;height:50px">
                                             <p>
-                                                @first.SUBJECT_ID @first.SUBJECT_NAME
+                                                @first.SUBJECT_ID @first.SUBJECT_NAME ตอนเรียน @first.SECTION_NUMBER
                                             </p>
                                         </div>
                                     </td>
@@ -182,7 +182,7 @@ else
                                     <td id="@tid" colspan="@TIME" width="60px">
                                         <div style="background-color:@color;width:100%;height:50px">
                                             <p>
-                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME
+                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอนเรียน @WhereTimeDate.First().SECTION_NUMBER
                                             </p>
                                         </div>
                                     </td>

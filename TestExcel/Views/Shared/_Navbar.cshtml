@@ -105,8 +105,14 @@
                     var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
                     var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
 
-                    $("#notiContent").append($('<li>' + value.SUBJECT_ID_First + " " + datethai[parseInt(tmp_datefirst)] + " ตอน " + value.SECTION_NUMBER_First + "<br>"
-                        + value.SUBJECT_ID_Last + " " + datethai[parseInt(tmp_datelast)] + " " + value.SECTION_NUMBER_Last + '</li>'));
+                    $("#notiContent").append($('<li><a href="/TimeSchedule/TeSchedule/' + value.SECTION_ID_First+'?SUBJECTid='
+                        + value.SUBJECT_ID_First + '&BR_SEMESTER=' + value.SEMESTER + '&BR_YEAR='
+                        + value.YEAR + '&color=#ff0000">'
+                        + value.SUBJECT_ID_First + " " + datethai[parseInt(tmp_datefirst)] + " ตอน "
+                        + value.SECTION_NUMBER_First + " ห้อง " + value.SECTION_CLASSROOM_First +"<br>"
+                        + value.SUBJECT_ID_Last + " "
+                        + datethai[parseInt(tmp_datelast)]
+                        + " ตอน " + value.SECTION_NUMBER_Last + '</a></li>'));
                 });
             },
             error: function (error) {
@@ -116,36 +122,5 @@
         $(".noti").click(function () {
             $("#notiContent").toggle();
         });
-        //$(".noti").click(function (e) {
-        //    var count = 0;
-        //    count = parseInt($(".badge1").html());
-        //        updatenotification();
-        //});
-        //function updatenotification() {
-        //    $("#notiContent").empty();
-        //    $("#notiContent").append($('<li>Loading...</li>'));
-        //    $.ajax({
-        //        type: 'GET',
-        //        url: '/data/GetNotifications',
-        //        success: function (response) {
-        //            $("#notiContent").empty();
-        //            if (response.length == 0) {
-        //                $("#notiContent").append($('<li>No data available</li>'));
-        //            }
-        //            else {
-        //                var count = 0;
-        //                count = response.length;
-        //                $("#count").html(count);
-        //            }
-
-        //            $.each(response, function (index, value) {
-        //                $("#notiContent").append($('<li>' + value.SUBJECT_ID_First + value.SECTION_DATE_First + '</li>'));
-        //            });
-        //        },
-        //        error: function (error) {
-        //            console.log(error);
-        //        }
-        //    });
-        //}
     });
 </script>
