@@ -201,27 +201,28 @@ namespace TestExcel.Controllers
             int Date = int.Parse(collection["DDL_DATE"]);
             string semester = collection["ddl_Semester"];
             string year = collection["ddl_Year"];
+            List<Building_Classroom> query = new List<Building_Classroom>();
 
-            var query = from e1 in db.SECTIONs
-                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
-                        where e3.BUILDING_NAME.Contains(Building_id.ToString()) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
-                        select new Building_Classroom
-                        {
-                            SUBJECT_ID = e1.SUBJECT_ID,
-                            SUBJECT_NAME = e2.SUBJECT_NAME,
-                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                            SECTION_NUMBER = e1.SECTION_NUMBER,
-                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                            SECTION_DATE = e1.SECTION_DATE,
-                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                            SECTION_TIME_START = e1.SECTION_TIME_START,
-                            SECTION_TIME_END = e1.SECTION_TIME_END,
-                            BUILDING_NAME = e3.BUILDING_NAME,
-                            SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
-                        };
+                query = (from e1 in db.SECTIONs
+                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                            join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
+                            where e3.BUILDING_NAME.Contains(Building_id.ToString()) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                            select new Building_Classroom
+                            {
+                                SUBJECT_ID = e1.SUBJECT_ID,
+                                SUBJECT_NAME = e2.SUBJECT_NAME,
+                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                SECTION_NUMBER = e1.SECTION_NUMBER,
+                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                SECTION_DATE = e1.SECTION_DATE,
+                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                SECTION_TIME_START = e1.SECTION_TIME_START,
+                                SECTION_TIME_END = e1.SECTION_TIME_END,
+                                BUILDING_NAME = e3.BUILDING_NAME,
+                                SEMESTER = e1.SEMESTER,
+                                YEAR = e1.YEAR
+                            }).ToList();
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {

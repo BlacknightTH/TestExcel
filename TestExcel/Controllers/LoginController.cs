@@ -24,7 +24,7 @@ namespace TestExcel.Controllers
                             SECTION_CLASSROOM = s.Key.classroom
                         };
             var query = db.SECTIONs.GroupBy(x => new { classroom = x.SECTION_CLASSROOM }).Select(y => new Section_Subject { SECTION_CLASSROOM = y.Key.classroom });
-            return View();
+            return View(query);
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)

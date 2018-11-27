@@ -38,16 +38,20 @@
                     <td id="TbuildingName_@item.BUILDING_ID">
                         @if (item.BUILDING_NAME == "632")
                         {
-                            buildingname = "อาคารเรียน " + item.CLASSROOM_NAME + "()";
+                            buildingname = "อาคารเรียน 63 (อาคารสีเทา ตึกใหม่)";
+                        }
+                        else if(item.BUILDING_NAME == "1")
+                        {
+                            buildingname = "อื่นๆ";
                         }
                         else
                         {
-                            buildingname = "อาคารเรียน " + item.CLASSROOM_NAME;
+                            buildingname = "อาคารเรียน " + item.BUILDING_NAME;
                         }
-                        <p>@item.BUILDING_NAME</p>
+                        <p>@buildingname</p>
                     </td>
                     <td id="TclassroomName_@item.BUILDING_ID">
-                        <p>@buildingname</p>
+                        <p>@item.CLASSROOM_NAME</p>
                     </td>
                     <td>
                         <a href="#" onclick="EditRecord(@item.BUILDING_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -72,9 +76,19 @@
             <div class="container">
                 <div class="w3-section">
                     @Html.Hidden("BUILDING_ID", 0)
-                    <label>อาคาร</label>
-                    @Html.TextBox("BUILDING_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
-                    <label>ห้องเรียน</label>
+                    <label>อาคาร</label><br>
+                    <select class="w3-select w3-border w3-margin-bottom" id="BUILDING_NAME" name="BUILDING_NAME" style="max-width:570px">
+                        <option value="63">อาคารเรียน 63</option>
+                        <option value="632">อาคารเรียน 63 (อาคารสีเทา ตึกใหม่)</option>
+                        <option value="62">อาคารเรียน 62</option>
+                        <option value="65">อาคารเรียน 65</option>
+                        <option value="42">อาคารเรียน 42</option>
+                        <option value="69">อาคารเรียน 69</option>
+                        <option value="64">อาคารเรียน 64</option>
+                        <option value="1">อื่น ๆ</option>
+                    </select><br>
+                    @*@Html.TextBox("BUILDING_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })*@
+                    <label>ห้องเรียน</label><br>
                     @Html.TextBox("CLASSROOM_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
 
@@ -122,7 +136,10 @@
     }
     function EditRecord(BUILDING_ID) {
         $("#BUILDING_ID").val(BUILDING_ID);
-        $("#BUILDING_NAME").val($("#TbuildingName_" + BUILDING_ID + " p").html().trim());
+        var buildingstring = $("#TbuildingName_" + BUILDING_ID + " p").html().trim();
+
+        var splitstring = buildingstring.split(' ');
+        $("#BUILDING_NAME").val(splitstring[1]);
         $("#CLASSROOM_NAME").val($("#TclassroomName_" + BUILDING_ID + " p").html().trim());
         $("#ModalTitle").html("Update Building Record");
         $("#MyModal").css('display', 'block');
