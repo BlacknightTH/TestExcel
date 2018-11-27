@@ -242,6 +242,8 @@ namespace TestExcel.Controllers
         public ActionResult TeSchedule(string id,string classroom,string SUBJECTid, string BR_Semester, string BR_Year, string Message,string color)
         {
             SUBJECT SUBJECT = new SUBJECT();
+            string first_subject = "";
+            string last_subject = "";
             IQueryable<Section_Subject> query;
             if (SUBJECTid == null && BR_Semester == null && BR_Year == null)
             {
@@ -252,7 +254,9 @@ namespace TestExcel.Controllers
             }
             else
             {
-                SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == SUBJECTid).First();
+                string[] splitsubject = SUBJECTid.Split('_');
+                first_subject = splitsubject[0];
+                last_subject = splitsubject[1];
             }
             if (Message != null)
             {
@@ -277,7 +281,7 @@ namespace TestExcel.Controllers
             {
                query = from e1 in db.SECTIONs
                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SECTION_CLASSROOM.Contains(classroom) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            where e1.SUBJECT_ID.Contains(first_subject) || e1.SUBJECT_ID.Contains(last_subject) && e1.SECTION_CLASSROOM.Contains(classroom) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                             select new Section_Subject
                             {
                                 SECTION_ID = e1.SECTION_ID,
@@ -333,6 +337,7 @@ namespace TestExcel.Controllers
             {
                 ViewBag.Number = "";
             }
+            int t = query.Count();
             ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
             ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
             ViewBag.Semester = BR_Semester;

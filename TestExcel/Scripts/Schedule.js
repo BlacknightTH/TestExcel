@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var colspan, tmp_id, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6,tmp7,tmpdate,tmptimestart,tmptimeend, j, k, l, a, i, value, valdate, tablecellcheck, colspanvalue;
+    var colspan, tmp_id, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmpdate, tmptimestart, tmptimeend, j, k, l, a, i, value, valdate, tablecellcheck, tablecellcheck2, tablecellcheck3, colspanvalue;
     var section_id, subject_classroom, subject_id, subject_name, subject_credit, subject_number, subject_hour, subject_timestart, subject_timeend, subject_professor, subject_branch, subject_date;
     var check_id, last_section_id, last_subject_classroom, last_subject_id, last_subject_name, last_subject_credit, last_subject_number, last_subject_hour, last_subject_timestart, last_subject_timeend, last_subject_professor, last_subject_branch, last_subject_date;
     var date2 = ["M", "T", "W", "H", "F", "S"];
@@ -12,6 +12,7 @@
             start: function (event, ui) {
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
+                var checkhave = $(this).parent().html();
                 $(this).parent().attr("colspan", "4");
 
                 check_id = $(this).find("#searchId").val();
@@ -145,49 +146,29 @@
                 $("#" + tmp6).show();
             }
             $("#" + tmp_id).attr("colspan", "4");
-
+            drag_drop();
         });
     }
     drag_drop();
-    $("#TableLocation tbody tr").click(function () {
-        if ($(this).find("input").is(':checked')) {
-            $(this).css("background-color", "");
-            $(this).find("input").prop('checked', false);
-        }
-        else {
-            var checkbool = false;
-            section_id = $(this).find("#sub_id").val();
-            subject_id = $(this).find("#subject_id").val();
-            subject_name = $(this).find("#subject_name").val();
-            subject_credit = $(this).find("#subject_credit").val();
-            subject_number = $(this).find("#subject_number").val();
-            subject_hour = $(this).find("#subject_hour").val();
-            subject_timestart = $(this).find("#subject_timestart").val();
-            subject_timeend = $(this).find("#subject_timeend").val();
-            subject_date = $(this).find("#subject_date").val();
-            subject_classroom = $(this).find("#subject_classroom").val();
-
-            last_subject_id = "0";
-            last_subject_name = "";
-            last_subject_credit = "";
-            last_subject_number = "";
-            last_subject_hour = "";
-            last_subject_timestart = "";
-            last_subject_timeend = "";
-            last_subject_date = "";
-
-            last_section_id = $(this).find("#Last_sub_id").val();
-            if (last_section_id != null) {
-                last_subject_id = $(this).find("#Last_subject_id").val();
-                last_subject_name = $(this).find("#Last_subject_name").val();
-                last_subject_credit = $(this).find("#Last_subject_credit").val();
-                last_subject_number = $(this).find("#Last_subject_number").val();
-                last_subject_timestart = $(this).find("#Last_subject_timestart").val();
-                last_subject_timeend = $(this).find("#Last_subject_timeend").val();
-                last_subject_date = $(this).find("#Last_subject_date").val();
-                last_subject_classroom = $(this).find("#Last_subject_classroom").val();
+   // function Table1() {
+        $("#TableLocation tbody tr").click(function () {
+            if ($(this).find(".tablecheckbox").is(':checked')) {
+                $(this).css("background-color", "");
+                $(this).find(".tablecheckbox").prop('checked', false);
             }
             else {
+                var checkbool = false;
+                section_id = $(this).find("#sub_id").val();
+                subject_id = $(this).find("#subject_id").val();
+                subject_name = $(this).find("#subject_name").val();
+                subject_credit = $(this).find("#subject_credit").val();
+                subject_number = $(this).find("#subject_number").val();
+                subject_hour = $(this).find("#subject_hour").val();
+                subject_timestart = $(this).find("#subject_timestart").val();
+                subject_timeend = $(this).find("#subject_timeend").val();
+                subject_date = $(this).find("#subject_date").val();
+                subject_classroom = $(this).find("#subject_classroom").val();
+
                 last_subject_id = "0";
                 last_subject_name = "";
                 last_subject_credit = "";
@@ -196,34 +177,58 @@
                 last_subject_timestart = "";
                 last_subject_timeend = "";
                 last_subject_date = "";
-                last_subject_classroom = "";
-            }
 
-            var s = subject_id + " " + subject_name;
-            for (i = 0; i < 6; i++) {
-                for (j = 8; j <= 21; j++) {
-                    tablecellcheck = $("#" + date2[i] + "id_" + j).children().children("p").text().trim();
-                    if (tablecellcheck == s) {
-                        checkbool = true;
+                last_section_id = $(this).find("#Last_sub_id").val();
+                if (last_section_id != null) {
+                    last_subject_id = $(this).find("#Last_subject_id").val();
+                    last_subject_name = $(this).find("#Last_subject_name").val();
+                    last_subject_credit = $(this).find("#Last_subject_credit").val();
+                    last_subject_number = $(this).find("#Last_subject_number").val();
+                    last_subject_timestart = $(this).find("#Last_subject_timestart").val();
+                    last_subject_timeend = $(this).find("#Last_subject_timeend").val();
+                    last_subject_date = $(this).find("#Last_subject_date").val();
+                    last_subject_classroom = $(this).find("#Last_subject_classroom").val();
+                }
+                else {
+                    last_subject_id = "0";
+                    last_subject_name = "";
+                    last_subject_credit = "";
+                    last_subject_number = "";
+                    last_subject_hour = "";
+                    last_subject_timestart = "";
+                    last_subject_timeend = "";
+                    last_subject_date = "";
+                    last_subject_classroom = "";
+                }
+                var s = subject_id + " " + subject_name + " ตอน " + subject_number;
+                for (i = 0; i < 6; i++) {
+                    for (j = 8; j <= 21; j++) {
+                        tablecellcheck = $("#" + date2[i] + "id_" + j).find("p:contains("+ s +")").text().trim();
+                        if (tablecellcheck == s) {
+                            checkbool = true;
+                        }
                     }
                 }
-            }
-            if (checkbool == false) {
-                $("#TableLocation tbody tr").find("input").prop('checked', false);
-                $("#TableLocation tbody tr").css("background-color", "");
+                if (checkbool == false) {
+                    $("#TableLocation tbody tr").find(".tablecheckbox").prop('checked', false);
+                    $("#TableLocation tbody tr").css("background-color", "");
 
-                $(this).css("background-color", "#d6d9db");
-                $(this).find("input").prop('checked', true);
+                    $(this).css("background-color", "#d6d9db");
+                    $(this).find(".tablecheckbox").prop('checked', true);
+                }
+                else {
+                    $("#TableLocation tbody tr").find(".tablecheckbox").prop('checked', false);
+                    $("#TableLocation tbody tr").css("background-color", "");
+                }
+                $("#gate").val(checkbool);
             }
-            else {
-                $("#TableLocation tbody tr").find("input").prop('checked', false);
-                $("#TableLocation tbody tr").css("background-color", "");
-            }
-        }
-    });
+        });
+    //}
+    //Table1();
+
     $("#TableLocation2").click(function () {
-        if ($("#TableLocation tbody tr").find("input").is(':checked')) {
-            $("#TableLocation tbody tr").find("input").prop('checked', false);
+        if ($("#TableLocation tbody tr").find(".tablecheckbox").is(':checked')) {
+            $("#TableLocation tbody tr").find(".tablecheckbox").prop('checked', false);
             $("#TableLocation tbody tr").css("background-color", "");
             var stringpart = "";
             var last_stringpart = "";
@@ -248,7 +253,7 @@
             if (tablecellcheck == "" && checkbool == false) {
                 $("#" + tmp_id).attr('colspan', colspan);
                 subject_timeend = parseInt(tmptimestart) + (parseInt(subject_timeend)  - parseInt(subject_timestart));
-                stringpart = '<div id="x_button" class="btn x_button btn-default pull-right text-center">X</div><p>' + subject_id + ' ' + subject_name + '</p> '+'<input id="searchId" value="' + section_id + '" type="hidden">'
+                stringpart = '<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div><p>' + subject_id + ' ' + subject_name + ' ตอน ' + subject_number + '</p> '+'<input id="searchId" value="' + section_id + '" type="hidden">'
                     + '<input id="First_id_' + section_id + '" value="' + section_id + '" type="hidden">'
                     + '<input id="First_subjectid_' + section_id + '" value="' + subject_id + '" type="hidden">'
                     + '<input id="First_name_' + section_id + '" value="' + subject_name + '" type="hidden">'

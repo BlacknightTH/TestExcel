@@ -33,7 +33,7 @@ namespace TestExcel.Controllers
                                    YEAR = d1.YEAR
                                };
             string first_Year;
-                first_Year = "2560";
+            first_Year = "2560";
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
             return View();
@@ -47,7 +47,7 @@ namespace TestExcel.Controllers
             PdfReport pdfReport = new PdfReport();
             byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
 
-            string FilePath = @"D:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department_name + ".pdf";
+            string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department_name + ".pdf";
             string FileName = Path.GetFileName(FilePath);
 
             //return File(abytes, "application/pdf", FileName);
@@ -61,7 +61,7 @@ namespace TestExcel.Controllers
             PdfReport pdfReport = new PdfReport();
             byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
 
-            string FilePath = @"D:\\" + "ตารางลงห้องเรียน_" + date[Date] + "_" + semester + "-" + year + ".pdf";
+            string FilePath = @"C:\\" + "ตารางลงห้องเรียน_" + date[Date] + "_" + semester + "-" + year + ".pdf";
             string FileName = Path.GetFileName(FilePath);
 
             //return File(abytes, "application/pdf", FileName);
@@ -77,7 +77,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")) && excelfile.FileName.StartsWith("ขบวน"))
+                if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")))
                 {
                     string path = Server.MapPath("~/import/" + excelfile.FileName);
                     if (System.IO.File.Exists(path))
@@ -87,19 +87,42 @@ namespace TestExcel.Controllers
                     Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
                     try
                     {
+                        int FilenameLength = excelfile.FileName.Length;
+                        FilenameLength = FilenameLength - 11;
+                        string FileName = excelfile.FileName.Substring(FilenameLength);
+                        string[] tmpstring = FileName.Split('.', '-');
+
                         Excel.Application excelapplication = new Excel.Application();
                         Excel.Workbook workbook = excelapplication.Workbooks.Open(path);
                         Excel.Worksheet worksheet = workbook.ActiveSheet;
                         Excel.Range range = worksheet.UsedRange;
-                        TestExcelEntities db = new TestExcelEntities();
+
                         string tmp = "";
                         string tmp2 = "";
 
-                        string semester_year = ((Excel.Range)range.Cells[3, 1]).Text;
-                        string[] split_semester_year = semester_year.Split(' ');
-                        string semester = split_semester_year[1];
-                        string year = split_semester_year[3];
-                        for (int row = 4; row < range.Rows.Count; row++)
+                        string semester = tmpstring[0];
+                        string year = tmpstring[1];
+                        var check_subject_semester_year = db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year);
+                        var check_section_semester_year = db.SECTIONs.Where(x => x.SEMESTER == semester && x.YEAR == year);
+                        if (check_subject_semester_year.Any() == true)
+                        {
+                            for (int g = check_subject_semester_year.ToList().FirstOrDefault().ID; g <= check_subject_semester_year.ToList().Last().ID; g++)
+                            {
+                                var record = db.SUBJECTs.Find(g);
+                                db.SUBJECTs.Remove(record);
+                            }
+                            db.SaveChanges();
+                        }
+                        if (check_section_semester_year.Any() == true)
+                        {
+                            for (int g = check_section_semester_year.ToList().FirstOrDefault().SECTION_ID; g <= check_section_semester_year.ToList().LastOrDefault().SECTION_ID; g++)
+                            {
+                                var record = db.SECTIONs.Where(x => x.SECTION_ID == g).First();
+                                db.SECTIONs.Remove(record);
+                            }
+                            db.SaveChanges();
+                        }
+                        for (int row = 1; row < range.Rows.Count; row++)
                         {
                             string B = ((Excel.Range)range.Cells[row, 2]).Text;
                             string C = ((Excel.Range)range.Cells[row, 3]).Text;
@@ -107,11 +130,12 @@ namespace TestExcel.Controllers
                             string E = ((Excel.Range)range.Cells[row, 5]).Text;
                             string F = ((Excel.Range)range.Cells[row, 6]).Text;
                             string G = ((Excel.Range)range.Cells[row, 7]).Text;
+                            string H = ((Excel.Range)range.Cells[row, 8]).Text;
 
-                            if (B.Length > 4)
+                            if (B.Length > 4 && B.Length < 12)
                             {
                                 tmp = B;
-                                var CheckSubject = db.SUBJECTs.SqlQuery("SELECT * FROM SUBJECT WHERE SUBJECT_ID = '" + B + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
+                                var CheckSubject = db.SUBJECTs.Where(x => x.SUBJECT_ID == B && x.SEMESTER == semester && x.YEAR == year).Any();
                                 if (CheckSubject != true)
                                 {
                                     if (G.Length != 0)
@@ -130,7 +154,7 @@ namespace TestExcel.Controllers
                                     {
                                         string Subject_ID = B;
                                         string subject_NAME = C;
-                                        string subject_CREDIT = ((Excel.Range)range.Cells[row, 8]).Text;
+                                        string subject_CREDIT = H.Trim();
                                         string subject_MIDTERM_DATE = ((Excel.Range)range.Cells[row, 10]).Text;
                                         string subject_FINAL_DATE = ((Excel.Range)range.Cells[row + 1, 10]).Text;
                                         string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
@@ -143,45 +167,36 @@ namespace TestExcel.Controllers
                             else if (B.Length <= 4)
                             {
                                 tmp2 = B;
-                                string[] split_date = D.Split('-');
                                 if (B.Length != 0)
                                 {
+                                    string[] split_date = D.Split('-');
                                     if (G.LastOrDefault().ToString() == ",")
                                     {
                                         G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
                                     }
-                                    var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
-                                    "SECTION_NUMBER = '" + B + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                    " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
-                                    if (CheckSection == false)
-                                    {
-                                        string Subject_ID = tmp;
-                                        string Section_Number = B;
-                                        string Section_Date = C;
-                                        string Section_Start_Time = split_date[0];
-                                        string Section_End_Time = split_date[1];
-                                        string Section_Classroom = E;
-                                        string Section_Professor = F;
-                                        string Section_Branch_Name = G;
-                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
-                                        //Section_ID++;
-                                    }
+
+                                    string Subject_ID = tmp;
+                                    string Section_Number = B;
+                                    string Section_Date = C;
+                                    string Section_Start_Time = split_date[0];
+                                    string Section_End_Time = split_date[1];
+                                    string Section_Classroom = E;
+                                    string Section_Professor = F;
+                                    string Section_Branch_Name = G;
+                                    saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
                                 }
                                 else
                                 {
-                                    if (C.Length != 0 && D.Length != 0 && G.Length != 0)
+                                    if (D.Length != 0 && E.Length != 0 && G.Length != 0)
                                     {
-                                        //if (tmp2 != "")
-                                        //{
-                                        if (G.LastOrDefault().ToString() == ",")
+                                        if (C == "M" || C == "T" || C == "W" || C == "H" || C == "F" || C == "S" || C == "SUN")
                                         {
-                                            G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
-                                        }
-                                        var CheckSection = db.SECTIONs.SqlQuery("SELECT * FROM SECTION WHERE SUBJECT_ID = '" + tmp + "' and " +
-                                "SECTION_NUMBER = '" + tmp2 + "' and SECTION_DATE = '" + C + "' and SECTION_TIME_START = '" + split_date[0] + "' and SECTION_TIME_END = '" + split_date[1] + "' and SECTION_CLASSROOM = '" + E + "' " +
-                                " and SECTION_PROFESSOR_SHORTNAME = '" + F + "' and SECTION_BRANCH_NAME = '" + G + "' and SEMESTER = '" + semester + "' and YEAR = '" + year + "'").Any();
-                                        if (CheckSection == false)
-                                        {
+                                            string[] split_date = D.Split('-');
+                                            if (G.LastOrDefault().ToString() == ",")
+                                            {
+                                                G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                            }
+
                                             string Subject_ID = tmp;
                                             string Section_Number = tmp2;
                                             string Section_Date = C;
@@ -191,9 +206,25 @@ namespace TestExcel.Controllers
                                             string Section_Professor = F;
                                             string Section_Branch_Name = G;
                                             saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
-                                            //Section_ID++;
                                         }
-                                        //}
+                                        else if(D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
+                                        {
+                                                string[] split_date = E.Split('-');
+                                                if (H.LastOrDefault().ToString() == ",")
+                                                {
+                                                    H = H + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                                }
+
+                                                string Subject_ID = tmp;
+                                                string Section_Number = C;
+                                                string Section_Date = D;
+                                                string Section_Start_Time = split_date[0];
+                                                string Section_End_Time = split_date[1];
+                                                string Section_Classroom = F;
+                                                string Section_Professor = G;
+                                                string Section_Branch_Name = H;
+                                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                        }
                                     }
                                 }
                             }
@@ -251,7 +282,6 @@ namespace TestExcel.Controllers
                 item.YEAR = YEAR;
                 db.SUBJECTs.Add(item);
                 db.SaveChanges();
-
             }
             catch
             {
@@ -278,7 +308,6 @@ namespace TestExcel.Controllers
                 item.YEAR = YEAR;
                 db.SECTIONs.Add(item);
                 db.SaveChanges();
-
             }
             catch
             {
@@ -290,7 +319,7 @@ namespace TestExcel.Controllers
         {
             var semester = collection["semester"];
             var year = collection["year_export"];
-            string FilePath = @"D:\ขบวน" + semester + "-" + year + ".xlsx";
+            string FilePath = @"C:\ขบวน" + semester + "-" + year + ".xlsx";
             string FileName = Path.GetFileName(FilePath);
             Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
             if (db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).Any() != false)
@@ -392,7 +421,7 @@ namespace TestExcel.Controllers
                     Response.Flush();
                     Response.End();
 
-                  
+
                     Marshal.ReleaseComObject(workbook);
 
                     application.Quit();
