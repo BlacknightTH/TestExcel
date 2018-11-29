@@ -16,6 +16,15 @@ namespace TestExcel.Controllers
         public ActionResult Index()
         {
             //var model = from a in db.SECTIONs
+            //            join b in db.BUILDINGs
+            //            on a.SECTION_CLASSROOM equals b.CLASSROOM_NAME into e
+            //            from b in e.DefaultIfEmpty()
+            //            select new Building_Classroom {
+            //                SUBJECT_ID = a.SUBJECT_ID,
+            //                SECTION_CLASSROOM = a.SECTION_CLASSROOM,
+            //                BUILDING_NAME = b == null? "" : b.BUILDING_NAME
+                        //};
+            //var model = from a in db.SECTIONs
             //            group a by new
             //            {
             //                classroom = a.SECTION_CLASSROOM

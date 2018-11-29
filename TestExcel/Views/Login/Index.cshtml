@@ -1,6 +1,11 @@
-﻿@{
+﻿@model IEnumerable<TestExcel.Models.Building_Classroom>
+@{
     ViewBag.Title = "Index";
 }
+@*@foreach(var item in Model.Where(x => x.BUILDING_NAME == ""))
+{
+    <p>@item.SUBJECT_ID/@item.SECTION_CLASSROOM/@item.BUILDING_NAME</p>
+}*@
 <div class="w3-container center-block" style="width:400px;margin-top:100px">
     <div class="panel panel-default">
         <div class="panel-heading w3-blue w3-center">

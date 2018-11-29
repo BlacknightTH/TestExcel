@@ -18,6 +18,21 @@
             $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
             $("#ddl_Semester").val(@ViewBag.Semester);
             $("#ddl_Year").val(@ViewBag.Year);
+
+            $("#DDL_DEPARTMENT").change(function () {
+                $("#Count").val(1);
+                $("#BRANCH_FORM").submit();
+            });
+            $("#ddl_Year").change(function () {
+                $("#BRANCH_FORM").submit();
+            });
+            $("#ddl_Semester").change(function () {
+                $("#BRANCH_FORM").submit();
+            });
+            $("#DDL_BRANCH").change(function () {
+                $("#BRANCH_FORM").submit();
+            });
+
             var Message = $("#Alert p").html();
             var ErrorMessage = $("#ErrorAlert p").html();
             if (Message != "") {
@@ -32,19 +47,6 @@
                     $("#ErrorAlert").hide("fade");
                 }, 3000);
             }
-    });
-    $("#DDL_DEPARTMENT").change(function () {
-        $("#Count").val(1);
-        $("#BRANCH_FORM").submit();
-    });
-    $("#ddl_Year").change(function () {
-        $("#BRANCH_FORM").submit();
-    });
-    $("#ddl_Semester").change(function () {
-        $("#BRANCH_FORM").submit();
-    });
-    $("#DDL_BRANCH").change(function () {
-        $("#BRANCH_FORM").submit();
     });
 </script>
 <div class="w3-row w3-center fontup">
@@ -137,14 +139,14 @@
                         <tr>
                             <td>
                                 @Html.CheckBox("check" + i,new { @class = "tablecheckbox" })
-                                @Html.Hidden("subject_hour", item.SECTION_TIME_END - item.SECTION_TIME_START)
+                                @Html.Hidden("subject_hour", Math.Floor(decimal.Parse(item.SECTION_TIME_END.ToString())) - Math.Floor(decimal.Parse(item.SECTION_TIME_START.ToString())))
 
                                 @Html.Hidden("sub_id", item.SECTION_ID)
                                 @Html.Hidden("subject_id", item.SUBJECT_ID)
                                 @Html.Hidden("subject_name", item.SUBJECT_NAME)
                                 @Html.Hidden("subject_credit", item.SUBJECT_CREDIT)
                                 @Html.Hidden("subject_number", item.SECTION_NUMBER)
-                                @Html.Hidden("subject_timestart", item.SECTION_TIME_START)
+                                @Html.Hidden("subject_timestart", Math.Floor(decimal.Parse(item.SECTION_TIME_START.ToString())))
                                 @Html.Hidden("subject_timeend", item.SECTION_TIME_END)
                                 @Html.Hidden("subject_professor", item.SECTION_PROFESSOR_SHORTNAME)
                                 @Html.Hidden("subject_branch", item.SECTION_BRANCH_NAME)
@@ -172,8 +174,8 @@
                     {
                         var first = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).First();
                         var second = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).Last();
-                        int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                        int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                        int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                        int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
                         var TIME = (tmp_last - tmp_first);
                         <tr>
                             <td>
@@ -185,8 +187,8 @@
                                 @Html.Hidden("subject_name", first.SUBJECT_NAME)
                                 @Html.Hidden("subject_credit", first.SUBJECT_CREDIT)
                                 @Html.Hidden("subject_number", first.SECTION_NUMBER)
-                                @Html.Hidden("subject_timestart", first.SECTION_TIME_START)
-                                @Html.Hidden("subject_timeend", first.SECTION_TIME_END)
+                                @Html.Hidden("subject_timestart", int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString()))
+                                @Html.Hidden("subject_timeend", int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString()))
                                 @Html.Hidden("subject_professor", first.SECTION_PROFESSOR_SHORTNAME)
                                 @Html.Hidden("subject_branch", first.SECTION_BRANCH_NAME)
                                 @Html.Hidden("subject_classroom", first.SECTION_CLASSROOM)
@@ -197,8 +199,8 @@
                                 @Html.Hidden("Last_subject_name", second.SUBJECT_NAME)
                                 @Html.Hidden("Last_subject_credit", second.SUBJECT_CREDIT)
                                 @Html.Hidden("Last_subject_number", second.SECTION_NUMBER)
-                                @Html.Hidden("Last_subject_timestart", second.SECTION_TIME_START)
-                                @Html.Hidden("Last_subject_timeend", second.SECTION_TIME_END)
+                                @Html.Hidden("Last_subject_timestart", int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString()))
+                                @Html.Hidden("Last_subject_timeend", int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString()))
                                 @Html.Hidden("Last_subject_classroom", second.SECTION_CLASSROOM)
                                 @Html.Hidden("Last_subject_date", second.SECTION_DATE)
                             </td>
@@ -439,7 +441,7 @@
                 @for (int b = 8; b <= 21; b++)
                 {
                     var tid = date[a] + "id_" + b;
-                    var WhereTimeDate = Model.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[a]);
+                    var WhereTimeDate = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) == b && x.SECTION_DATE == date[a]);
                     var check = WhereTimeDate.LastOrDefault();
                     if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
                     {
@@ -449,16 +451,14 @@
                     {
                         color = "#D3D3D3";
                     }
-                    var check1 = Model.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                    var check1 = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                     if (check != null)
                     {
                         var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
                         if (trigger == 1)
                         {
-                            var tmp_TIME_START = check.SECTION_TIME_START;
-                            var tmp_TIME_END = check.SECTION_TIME_END;
-                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                            var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
+                            var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
                             var TIME = (TIME_END - TIME_START) * 4;
                             <td id="@tid" colspan="@TIME" class="droppable revert" width="60px">
                                 <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
@@ -471,8 +471,8 @@
                                     @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
                                     @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
                                     @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
-                                    @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_TIME_START)
-                                    @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_TIME_END)
+                                    @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                    @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
                                     @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
                                     @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
                                     @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
@@ -483,11 +483,11 @@
                         {
                             var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
                             var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
-                            int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                            int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                            int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                            int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                            int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                            int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                            int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                            int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
                             if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                             {
                                 <td id="@tid" class="droppable" height="50px" width="60px" colspan="4" style="display:none"></td>
@@ -506,8 +506,8 @@
                                         @Html.Hidden("First_subjectid_" + first.SECTION_ID, first.SUBJECT_ID)
                                         @Html.Hidden("First_name_" + first.SECTION_ID, first.SUBJECT_NAME)
                                         @Html.Hidden("First_number_" + first.SECTION_ID, first.SECTION_NUMBER)
-                                        @Html.Hidden("First_timestart_" + first.SECTION_ID, first.SECTION_TIME_START)
-                                        @Html.Hidden("First_timeend_" + first.SECTION_ID, first.SECTION_TIME_END)
+                                        @Html.Hidden("First_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString()))
+                                        @Html.Hidden("First_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString()))
                                         @Html.Hidden("First_date_" + first.SECTION_ID, first.SECTION_DATE)
                                         @Html.Hidden("First_classroom_" + first.SECTION_ID, first.SECTION_CLASSROOM)
                                         @Html.Hidden("First_branch_" + first.SECTION_ID, first.SECTION_BRANCH_NAME)
@@ -516,8 +516,8 @@
                                         @Html.Hidden("Second_subjectid_" + first.SECTION_ID, second.SUBJECT_ID)
                                         @Html.Hidden("Second_name_" + first.SECTION_ID, second.SUBJECT_NAME)
                                         @Html.Hidden("Second_number_" + first.SECTION_ID, second.SECTION_NUMBER)
-                                        @Html.Hidden("Second_timestart_" + first.SECTION_ID, second.SECTION_TIME_START)
-                                        @Html.Hidden("Second_timeend_" + first.SECTION_ID, second.SECTION_TIME_END)
+                                        @Html.Hidden("Second_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString()))
+                                        @Html.Hidden("Second_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString()))
                                         @Html.Hidden("Second_date_" + first.SECTION_ID, second.SECTION_DATE)
                                         @Html.Hidden("Second_classroom_" + first.SECTION_ID, second.SECTION_CLASSROOM)
                                         @Html.Hidden("Second_branch_" + first.SECTION_ID, second.SECTION_BRANCH_NAME)
@@ -526,10 +526,8 @@
                             }
                             else if (tmpl_first != tmpl_last)
                             {
-                                var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                                var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                                var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                 var TIME = (TIME_END - TIME_START) * 4;
                                 <td id="@tid" colspan="@TIME" width="60px" class="droppable">
                                     <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
@@ -542,8 +540,8 @@
                                         @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
                                         @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
                                         @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
-                                        @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_TIME_START)
-                                        @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_TIME_END)
+                                        @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                        @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
                                         @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
                                         @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
                                         @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)

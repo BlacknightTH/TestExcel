@@ -51,7 +51,7 @@ namespace TestExcel.Controllers
             string FileName = Path.GetFileName(FilePath);
 
             //return File(abytes, "application/pdf", FileName);
-            return File(abytes, "application/pdf", FileName);
+            return File(abytes, "application/pdf");
         }
         [HttpPost]
         public ActionResult TeReport(FormCollection collection)
@@ -66,7 +66,7 @@ namespace TestExcel.Controllers
             string FileName = Path.GetFileName(FilePath);
 
             //return File(abytes, "application/pdf", FileName);
-            return File(abytes, "application/pdf", FileName);
+            return File(abytes, "application/pdf");
         }
         [HttpPost]
         public ActionResult ClReport(FormCollection collection)

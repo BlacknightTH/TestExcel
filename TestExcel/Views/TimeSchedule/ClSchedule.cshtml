@@ -118,7 +118,7 @@ else
                     {
                         var tid = classroom + "id_" + b;
                         var tname = classroom + "name" + b;
-                        var WhereTimeDate = Model.Item1.Where(x => x.SECTION_TIME_START == b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM.Contains(classroom));
+                        var WhereTimeDate = Model.Item1.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) == b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom);
                         var check = WhereTimeDate.LastOrDefault();
                         var Bcolor = Model.Item1.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
                         if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
@@ -129,16 +129,14 @@ else
                         {
                             color = "#D3D3D3";
                         }
-                        var check1 = Model.Item1.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM.Contains(classroom)).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                        var check1 = Model.Item1.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)
                         {
-                            var trigger = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM.Contains(classroom)).Count();
+                            var trigger = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).Count();
                             if (trigger == 1)
                             {
-                                var tmp_TIME_START = check.SECTION_TIME_START;
-                                var tmp_TIME_END = check.SECTION_TIME_END;
-                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME_START = Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString()));
+                                var TIME_END = Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString()));
                                 var TIME = (TIME_END - TIME_START) * 4;
                                 <td id="@tid" colspan="@TIME" width="60px">
                                     <div class="" style="background-color:@color;width:100%;height:50px">
@@ -150,13 +148,13 @@ else
                             }
                             else if (trigger == 2)
                             {
-                                var first = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM.Contains(classroom)).First();
-                                var second = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM.Contains(classroom)).Last();
-                                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                                var first = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).First();
+                                var second = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).Last();
+                                int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                                int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                                int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                                int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
                                 if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                                 {
                                     <td id="@tid" width="60px" height="50px" colspan="4" style="display:none"></td>
@@ -174,10 +172,8 @@ else
                                 }
                                 else if (tmpl_first != tmpl_last)
                                 {
-                                    var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                                    var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                                    var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                     var TIME = (TIME_END - TIME_START) * 4;
 
                                     <td id="@tid" colspan="@TIME" width="60px">

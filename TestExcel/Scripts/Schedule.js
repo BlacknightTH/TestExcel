@@ -7,14 +7,22 @@
     function drag_drop() {
 
         $(".draggable").draggable({
-            cursor: "move",
+            cursor: "pointer",
             revert: "invalid",
             start: function (event, ui) {
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
                 var checkhave = $(this).parent().html();
-                $(this).parent().attr("colspan", "4");
-
+                if (checkhave != null) {
+                    check_id = $(this).parent().find("#searchId").val();
+                    subject_timestart = $(this).find("#First_timestart_" + check_id).val();
+                    subject_timeend = $(this).find("#First_timeend_" + check_id).val();
+                    hour = (parseInt(subject_timeend) - parseInt(subject_timestart)) * 4;
+                    $(this).parent().attr("colspan", hour);
+                }
+                else {
+                    $(this).parent().attr("colspan", "4");
+                }
                 check_id = $(this).find("#searchId").val();
                 subject_timestart = $(this).find("#First_timestart_" + check_id).val();
                 subject_timeend = $(this).find("#First_timeend_" + check_id).val();

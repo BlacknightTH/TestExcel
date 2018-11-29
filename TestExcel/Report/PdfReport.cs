@@ -15,6 +15,7 @@ namespace TestExcel.Report
         #region Declaration
         int k = 0; int l = 0; int m = 0; int n = 0;
         string[] date = { "M", "T", "W", "H", "F", "S" };
+        string[] date_thai = { "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์" };
         string textcreadit = "", tmp;
         string tab = "  ";
         int _totalColumn = 5, _totalColumn2 = 15;
@@ -26,12 +27,13 @@ namespace TestExcel.Report
         PdfPTable _pdfTable = new PdfPTable(5);
         PdfPTable _pdfTable2 = new PdfPTable(15);
         PdfPCell _pdfPCell;
+        Chunk _chunk;
         MemoryStream _memoryStream = new MemoryStream();
         TestExcelEntities db = new TestExcelEntities();
         List<Section_Subject> _section_subject = new List<Section_Subject>();
         List<Building_Classroom> _building_classroom = new List<Building_Classroom>();
         List<Department_Branch> _department_branch = new List<Department_Branch>();
-        string Semester, Year, Branch_Name, department_name, day,BUILDING;
+        string Semester, Year, Branch_Name, department_name, day, BUILDING;
         #endregion
 
         public List<Section_Subject> GetModel(string Branch_Name, string semester, string year)
@@ -84,13 +86,14 @@ namespace TestExcel.Report
             Building_subject = query.ToList();
             return Building_subject;
         }
-        public List<Building_Classroom> GetCLModel(string Building, string semester, string year)
+        public List<Building_Classroom> GetCLModel(string semester, string year)
         {
             List<Building_Classroom> Building_subject = new List<Building_Classroom>();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
-                        where e3.BUILDING_NAME.Contains(Building) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME into d
+                        from e3 in d.DefaultIfEmpty()
+                        where e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -114,21 +117,21 @@ namespace TestExcel.Report
         {
             if (building == "42" || building == "65")
             {
-                THSarabunfnt = new Font(bf, 8, 0);
+                THSarabunfnt = new Font(bf, 12, 0);
             }
             else
             {
-                THSarabunfnt = new Font(bf, 9, 0);
+                THSarabunfnt = new Font(bf, 14, 0);
             }
             //THSarabunfnt = new Font(bf, 8, 0);
             for (int b = 8; b <= 21; b++)
             {
-                var WhereTimeDate = _building_classroom.Where(x => x.SECTION_TIME_START == b && x.SECTION_CLASSROOM.Contains(classroom));
+                var WhereTimeDate = _building_classroom.Where(x => x.SECTION_TIME_START == b && x.SECTION_CLASSROOM == classroom);
                 var check = WhereTimeDate.LastOrDefault();
-                var check1 = _building_classroom.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_CLASSROOM.Contains(classroom)).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                var check1 = _building_classroom.Where(x => x.SECTION_TIME_START <= b && x.SECTION_TIME_END > b && x.SECTION_CLASSROOM == classroom).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                 if (check != null)
                 {
-                    var trigger = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM.Contains(classroom)).Count();
+                    var trigger = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).Count();
                     if (trigger == 1)
                     {
                         var tmp_TIME_START = check.SECTION_TIME_START;
@@ -137,7 +140,8 @@ namespace TestExcel.Report
                         var TIME_END = int.Parse(tmp_TIME_END.ToString());
                         var TIME = TIME_END - TIME_START;
                         tmp = Tetemp(TIME);
-                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tab + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                        //_pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                         _pdfPCell.Colspan = TIME;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -147,8 +151,8 @@ namespace TestExcel.Report
                     }
                     else if (trigger == 2)
                     {
-                        var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM.Contains(classroom)).First();
-                        var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM.Contains(classroom)).Last();
+                        var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).First();
+                        var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).Last();
                         int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
                         int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
 
@@ -161,7 +165,8 @@ namespace TestExcel.Report
                         {
                             var TIME = tmp_last - tmp_first;
                             tmp = Tetemp(TIME);
-                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + tab + second.SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/\n"+ second.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                            //_pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + tmp + second.SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                             _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -176,8 +181,8 @@ namespace TestExcel.Report
                             var TIME_END = int.Parse(tmp_TIME_END.ToString());
                             var TIME = TIME_END - TIME_START;
                             tmp = Tetemp(TIME);
-
-                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + tab + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                            //_pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                             _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -191,7 +196,7 @@ namespace TestExcel.Report
                 {
                     if (check1 == null)
                     {
-                        _pdfPCell = new PdfPCell(new Phrase("\n\n\n", THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase("\n\n", THSarabunfnt));
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         _pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -213,7 +218,7 @@ namespace TestExcel.Report
             #region T
             _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
             _document.SetPageSize(PageSize.A4.Rotate());
-            _document.SetMargins(10f, 10f, 10f, 20f);
+            _document.SetMargins(5f, 5f, 10f, 5f);
             _pdfTable2.WidthPercentage = 93;
             _fontStyle = FontFactory.GetFont("Tahoma", 8f, 1);
             _pdfTable2.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -226,7 +231,7 @@ namespace TestExcel.Report
             #region B_63
             _building_classroom = GetTEModel("63", Semester, Year, day);
             #region header B_63
-            THSarabunfnt = new Font(bf, 20, 0);
+            THSarabunfnt = new Font(bf, 18, 0);
             _pdfPCell = new PdfPCell(new Phrase("ตารางการใช้ห้องเรียน", THSarabunfnt));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -246,8 +251,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 63", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 20, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 63", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -289,13 +296,25 @@ namespace TestExcel.Report
             #region B_63 Body
             foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
-                THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
-                _pdfPCell.PaddingBottom = 8f;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable2.AddCell(_pdfPCell);
+                THSarabunfnt = new Font(bf, 15, 0);
+                if (aa.NUMBER_SEATS == "ป.โท" || aa.NUMBER_SEATS == "lab-LE" || aa.NUMBER_SEATS.Contains("Draw"))
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + ")" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + " ที่นั่ง)" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
 
                 B_Body(aa.CLASSROOM_NAME, "63");
                 _pdfTable2.CompleteRow();
@@ -335,8 +354,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 63 (อาคารสีเทา ตึกใหม่)", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 63 (อาคารสีเทา ตึกใหม่)", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -378,13 +399,25 @@ namespace TestExcel.Report
             #region B_63_2 Body
             foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "632").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
-                THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
-                _pdfPCell.PaddingBottom = 8f;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable2.AddCell(_pdfPCell);
+                THSarabunfnt = new Font(bf, 15, 0);
+                if (aa.NUMBER_SEATS == "ป.โท" || aa.NUMBER_SEATS == "lab-LE" || aa.NUMBER_SEATS.Contains("Draw"))
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + ")" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + " ที่นั่ง)" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
 
                 B_Body(aa.CLASSROOM_NAME, "632");
                 _pdfTable2.CompleteRow();
@@ -423,8 +456,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 62", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 62", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -466,13 +501,25 @@ namespace TestExcel.Report
             #region B_62 Body
             foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "62").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
-                THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
-                _pdfPCell.PaddingBottom = 8f;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable2.AddCell(_pdfPCell);
+                THSarabunfnt = new Font(bf, 15, 0);
+                if (aa.NUMBER_SEATS == "ป.โท" || aa.NUMBER_SEATS == "lab-LE" || aa.NUMBER_SEATS.Contains("Draw"))
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + ")" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + " ที่นั่ง)" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
 
                 B_Body(aa.CLASSROOM_NAME, "62");
                 _pdfTable2.CompleteRow();
@@ -510,8 +557,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 42", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 42", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -553,13 +602,25 @@ namespace TestExcel.Report
             #region B_42 Body
             foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "42").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
-                THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
-                _pdfPCell.PaddingBottom = 8f;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable2.AddCell(_pdfPCell);
+                THSarabunfnt = new Font(bf, 15, 0);
+                if (aa.NUMBER_SEATS == "ป.โท" || aa.NUMBER_SEATS == "lab-LE" || aa.NUMBER_SEATS.Contains("Draw"))
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + ")" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + " ที่นั่ง)" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
 
                 B_Body(aa.CLASSROOM_NAME, "42");
                 _pdfTable2.CompleteRow();
@@ -598,8 +659,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 21, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 65", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 65", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -641,17 +704,27 @@ namespace TestExcel.Report
             #region B_65 Body
             foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "65").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
-                THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
-                _pdfPCell.PaddingBottom = 8f;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable2.AddCell(_pdfPCell);
-
+                THSarabunfnt = new Font(bf, 15, 0);
+                if (aa.NUMBER_SEATS == "ป.โท" || aa.NUMBER_SEATS == "lab-LE" || aa.NUMBER_SEATS.Contains("Draw"))
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + ")" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "(" + aa.NUMBER_SEATS + " ที่นั่ง)" + "\n", THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 8f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
                 B_Body(aa.CLASSROOM_NAME, "65");
                 _pdfTable2.CompleteRow();
-
             }
             #endregion
             #endregion
@@ -686,8 +759,10 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 69 (ด้านหลัง SHOP-IP)", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 69 (ด้านหลัง SHOP-IP)", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -763,8 +838,10 @@ namespace TestExcel.Report
             #region B_64
             _building_classroom = GetTEModel("64", Semester, Year, day);
             #region header B_64
-            THSarabunfnt = new Font(bf, 22, 4);
-            _pdfPCell = new PdfPCell(new Phrase("ห้องเรียนอาคาร 64 (ด้านหลังปรับอากาศ)", THSarabunfnt));
+            THSarabunfnt = new Font(bf, 22, 0);
+            _chunk = new Chunk("ห้องเรียนอาคาร 64 (ด้านหลังปรับอากาศ)", THSarabunfnt);
+            _chunk.SetUnderline(1, -3);
+            _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
             _pdfPCell.Border = 0;
@@ -1222,7 +1299,7 @@ namespace TestExcel.Report
                                     tmp = temp(TIME);
 
                                     THSarabunfnt = new Font(bf, 10, 0);
-                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + "\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                                     _pdfPCell.Colspan = TIME;
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1248,7 +1325,7 @@ namespace TestExcel.Report
                                         var TIME = tmp_last - tmp_first;
                                         tmp = temp(TIME);
                                         THSarabunfnt = new Font(bf, 10, 0);
-                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "\n" + second.SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/\n" + second.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1265,7 +1342,7 @@ namespace TestExcel.Report
                                         tmp = temp(TIME);
 
                                         THSarabunfnt = new Font(bf, 10, 0);
-                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SUBJECT_ID + "\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).LastOrDefault().SECTION_PROFESSOR_SHORTNAME + tmp, THSarabunfnt));
+                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1289,13 +1366,6 @@ namespace TestExcel.Report
                                 {
                                 }
                             }
-                            //_pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
-                            //_pdfPCell.PaddingBottom = 10f;
-                            //_pdfPCell.PaddingTop = 5f;
-                            //_pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            //_pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                            //_pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            //_pdfTable2.AddCell(_pdfPCell);
                         }
                         _pdfTable2.CompleteRow();
                     }
@@ -1321,26 +1391,29 @@ namespace TestExcel.Report
             BUILDING = Building;
 
             #region T
+            string tableHeader = "";
             _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
             _document.SetPageSize(PageSize.A4.Rotate());
-            _document.SetMargins(10f, 10f, 10f, 20f);
+            _document.SetMargins(0, 0, 20f, 20f);
             _pdfTable2.WidthPercentage = 93;
             _fontStyle = FontFactory.GetFont("Tahoma", 8f, 1);
             _pdfTable2.HorizontalAlignment = Element.ALIGN_CENTER;
             PdfWriter.GetInstance(_document, _memoryStream);
             _document.Open();
 
-            _pdfTable2.SetWidths(new float[] { 40f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
+            _pdfTable2.SetWidths(new float[] { 30f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
                                                 20f, 20f, 20f, 20f, 20f, 20f, 20f});
             #endregion
 
-            _building_classroom = GetCLModel(BUILDING, Semester, Year);
+            _building_classroom = GetCLModel(Semester, Year);
 
             foreach (var Item in db.BUILDINGs.Where(x => x.BUILDING_NAME == BUILDING).OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 #region Header
-                THSarabunfnt = new Font(bf, 30, 4);
-                _pdfPCell = new PdfPCell(new Phrase("ตารางการใช้ห้องเรียน ห้อง " + Item.CLASSROOM_NAME +" ภาคการศึกษาที่ " + semester + "-" + year, THSarabunfnt));
+                THSarabunfnt = new Font(bf, 30, 0);
+                _chunk = new Chunk("ตารางการใช้ห้องเรียน ห้อง " + Item.CLASSROOM_NAME + " ภาคการศึกษาที่ " + semester + "-" + year, THSarabunfnt);
+                _chunk.SetUnderline(1, -3);
+                _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
                 _pdfPCell.Colspan = _totalColumn2;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.Border = 0;
@@ -1350,7 +1423,7 @@ namespace TestExcel.Report
                 _pdfTable2.CompleteRow();
 
                 THSarabunfnt = new Font(bf, 16, 0);
-                _pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(" \n", THSarabunfnt));
                 _pdfPCell.Colspan = _totalColumn2;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.Border = 0;
@@ -1359,16 +1432,187 @@ namespace TestExcel.Report
                 _pdfTable2.AddCell(_pdfPCell);
                 _pdfTable2.CompleteRow();
                 #endregion
+                #region Table Header
+                THSarabunfnt = new Font(bf, 24, 0);
+                _pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
+                _pdfPCell.PaddingBottom = 10f;
+                _pdfPCell.PaddingTop = 15f;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfTable2.AddCell(_pdfPCell);
+
+                for (int b = 8; b <= 21; b++)
+                {
+                    if (b < 10)
+                    {
+                        tableHeader = "0" + b + ".00";
+                    }
+                    else
+                    {
+                        tableHeader = b + ".00";
+                    }
+                    THSarabunfnt = new Font(bf, 24, 0);
+                    _pdfPCell = new PdfPCell(new Phrase(tableHeader, THSarabunfnt));
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                _pdfTable2.CompleteRow();
+                #endregion
+
+                #region Table Body
+                for (int c = 0; c < 6; c++)
+                {
+                    THSarabunfnt = new Font(bf, 24, 0);
+                    _pdfPCell = new PdfPCell(new Phrase(" "+ date_thai[c], THSarabunfnt));
+                    _pdfPCell.PaddingBottom = 17f;
+                    _pdfPCell.PaddingTop = 17f;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+
+                    for (int d = 8; d <= 21; d++)
+                    {
+                        THSarabunfnt = new Font(bf, 20, 0);
+                        var WhereTimeDate = _building_classroom.Where(x => x.SECTION_CLASSROOM == Item.CLASSROOM_NAME && x.SECTION_TIME_START == d && x.SECTION_DATE == date[c]);
+                        var check = WhereTimeDate.LastOrDefault();
+                        var check1 = _building_classroom.Where(x => x.SECTION_TIME_START <= d && x.SECTION_TIME_END > d && x.SECTION_DATE == date[c] && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                        if (check != null)
+                        {
+                            THSarabunfnt = new Font(bf, 22, 0);
+                            var trigger = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[c] && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).Count();
+                            if (trigger == 1)
+                            {
+
+                                var tmp_TIME_START = check.SECTION_TIME_START;
+                                var tmp_TIME_END = check.SECTION_TIME_END;
+                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME = TIME_END - TIME_START;
+
+                                ClBody(TIME,WhereTimeDate);
+                                THSarabunfnt = new Font(bf, 22, 0);
+                            }
+                            else if (trigger == 2)
+                            {
+                                var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).First();
+                                var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).Last();
+                                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+
+                                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
+                                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                                if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
+                                {
+                                    
+                                }
+                                else if (tmpl_first == tmpl_last)
+                                {
+                                    var TIME = tmp_last - tmp_first;
+
+                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/"+ second.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
+                                    _pdfPCell.Colspan = TIME;
+                                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                    _pdfTable2.AddCell(_pdfPCell);
+                                }
+                                else if (tmpl_first != tmpl_last)
+                                {
+                                    var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
+                                    var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
+                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME = TIME_END - TIME_START;
+
+                                    ClBody(TIME, WhereTimeDate);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (check1 == null)
+                            {
+                                _pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
+                                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                _pdfTable2.AddCell(_pdfPCell);
+                            }
+                            else
+                            {
+                            }
+                        }
+                    }
+                    _pdfTable2.CompleteRow();
+                }
+                #endregion
+
                 _document.Add(_pdfTable2);
                 _document.NewPage();
                 _pdfTable2 = new PdfPTable(15);
                 _pdfTable2.WidthPercentage = 93;
                 _pdfTable2.HorizontalAlignment = Element.ALIGN_CENTER;
-                _pdfTable2.SetWidths(new float[] { 40f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
+                _pdfTable2.SetWidths(new float[] { 30f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
                                                 20f, 20f, 20f, 20f, 20f, 20f, 20f});
             }
             _document.Close();
             return _memoryStream.ToArray();
+        }
+        public void ClBody(int TIME,IEnumerable<Building_Classroom> WhereTimeDate)
+        {
+            if (TIME == 1)
+            {
+                THSarabunfnt = new Font(bf, 14, 0);
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                _pdfPCell.Colspan = TIME;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfTable2.AddCell(_pdfPCell);
+            }
+            else if (TIME == 2)
+            {
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/\n" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                _pdfPCell.Colspan = TIME;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfTable2.AddCell(_pdfPCell);
+            }
+            else if (TIME == 3)
+            {
+                if (WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Length <= 3)
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                    _pdfPCell.Colspan = TIME;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+                else
+                {
+                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/\n" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                    _pdfPCell.Colspan = TIME;
+                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    _pdfTable2.AddCell(_pdfPCell);
+                }
+            }
+            else
+            {
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                _pdfPCell.Colspan = TIME;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfTable2.AddCell(_pdfPCell);
+            }
         }
         public string temp(int TIME)
         {
@@ -1408,31 +1652,31 @@ namespace TestExcel.Report
             string Temp = "";
             if (TIME == 1)
             {
-                Temp = " \n /----------------" + "----------------/ \n";
+                Temp = " \n /--------" + "--------/ \n";
             }
             else if (TIME == 2)
             {
-                Temp = " \n /--------------------" + "--------------------/ \n";
+                Temp = " \n /----------" + "----------/ \n";
             }
             else if (TIME == 3)
             {
-                Temp = " \n /------------------------------" + "------------------------------/ \n";
+                Temp = " \n /---------------" + "---------------/ \n";
             }
             else if (TIME == 4)
             {
-                Temp = " \n /----------------------------------------" + "----------------------------------------/ \n";
+                Temp = " \n /--------------------" + "--------------------/ \n";
             }
             else if (TIME == 5)
             {
-                Temp = " \n /-----------------------------------------" + "-----------------------------------------/ \n";
+                Temp = " \n /--------------------------" + "--------------------------/ \n";
             }
             else if (TIME == 6)
             {
-                Temp = " \n /-----------------------------------------------" + "-----------------------------------------------/ \n";
+                Temp = " \n /--------------------------------" + "--------------------------------/ \n";
             }
             else if (TIME == 7)
             {
-                Temp = " \n /-----------------------------------------------------" + "-----------------------------------------------------/ \n";
+                Temp = " \n /--------------------------------------" + "--------------------------------------/ \n";
             }
             return Temp;
         }
