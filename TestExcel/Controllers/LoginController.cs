@@ -15,16 +15,16 @@ namespace TestExcel.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            var model = from a in db.SECTIONs
-                        group a by new
-                        {
-                            classroom = a.SECTION_CLASSROOM
-                        } into s
-                        select new Section_Subject{
-                            SECTION_CLASSROOM = s.Key.classroom
-                        };
-            var query = db.SECTIONs.GroupBy(x => new { classroom = x.SECTION_CLASSROOM }).Select(y => new Section_Subject { SECTION_CLASSROOM = y.Key.classroom });
-            return View(query);
+            //var model = from a in db.SECTIONs
+            //            group a by new
+            //            {
+            //                classroom = a.SECTION_CLASSROOM
+            //            } into s
+            //            select new Section_Subject{
+            //                SECTION_CLASSROOM = s.Key.classroom
+            //            };
+            //var query = db.SECTIONs.GroupBy(x => new { classroom = x.SECTION_CLASSROOM }).Select(y => new Section_Subject { SECTION_CLASSROOM = y.Key.classroom });
+            return View();
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)

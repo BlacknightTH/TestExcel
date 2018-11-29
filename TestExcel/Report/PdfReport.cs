@@ -15,7 +15,6 @@ namespace TestExcel.Report
         #region Declaration
         int k = 0; int l = 0; int m = 0; int n = 0;
         string[] date = { "M", "T", "W", "H", "F", "S" };
-        //string[] building = { "63", "62", "W", "H", "F", "S" };
         string textcreadit = "", tmp;
         string tab = "  ";
         int _totalColumn = 5, _totalColumn2 = 15;
@@ -32,7 +31,7 @@ namespace TestExcel.Report
         List<Section_Subject> _section_subject = new List<Section_Subject>();
         List<Building_Classroom> _building_classroom = new List<Building_Classroom>();
         List<Department_Branch> _department_branch = new List<Department_Branch>();
-        string Semester, Year, Branch_Name, department_name, day;
+        string Semester, Year, Branch_Name, department_name, day,BUILDING;
         #endregion
 
         public List<Section_Subject> GetModel(string Branch_Name, string semester, string year)
@@ -66,6 +65,32 @@ namespace TestExcel.Report
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
                         where e3.BUILDING_NAME.Contains(Building) && e1.SECTION_DATE.Contains(day) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                        select new Building_Classroom
+                        {
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            BUILDING_NAME = e3.BUILDING_NAME,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
+                        };
+            Building_subject = query.ToList();
+            return Building_subject;
+        }
+        public List<Building_Classroom> GetCLModel(string Building, string semester, string year)
+        {
+            List<Building_Classroom> Building_subject = new List<Building_Classroom>();
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        join e3 in db.BUILDINGs on e1.SECTION_CLASSROOM equals e3.CLASSROOM_NAME
+                        where e3.BUILDING_NAME.Contains(Building) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Building_Classroom
                         {
                             SUBJECT_ID = e1.SUBJECT_ID,
@@ -262,7 +287,7 @@ namespace TestExcel.Report
             _pdfTable2.CompleteRow();
             #endregion
             #region B_63 Body
-            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").ToList())
+            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "63").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 THSarabunfnt = new Font(bf, 16, 0);
                 _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
@@ -351,7 +376,7 @@ namespace TestExcel.Report
             _pdfTable2.CompleteRow();
             #endregion
             #region B_63_2 Body
-            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "632").ToList())
+            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "632").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 THSarabunfnt = new Font(bf, 16, 0);
                 _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
@@ -439,7 +464,7 @@ namespace TestExcel.Report
             _pdfTable2.CompleteRow();
             #endregion
             #region B_62 Body
-            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "62").ToList())
+            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "62").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 THSarabunfnt = new Font(bf, 16, 0);
                 _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
@@ -526,7 +551,7 @@ namespace TestExcel.Report
             _pdfTable2.CompleteRow();
             #endregion
             #region B_42 Body
-            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "42").ToList())
+            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "42").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 THSarabunfnt = new Font(bf, 16, 0);
                 _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
@@ -614,7 +639,7 @@ namespace TestExcel.Report
             _pdfTable2.CompleteRow();
             #endregion
             #region B_65 Body
-            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "65").ToList())
+            foreach (var aa in db.BUILDINGs.Where(x => x.BUILDING_NAME == "65").OrderBy(x => x.CLASSROOM_NAME).ToList())
             {
                 THSarabunfnt = new Font(bf, 16, 0);
                 _pdfPCell = new PdfPCell(new Phrase(aa.CLASSROOM_NAME + "\n", THSarabunfnt));
@@ -800,7 +825,6 @@ namespace TestExcel.Report
             _document.Close();
             return _memoryStream.ToArray();
         }
-
         public byte[] PrepareReport(string Department_name, string semester, string year)
         {
             Semester = semester;
@@ -1289,6 +1313,62 @@ namespace TestExcel.Report
             _document.Close();
             return _memoryStream.ToArray();
 
+        }
+        public byte[] ClPrepareReport(string Building, string semester, string year)
+        {
+            Semester = semester;
+            Year = year;
+            BUILDING = Building;
+
+            #region T
+            _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
+            _document.SetPageSize(PageSize.A4.Rotate());
+            _document.SetMargins(10f, 10f, 10f, 20f);
+            _pdfTable2.WidthPercentage = 93;
+            _fontStyle = FontFactory.GetFont("Tahoma", 8f, 1);
+            _pdfTable2.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfWriter.GetInstance(_document, _memoryStream);
+            _document.Open();
+
+            _pdfTable2.SetWidths(new float[] { 40f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
+                                                20f, 20f, 20f, 20f, 20f, 20f, 20f});
+            #endregion
+
+            _building_classroom = GetCLModel(BUILDING, Semester, Year);
+
+            foreach (var Item in db.BUILDINGs.Where(x => x.BUILDING_NAME == BUILDING).OrderBy(x => x.CLASSROOM_NAME).ToList())
+            {
+                #region Header
+                THSarabunfnt = new Font(bf, 30, 4);
+                _pdfPCell = new PdfPCell(new Phrase("ตารางการใช้ห้องเรียน ห้อง " + Item.CLASSROOM_NAME +" ภาคการศึกษาที่ " + semester + "-" + year, THSarabunfnt));
+                _pdfPCell.Colspan = _totalColumn2;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.Border = 0;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfPCell.ExtraParagraphSpace = 0;
+                _pdfTable2.AddCell(_pdfPCell);
+                _pdfTable2.CompleteRow();
+
+                THSarabunfnt = new Font(bf, 16, 0);
+                _pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
+                _pdfPCell.Colspan = _totalColumn2;
+                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfPCell.Border = 0;
+                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                _pdfPCell.ExtraParagraphSpace = 0;
+                _pdfTable2.AddCell(_pdfPCell);
+                _pdfTable2.CompleteRow();
+                #endregion
+                _document.Add(_pdfTable2);
+                _document.NewPage();
+                _pdfTable2 = new PdfPTable(15);
+                _pdfTable2.WidthPercentage = 93;
+                _pdfTable2.HorizontalAlignment = Element.ALIGN_CENTER;
+                _pdfTable2.SetWidths(new float[] { 40f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
+                                                20f, 20f, 20f, 20f, 20f, 20f, 20f});
+            }
+            _document.Close();
+            return _memoryStream.ToArray();
         }
         public string temp(int TIME)
         {

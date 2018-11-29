@@ -53,6 +53,7 @@ namespace TestExcel.Controllers
             //return File(abytes, "application/pdf", FileName);
             return File(abytes, "application/pdf", FileName);
         }
+        [HttpPost]
         public ActionResult TeReport(FormCollection collection)
         {
             int Date = int.Parse(collection["DDL_DATE"]);
@@ -61,7 +62,33 @@ namespace TestExcel.Controllers
             PdfReport pdfReport = new PdfReport();
             byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
 
-            string FilePath = @"C:\\" + "ตารางลงห้องเรียน_" + date[Date] + "_" + semester + "-" + year + ".pdf";
+            string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + date[Date] + "_" + semester + "-" + year + ".pdf";
+            string FileName = Path.GetFileName(FilePath);
+
+            //return File(abytes, "application/pdf", FileName);
+            return File(abytes, "application/pdf", FileName);
+        }
+        [HttpPost]
+        public ActionResult ClReport(FormCollection collection)
+        {
+            string BUILDING = collection["DDL_BUILDING"];
+            string semester = collection["semester"];
+            string year = collection["year"];
+            PdfReport pdfReport = new PdfReport();
+            byte[] abytes = pdfReport.ClPrepareReport(BUILDING, semester, year);
+            if (BUILDING == "632")
+            {
+                BUILDING = "อาคารเรียน " + BUILDING + " (อาคารเรียนสีเทา ตึกใหม่)";
+            }
+            else if (BUILDING == "1")
+            {
+                BUILDING = "อื่นๆ";
+            }
+            else
+            {
+                BUILDING = "อาคารเรียน " + BUILDING;
+            }
+            string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year + ".pdf";
             string FileName = Path.GetFileName(FilePath);
 
             //return File(abytes, "application/pdf", FileName);
