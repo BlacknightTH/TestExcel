@@ -258,6 +258,7 @@ namespace TestExcel.Controllers
             else
             {
                 string[] splitsubject = SUBJECTid.Split('_');
+                SECTION = db.SECTIONs.Where(x => x.SECTION_CLASSROOM == classroom).First();
                 first_subject = splitsubject[0];
                 last_subject = splitsubject[1];
             }
@@ -284,7 +285,7 @@ namespace TestExcel.Controllers
             {
                query = from e1 in db.SECTIONs
                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where e1.SUBJECT_ID.Contains(first_subject) || e1.SUBJECT_ID.Contains(last_subject) && e1.SECTION_CLASSROOM.Contains(classroom) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            where (e1.SUBJECT_ID.Contains(first_subject) || e1.SUBJECT_ID.Contains(last_subject)) && e1.SECTION_CLASSROOM ==classroom && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                             select new Section_Subject
                             {
                                 SECTION_ID = e1.SECTION_ID,
@@ -301,6 +302,7 @@ namespace TestExcel.Controllers
                                 SEMESTER = e1.SEMESTER,
                                 YEAR = e1.YEAR
                             };
+                ViewBag.CLASSROOM = " ";
             }
             else
             {
@@ -312,6 +314,8 @@ namespace TestExcel.Controllers
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                         };
                 ViewBag.DDL_building = query.Select(x => x.SECTION_CLASSROOM).Distinct();
+                ViewBag.CLASSROOM = SECTION.SECTION_CLASSROOM;
+
                 query = from e1 in db.SECTIONs
                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                             where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SECTION_CLASSROOM == SECTION.SECTION_CLASSROOM && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
@@ -353,7 +357,6 @@ namespace TestExcel.Controllers
             ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
             ViewBag.Semester = BR_Semester;
             ViewBag.Year = BR_Year;
-            ViewBag.CLASSROOM = SECTION.SECTION_CLASSROOM;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
             ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_ID", SUBJECT.SUBJECT_ID);
             ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", SUBJECT.SUBJECT_ID);

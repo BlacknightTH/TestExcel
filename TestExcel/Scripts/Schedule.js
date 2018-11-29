@@ -12,19 +12,28 @@
             start: function (event, ui) {
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
-                //var checkhave = $(this).parent("div:first-child").html();
-                //$("#gate").val(checkhave);
-                //if (checkhave !== "") {
-                //    check_id = $(this).parent().find("#searchId").val();
-                //    subject_timestart = $(this).find("#First_timestart_" + check_id).val();
-                //    subject_timeend = $(this).find("#First_timeend_" + check_id).val();
-                //    hour = (parseInt(subject_timeend) - parseInt(subject_timestart)) * 4;
-                //    $(this).parent().attr("colspan", hour);
+                var checkhave = $(this).parent();
+                var checkhavefirst = $(this).parent().find(".getdata:first #searchId").val();
+                var checkhavelast = $(this).parent().find(".getdata:last #searchId").val();
+                var tmp = $(this).parent().attr("id");
+                tmp = tmp.split("_");
 
-                //}
-                //else {
+                if (checkhavefirst !== checkhavelast) {
+                    check_id = checkhavelast;
+                    subject_timestart = $(this).parent().find(".getdata:last #First_timestart_" + check_id).val();
+                    subject_timeend = $(this).parent().find(".getdata:last #First_timeend_" + check_id).val();
+                    hour = (parseInt(subject_timeend) - parseInt(subject_timestart)) * 4;
+                    checkhave.attr("colspan", hour);
+                    colspan = $(this).parent().attr("colspan");
+                    a = parseInt(tmp[1]);
+                    j = (parseInt(colspan) / 4) + a;
+                }
+                else {
                     $(this).parent().attr("colspan", "4");
-                //}
+                    a = parseInt(tmp[1]);
+                    j = (parseInt(colspan) / 4) + a;
+                }
+
                 check_id = $(this).find("#searchId").val();
                 subject_timestart = $(this).find("#First_timestart_" + check_id).val();
                 subject_timeend = $(this).find("#First_timeend_" + check_id).val();
@@ -35,10 +44,6 @@
                     last_subject_timeend = $(this).find("#Second_timeend_" + check_id).val();
                     hour1 = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
                 }
-                var tmp = $(this).parent().attr("id");
-                tmp = tmp.split("_");
-                a = parseInt(tmp[1]);
-                j = (parseInt(colspan) / 4) + a;
                 tmp1 = 21 - (parseInt(colspan) / 4) + 1;
 
                 for (valdate = 0; valdate < 6; valdate++) {
@@ -59,19 +64,22 @@
                         }
                     }
                 }
-                //if (checkhave == "") {
+                if (checkhavefirst !== checkhavelast) {
+                    for (i = a + 1; i < j; i++) {
+                        tmp6 = tmp[0] + "_" + i;
+                        $("#" + tmp6).hide();
+                    }
+                } else {
                     for (i = a; i < j; i++) {
                         tmp6 = tmp[0] + "_" + i;
                         $("#" + tmp6).show();
                     }
-                //}
-                //else {
-
-                //}
+                }
             },
             stop: function (event, ui) {
 
                 console.log("stop");
+                colspan = hour * 4;
                 $(this).parent().attr("colspan", colspan);
                 var tmp = $(this).parent().attr("id");
                 tmp = tmp.split("_");
@@ -235,7 +243,6 @@
                     $("#TableLocation tbody tr").find(".tablecheckbox").prop('checked', false);
                     $("#TableLocation tbody tr").css("background-color", "");
                 }
-                $("#gate").val(checkbool);
             }
         });
     //}
@@ -276,7 +283,8 @@
                     + '<input id="First_timestart_' + section_id + '" value="' + tmptimestart + '" type="hidden">'
                     + '<input id="First_timeend_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                     + '<input id="First_date_' + section_id + '" value="' + tmpdate + '" type="hidden">'
-                    + '<input id="First_classroom_' + section_id + '" value="' + subject_classroom + '" type="hidden">';
+                    + '<input id="First_classroom_' + section_id + '" value="' + subject_classroom + '" type="hidden">'
+                    + '<input id="Second_clasroom_' + section_id + '" value="' + subject_branch + '" type="hidden">';
 
                 if (last_subject_id != "0") {
                     hour = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
@@ -288,8 +296,8 @@
                         + '<input id="Second_timestart_' + section_id + '" value="' + subject_timeend + '" type="hidden">'
                         + '<input id="Second_timeend_' + section_id + '" value="' + last_subject_timeend + '" type="hidden">'
                         + '<input id="Second_date_' + section_id + '" value="' + tmpdate + '" type="hidden">'
-                        + '<input id="Second_clasroom_' + section_id + '" value="' + last_subject_classroom + '" type="hidden">';
-
+                        + '<input id="Second_clasroom_' + section_id + '" value="' + last_subject_classroom + '" type="hidden">'
+                    + '<input id="Second_clasroom_' + section_id + '" value="' + last_subject_branch + '" type="hidden">';
                     $("#" + tmp_id).html('<div class="" style="background-color:' + color + ';width:100%;height:50px">' + stringpart + last_stringpart + '</div>');
                 }
                 else {

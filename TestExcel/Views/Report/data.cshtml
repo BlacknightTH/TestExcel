@@ -31,6 +31,7 @@
 <script>
     $(document).ready(function () {
         $("#year").val(@ViewBag.Year);
+        $("#year_export").val(@ViewBag.Year);
     });
     $(document).on('click', '#close-preview', function () {
         $('.image-preview').popover('hide');
@@ -123,7 +124,8 @@
                         <h4 class="w3-center">ดาวน์โหลดไฟล์ Excel</h4>
                         <hr>
                         <div><p>*หมายเหตุ:การดาวน์โหลดไฟล์ใช้เวลาประมาณ 2 นาที</p></div>
-                        @using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))
+                        @*@using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))*@
+                        @using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                         {
                             <div class="w3-container">
                                 <label>ภาคการศึกษา</label>

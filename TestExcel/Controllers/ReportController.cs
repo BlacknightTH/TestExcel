@@ -44,14 +44,21 @@ namespace TestExcel.Controllers
             string department_name = collection["department_name"];
             string semester = collection["semester"];
             string year = collection["year"];
-            PdfReport pdfReport = new PdfReport();
-            byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
-
             string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department_name + ".pdf";
             string FileName = Path.GetFileName(FilePath);
+            PdfReport pdfReport = new PdfReport();
+            try
+            {
+                byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
+                return File(abytes, "application/pdf");
+            }
+            catch
+            {
+                return RedirectToAction("data");
+            }
+
 
             //return File(abytes, "application/pdf", FileName);
-            return File(abytes, "application/pdf");
         }
         [HttpPost]
         public ActionResult TeReport(FormCollection collection)
@@ -60,13 +67,17 @@ namespace TestExcel.Controllers
             string semester = collection["semester"];
             string year = collection["year"];
             PdfReport pdfReport = new PdfReport();
-            byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
-
             string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + date[Date] + "_" + semester + "-" + year + ".pdf";
             string FileName = Path.GetFileName(FilePath);
-
-            //return File(abytes, "application/pdf", FileName);
-            return File(abytes, "application/pdf");
+            try
+            {
+                byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
+                return File(abytes, "application/pdf",FileName);
+            }
+            catch
+            {
+                return RedirectToAction("data");
+            }
         }
         [HttpPost]
         public ActionResult ClReport(FormCollection collection)
@@ -75,7 +86,6 @@ namespace TestExcel.Controllers
             string semester = collection["semester"];
             string year = collection["year"];
             PdfReport pdfReport = new PdfReport();
-            byte[] abytes = pdfReport.ClPrepareReport(BUILDING, semester, year);
             if (BUILDING == "632")
             {
                 BUILDING = "อาคารเรียน " + BUILDING + " (อาคารเรียนสีเทา ตึกใหม่)";
@@ -90,9 +100,16 @@ namespace TestExcel.Controllers
             }
             string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year + ".pdf";
             string FileName = Path.GetFileName(FilePath);
-
-            //return File(abytes, "application/pdf", FileName);
-            return File(abytes, "application/pdf", FileName);
+            try
+            {
+                byte[] abytes = pdfReport.ClPrepareReport(BUILDING, semester, year);
+                //return File(abytes, "application/pdf", FileName);
+                return File(abytes, "application/pdf", FileName);
+            }
+            catch
+            {
+                return RedirectToAction("data");
+            }
         }
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase excelfile)
@@ -100,7 +117,7 @@ namespace TestExcel.Controllers
             if (excelfile == null || excelfile.ContentLength == 0)
             {
                 ViewBag.Error = "Please select a excel file<br>";
-                return View("data");
+                return RedirectToAction("data");
             }
             else
             {
@@ -286,7 +303,7 @@ namespace TestExcel.Controllers
                 else
                 {
                     ViewBag.Error = "File type is incorrect<br>";
-                    return View("data");
+                    return RedirectToAction("data");
                 }
             }
         }
@@ -479,11 +496,21 @@ namespace TestExcel.Controllers
                     }
                 }
                 System.IO.File.Delete(FilePath);
-                return View("Close");
+                return RedirectToAction("data");
             }
             else
             {
-                return View("Close");
+                //var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                //                   select new SemesterYear
+                //                   {
+                //                       SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                //                       SEMESTER = d1.SEMESTER,
+                //                       YEAR = d1.YEAR
+                //                   };
+                //var first_Year = "2560";
+                //ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
+                //ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
+                return RedirectToAction("data");
             }
         }
     }

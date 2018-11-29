@@ -13,52 +13,57 @@
     string CLASSROOM = ViewBag.CLASSROOM;
     string Message = ViewBag.Message;
     string ErrorMessage = ViewBag.ErrorMessage;
-}
+    }
 <script>
     $(document).ready(function () {
         var num = "";
+        var cc = "";
+        cc = "" + @CLASSROOM + "";
+        var res = cc.split('-');
             $("#ddl_Semester").val(@SEMESTER);
-            $("#ddl_Year").val(@YEAR);
-            $("#ddl_classroom").val(@CLASSROOM);
+        $("#ddl_Year").val(@YEAR);
+        if (cc != " ") {
+            $("#ddl_classroom").val(res[0] + "-"+res[1]);
+            }
             $("#SUBJECT_NAME").val($("#SUBJECT").val());
             $("#ddl_Semester").change(function () {
                 $("#SUBJECT_FORM").submit();
-            });
+        });
             $("#SUBJECT").change(function () {
                 $("#SUBJECT_FORM").submit();
-            });
+        });
             $("#ddl_Year").change(function () {
                 $("#SUBJECT_FORM").submit();
-            });
+        });
             $("#ddl_classroom").change(function () {
                 $("#SUBJECT_FORM").submit();
-            });
-            var Message = $("#Alert p").html();
-            var ErrorMessage = $("#ErrorAlert p").html();
-            if (Message != "") {
+        });
+        var Message = $("#Alert p").html();
+        var ErrorMessage = $("#ErrorAlert p").html();
+        if (Message != "") {
                 $("#Alert").show("fade");
-                setTimeout(function () {
+            setTimeout(function () {
                     $("#Alert").hide("fade");
-                }, 3000);
-            }
-            if (ErrorMessage != "") {
+            }, 3000);
+        }
+        if (ErrorMessage != "") {
                 $("#ErrorAlert").show("fade");
-                setTimeout(function () {
+            setTimeout(function () {
                     $("#ErrorAlert").hide("fade");
-                }, 3000);
-            }
-            num = ""+ @number +"";
-            if (num != "") {
-                $("#TableLocation2 tr td div input[value='" + num + "']").parent().css('background-color', '#ff0000');
-                $("#TableLocation2 tr td div input[value='" + num + "']").parent().css('color', 'white');
-            }
-            });
+            }, 3000);
+        }
+        num = ""+ @number.Trim() +"";
+        if (num != "") {
+                $("#TableLocation2 tr td div #searchId[value='" + num + "']").parent().css('background-color', '#ff0000');
+                $("#TableLocation2 tr td div #searchId[value='" + num + "']").parent().css('color', 'white');
+        }
+    });
 
 </script>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
+    <a href="~/TimeSchedule/DSchedule" style="color:blue;font-size:20px">ภาควิชา |</a>
+    <a href="~/TimeSchedule/ClSchedule" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/TimeSchedule/TeSchedule" style="color:blue;font-size:20px">วิชาเรียน</a>
 </div>
 <div id="Alert" class="alert alert-success collapse">
     <p>@Message</p>
@@ -66,6 +71,7 @@
 <div id="ErrorAlert" class="alert alert-danger collapse">
     <p>@ErrorMessage</p>
 </div>
+@number
 @if (Subject_id == null)
 {
     <h3>ห้อง @Model.First().SECTION_CLASSROOM ภาคการศึกษาที่ @SEMESTER ปีการศึกษา @YEAR</h3>
@@ -432,7 +438,6 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
     <br>
 }
 <br>
-<input id="gate" name="gate" value="">
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     @Html.Hidden("SUBJECTid", Subject_id);
@@ -482,8 +487,8 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                             var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
                             if (trigger == 1)
                             {
-                                var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
-                                var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
+                                var TIME_START = int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString());
+                                var TIME_END = int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString());
                                 var TIME = (TIME_END - TIME_START) * 4;
                                 <td id="@tid" colspan="@TIME" class="droppable revert" width="60px">
                                     @if (WhereTimeDate.First().SUBJECT_ID == WhereTimeDate.Last().SUBJECT_ID)
@@ -533,8 +538,8 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                                             @Html.Hidden("First_subjectid_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SUBJECT_ID)
                                             @Html.Hidden("First_name_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SUBJECT_NAME)
                                             @Html.Hidden("First_number_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SECTION_NUMBER)
-                                            @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString())).ToString()))
-                                            @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString())).ToString()))
+                                            @Html.Hidden("First_timestart_" + WhereTimeDate.Last().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString())).ToString()))
+                                            @Html.Hidden("First_timeend_" + WhereTimeDate.Last().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString())).ToString()))
                                             @Html.Hidden("First_date_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SECTION_DATE)
                                             @Html.Hidden("First_classroom_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SECTION_CLASSROOM)
                                             @Html.Hidden("First_branch_" + WhereTimeDate.Last().SECTION_ID, WhereTimeDate.Last().SECTION_BRANCH_NAME)
