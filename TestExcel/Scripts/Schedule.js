@@ -12,17 +12,19 @@
             start: function (event, ui) {
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
-                var checkhave = $(this).parent().html();
-                if (checkhave != null) {
-                    check_id = $(this).parent().find("#searchId").val();
-                    subject_timestart = $(this).find("#First_timestart_" + check_id).val();
-                    subject_timeend = $(this).find("#First_timeend_" + check_id).val();
-                    hour = (parseInt(subject_timeend) - parseInt(subject_timestart)) * 4;
-                    $(this).parent().attr("colspan", hour);
-                }
-                else {
+                //var checkhave = $(this).parent("div:first-child").html();
+                //$("#gate").val(checkhave);
+                //if (checkhave !== "") {
+                //    check_id = $(this).parent().find("#searchId").val();
+                //    subject_timestart = $(this).find("#First_timestart_" + check_id).val();
+                //    subject_timeend = $(this).find("#First_timeend_" + check_id).val();
+                //    hour = (parseInt(subject_timeend) - parseInt(subject_timestart)) * 4;
+                //    $(this).parent().attr("colspan", hour);
+
+                //}
+                //else {
                     $(this).parent().attr("colspan", "4");
-                }
+                //}
                 check_id = $(this).find("#searchId").val();
                 subject_timestart = $(this).find("#First_timestart_" + check_id).val();
                 subject_timeend = $(this).find("#First_timeend_" + check_id).val();
@@ -57,10 +59,15 @@
                         }
                     }
                 }
-                for (i = a; i < j; i++) {
-                    tmp6 = tmp[0] + "_" + i;
-                    $("#" + tmp6).show();
-                }
+                //if (checkhave == "") {
+                    for (i = a; i < j; i++) {
+                        tmp6 = tmp[0] + "_" + i;
+                        $("#" + tmp6).show();
+                    }
+                //}
+                //else {
+
+                //}
             },
             stop: function (event, ui) {
 

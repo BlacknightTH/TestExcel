@@ -17,7 +17,6 @@ namespace TestExcel.Report
         string[] date = { "M", "T", "W", "H", "F", "S" };
         string[] date_thai = { "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์" };
         string textcreadit = "", tmp;
-        string tab = "  ";
         int _totalColumn = 5, _totalColumn2 = 15;
         Document _document;
         Font _fontStyle, THSarabunfnt;
