@@ -86,24 +86,24 @@ namespace TestExcel.Controllers
             string semester = collection["semester"];
             string year = collection["year"];
             PdfReport pdfReport = new PdfReport();
-            if (BUILDING == "632")
-            {
-                BUILDING = "อาคารเรียน " + BUILDING + " (อาคารเรียนสีเทา ตึกใหม่)";
-            }
-            else if (BUILDING == "1")
-            {
-                BUILDING = "อื่นๆ";
-            }
-            else
-            {
-                BUILDING = "อาคารเรียน " + BUILDING;
-            }
-            string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year + ".pdf";
-            string FileName = Path.GetFileName(FilePath);
             try
             {
                 byte[] abytes = pdfReport.ClPrepareReport(BUILDING, semester, year);
                 //return File(abytes, "application/pdf", FileName);
+                if (BUILDING == "632")
+                {
+                    BUILDING = "อาคารเรียน " + BUILDING + " (อาคารเรียนสีเทา ตึกใหม่)";
+                }
+                else if (BUILDING == "1")
+                {
+                    BUILDING = "อื่นๆ";
+                }
+                else
+                {
+                    BUILDING = "อาคารเรียน " + BUILDING;
+                }
+                string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year + ".pdf";
+                string FileName = Path.GetFileName(FilePath);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
@@ -123,7 +123,7 @@ namespace TestExcel.Controllers
             {
                 if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")))
                 {
-                    string path = Server.MapPath("~/import/" + excelfile.FileName);
+                    string path = Server.MapPath("~/Content/import/" + excelfile.FileName);
                     if (System.IO.File.Exists(path))
                         System.IO.File.Delete(path);
                     excelfile.SaveAs(path);

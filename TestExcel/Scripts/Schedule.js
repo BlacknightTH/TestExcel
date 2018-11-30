@@ -3,7 +3,7 @@
     var section_id, subject_classroom, subject_id, subject_name, subject_credit, subject_number, subject_hour, subject_timestart, subject_timeend, subject_professor, subject_branch, subject_date;
     var check_id, last_section_id, last_subject_classroom, last_subject_id, last_subject_name, last_subject_credit, last_subject_number, last_subject_hour, last_subject_timestart, last_subject_timeend, last_subject_professor, last_subject_branch, last_subject_date;
     var date2 = ["M", "T", "W", "H", "F", "S"];
-    var hour,hour1;
+    var hour,hour1,hour2;
     function drag_drop() {
 
         $(".draggable").draggable({
@@ -13,11 +13,10 @@
                 console.log("start");
                 colspan = $(this).parent().attr("colspan");
                 var checkhave = $(this).parent();
-                var checkhavefirst = $(this).parent().find(".getdata:first #searchId").val();
-                var checkhavelast = $(this).parent().find(".getdata:last #searchId").val();
                 var tmp = $(this).parent().attr("id");
                 tmp = tmp.split("_");
-
+                var checkhavefirst = $(this).parent().find(".getdata:first #searchId").val();
+                var checkhavelast = $(this).parent().find(".getdata:last #searchId").val();
                 if (checkhavefirst !== checkhavelast) {
                     check_id = checkhavelast;
                     subject_timestart = $(this).parent().find(".getdata:last #First_timestart_" + check_id).val();
@@ -30,20 +29,19 @@
                 }
                 else {
                     $(this).parent().attr("colspan", "4");
-                    a = parseInt(tmp[1]);
-                    j = (parseInt(colspan) / 4) + a;
                 }
-
                 check_id = $(this).find("#searchId").val();
                 subject_timestart = $(this).find("#First_timestart_" + check_id).val();
                 subject_timeend = $(this).find("#First_timeend_" + check_id).val();
                 hour = parseInt(subject_timeend) - parseInt(subject_timestart);
                 section_id = $(this).find("#Second_id_" + check_id).val();
-                if (section_id != "0") {
+                if (section_id !== "0" || section_id !== null) {
                     last_subject_timestart = $(this).find("#Second_timestart_" + check_id).val();
                     last_subject_timeend = $(this).find("#Second_timeend_" + check_id).val();
                     hour1 = parseInt(last_subject_timeend) - parseInt(last_subject_timestart);
                 }
+                a = parseInt(tmp[1]);
+                j = (parseInt(colspan) / 4) + a;
                 tmp1 = 21 - (parseInt(colspan) / 4) + 1;
 
                 for (valdate = 0; valdate < 6; valdate++) {
@@ -79,7 +77,12 @@
             stop: function (event, ui) {
 
                 console.log("stop");
-                colspan = hour * 4;
+                if (section_id == "0" || section_id == null) {
+                    colspan = hour * 4;
+                }
+                else {
+                    colspan = (hour + hour1) * 4;
+                }
                 $(this).parent().attr("colspan", colspan);
                 var tmp = $(this).parent().attr("id");
                 tmp = tmp.split("_");
@@ -102,7 +105,7 @@
                 $(this).find("#First_timestart_" + check_id).val(tmptimestart);
                 $(this).find("#First_timeend_" + check_id).val(hour);
                 $(this).find("#First_date_" + check_id).val(tmpdate);
-                if (section_id != "0") {
+                if (section_id !== "0" || section_id !== null) {
                     hour1 = hour + hour1;
                     $(this).find("#Second_timestart_" + check_id).val(hour);
                     $(this).find("#Second_timeend_" + check_id).val(hour1);

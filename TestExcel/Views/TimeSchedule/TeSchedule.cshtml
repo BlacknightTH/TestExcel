@@ -18,12 +18,11 @@
     $(document).ready(function () {
         var num = "";
         var cc = "";
-        cc = "" + @CLASSROOM + "";
-        var res = cc.split('-');
-            $("#ddl_Semester").val(@SEMESTER);
+        cc = "@CLASSROOM";
+        $("#ddl_Semester").val(@SEMESTER);
         $("#ddl_Year").val(@YEAR);
         if (cc != " ") {
-            $("#ddl_classroom").val(res[0] + "-"+res[1]);
+            $("#ddl_classroom").val(cc);
             }
             $("#SUBJECT_NAME").val($("#SUBJECT").val());
             $("#ddl_Semester").change(function () {
@@ -52,7 +51,7 @@
                     $("#ErrorAlert").hide("fade");
             }, 3000);
         }
-        num = ""+ @number.Trim() +"";
+        num = ""+ @number +"";
         if (num != "") {
                 $("#TableLocation2 tr td div #searchId[value='" + num + "']").parent().css('background-color', '#ff0000');
                 $("#TableLocation2 tr td div #searchId[value='" + num + "']").parent().css('color', 'white');
@@ -71,7 +70,6 @@
 <div id="ErrorAlert" class="alert alert-danger collapse">
     <p>@ErrorMessage</p>
 </div>
-@number
 @if (Subject_id == null)
 {
     <h3>ห้อง @Model.First().SECTION_CLASSROOM ภาคการศึกษาที่ @SEMESTER ปีการศึกษา @YEAR</h3>
@@ -438,6 +436,7 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
     <br>
 }
 <br>
+<textarea id="gate" name="gate"></textarea>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     @Html.Hidden("SUBJECTid", Subject_id);

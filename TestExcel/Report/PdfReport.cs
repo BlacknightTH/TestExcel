@@ -164,7 +164,7 @@ namespace TestExcel.Report
                         {
                             var TIME = tmp_last - tmp_first;
                             tmp = Tetemp(TIME);
-                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/\n"+ second.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/\n"+ first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                             //_pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + tmp + second.SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1297,7 +1297,7 @@ namespace TestExcel.Report
                                     var TIME = TIME_END - TIME_START;
                                     tmp = temp(TIME);
 
-                                    THSarabunfnt = new Font(bf, 10, 0);
+                                    THSarabunfnt = new Font(bf, 12, 0);
                                     _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                                     _pdfPCell.Colspan = TIME;
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1323,8 +1323,8 @@ namespace TestExcel.Report
                                     {
                                         var TIME = tmp_last - tmp_first;
                                         tmp = temp(TIME);
-                                        THSarabunfnt = new Font(bf, 10, 0);
-                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/\n" + second.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
+                                        THSarabunfnt = new Font(bf, 12, 0);
+                                        _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/\n" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -1340,7 +1340,7 @@ namespace TestExcel.Report
                                         var TIME = TIME_END - TIME_START;
                                         tmp = temp(TIME);
 
-                                        THSarabunfnt = new Font(bf, 10, 0);
+                                        THSarabunfnt = new Font(bf, 12, 0);
                                         _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                                         _pdfPCell.Colspan = TIME;
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1512,7 +1512,7 @@ namespace TestExcel.Report
                                 {
                                     var TIME = tmp_last - tmp_first;
 
-                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/"+ second.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
+                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER +"/"+ first.SECTION_PROFESSOR_SHORTNAME.Replace('/',','), THSarabunfnt));
                                     _pdfPCell.Colspan = TIME;
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
