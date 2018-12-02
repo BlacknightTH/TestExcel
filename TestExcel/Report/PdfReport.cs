@@ -1062,7 +1062,7 @@ namespace TestExcel.Report
                     int number = 1;
                     foreach (var p in _section_subject.Where(x => x.SECTION_NUMBER != ""))
                     {
-                        string[] e = p.SUBJECT_CREDIT.Split('(', ')');
+                        string[] e = p.SUBJECT_CREDIT.Trim().Split('(', ')');
                         if (e[0] != "")
                         {
                             k += int.Parse(e[0]);

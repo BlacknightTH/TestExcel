@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TestExcel.Models.Section_Subject>
 @{
     ViewBag.Title = "Index";
-    int i = 0; int j = 0; int k = 0; int l = 0; int m = 0;
+    int i = 0; var j = 0; int k = 0; int l = 0; int m = 0;
     string color;
     string textcreadit = "";
     string[] date = { "M", "T", "W", "H", "F", "S" };
@@ -50,9 +50,9 @@
     });
 </script>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
+    <a href="~/TimeSchedule/DSchedule" style="color:blue;font-size:20px">ภาควิชา |</a>
+    <a href="~/TimeSchedule/ClSchedule" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/TimeSchedule/TeSchedule" style="color:blue;font-size:20px">วิชาเรียน</a>
 </div>
 <h2>@BRANCH_NAME</h2>
 <div id="Alert" class="alert alert-success collapse">
@@ -115,7 +115,7 @@
             if (item.SECTION_NUMBER != "")
             {
                 i++;
-                string[] e = item.SUBJECT_CREDIT.Split('(', ')');
+                string[] e = item.SUBJECT_CREDIT.Trim().Split('(', ')');
                 if (e[0] != "")
                 {
                     j += int.Parse(e[0]);
@@ -123,7 +123,6 @@
                     k += int.Parse(ee[0]);
                     l += int.Parse(ee[1]);
                     m += int.Parse(ee[2]);
-
                     textcreadit = j + "(" + k + "-" + l + "-" + m + ")";
                 }
                 else

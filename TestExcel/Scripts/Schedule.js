@@ -355,9 +355,10 @@
     });
 
     function replace() {
-        $("#TableLocation2 tr td div").on('click mouseover',function () {
+        $("#TableLocation2 tr td div").on('click',function () {
             var optionlisting = "";
-            var TimeStart, tmp_id2, tmp12, first_classroom,first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
+            var optionlisting2 = "";
+            var TimeStart, TimeEnd, tmp_id2, tmp12, first_classroom,first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
             var second_id, second_classroom, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;
             check_id = $(this).find("#searchId").val();
             first_id = $(this).find("#First_" + "id_" + check_id).val();
@@ -391,29 +392,8 @@
             $('#FIRST_SAVE_TIMEEND').html(optionlisting);
             $("#FIRST_SAVE_TIMEEND").val(first_timeend);
 
-            $("#Second_Header").html("Second");
-            $("#SECOND_SECTION_ID").val("0");
-            $("#SECOND_SAVE_NUMBER").val("");
-            $("#SECOND_SAVE_DATE").val("M");
-            $("#SECOND_SAVE_CLASSROOM").val("");
-            $("#SECOND_SAVE_TIMESTART").val(8);
-            $("#SECOND_SAVE_BRANCH").val("");
-            TimeStart = $('#SECOND_SAVE_TIMESTART').val();
-            $('#SECOND_SAVE_TIMEEND option').remove();
-            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-                if (i < 10) {
-                    optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
-                }
-                else {
-                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
-                }
-
-            }
-            $('#SECOND_SAVE_TIMEEND').html(optionlisting);
-            $("#SECOND_SAVE_TIMEEND").val(9);
-
             second_id = $(this).find("#Second_" + "id_" + check_id).val();
-            if (second_id != null) {
+            if (second_id != null && second_id != "0") {
                 second_id = $(this).find("#Second_" + "id_" + check_id).val();
                 second_subjectid = $(this).find("#Second_" + "subjectid_" + check_id).val();
                 second_name = $(this).find("#Second_" + "name_" + check_id).val();
@@ -431,38 +411,41 @@
                 $("#SECOND_SAVE_TIMESTART").val(second_timestart);
                 $("#SECOND_SAVE_CLASSROOM").val(second_classroom);
                 $("#SECOND_SAVE_BRANCH").val(second_branch);
-                TimeStart = $('#SECOND_SAVE_TIMESTART').val();
+                TimeEnd = $('#SECOND_SAVE_TIMESTART').val();
+                $("#gate").val(TimeEnd);
                 $('#SECOND_SAVE_TIMEEND option').remove();
-                for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                for (i = parseInt(TimeEnd) + 1; i <= 21; i++) {
                     if (i < 10) {
-                        optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
                     }
                     else {
-                        optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + i + ":00" + '</option>';
                     }
 
                 }
-                $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+                $('#SECOND_SAVE_TIMEEND').html(optionlisting2);
                 $("#SECOND_SAVE_TIMEEND").val(second_timeend);
             }
-            else if (second_id == "0"){
+            else{
                 $("#Second_Header").html("Second");
                 $("#SECOND_SECTION_ID").val("0");
                 $("#SECOND_SAVE_NUMBER").val("");
                 $("#SECOND_SAVE_DATE").val("M");
+                $("#SECOND_SAVE_CLASSROOM").val("");
                 $("#SECOND_SAVE_TIMESTART").val(8);
-                TimeStart = $('#SECOND_SAVE_TIMESTART').val();
+                $("#SECOND_SAVE_BRANCH").val("");
+                TimeEnd = $('#SECOND_SAVE_TIMESTART').val();
                 $('#SECOND_SAVE_TIMEEND option').remove();
-                for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
+                for (i = parseInt(TimeEnd) + 1; i <= 21; i++) {
                     if (i < 10) {
-                        optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
                     }
                     else {
-                        optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + i + ":00" + '</option>';
                     }
 
                 }
-                $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+                $('#SECOND_SAVE_TIMEEND').html(optionlisting2);
                 $("#SECOND_SAVE_TIMEEND").val(9);
             }
         });

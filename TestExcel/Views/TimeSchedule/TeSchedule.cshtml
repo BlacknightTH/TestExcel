@@ -2,8 +2,7 @@
 @{
     ViewBag.Title = "TeSchedule";
     string color;
-    int i = 0; int j = 0; int k = 0; int l = 0; int m = 0;
-    string textcreadit = "";
+    int i = 0;
     string number = ViewBag.Number;
     string[] date = { "M", "T", "W", "H", "F", "S" };
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
@@ -17,7 +16,6 @@
 <script>
     $(document).ready(function () {
         var num = "";
-        var cc = "";
         cc = "@CLASSROOM";
         $("#ddl_Semester").val(@SEMESTER);
         $("#ddl_Year").val(@YEAR);
@@ -72,7 +70,7 @@
 </div>
 @if (Subject_id == null)
 {
-    <h3>ห้อง @Model.First().SECTION_CLASSROOM ภาคการศึกษาที่ @SEMESTER ปีการศึกษา @YEAR</h3>
+    <h3>ห้อง @Model.FirstOrDefault().SECTION_CLASSROOM ภาคการศึกษาที่ @SEMESTER ปีการศึกษา @YEAR</h3>
 }
 else
 {
@@ -103,7 +101,7 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                 </td>
                 <td align="right"><b>วิชา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
-                    <select class="form-control" id="ddl_classroom" name="ddl_classroom" style="width:90px">
+                    <select class="form-control" id="ddl_classroom" name="ddl_classroom" style="width:120px">
                         @foreach(var item in ViewBag.DDL_building)
                         {
                         <option value="@item">@item</option>
@@ -408,7 +406,6 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
     <br>
 }
 <br>
-<textarea id="gate" name="gate"></textarea>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
     @Html.Hidden("SUBJECTid", Subject_id);

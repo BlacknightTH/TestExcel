@@ -27,9 +27,9 @@
             });
 </script>
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("ภาควิชา", "DSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาคาร/ห้องเรียน", "ClSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("วิชาเรียน", "TeSchedule", "TimeSchedule", new { style = "color:blue;font-size:20px" })
+    <a href="~/TimeSchedule/DSchedule" style="color:blue;font-size:20px">ภาควิชา |</a>
+    <a href="~/TimeSchedule/ClSchedule" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/TimeSchedule/TeSchedule" style="color:blue;font-size:20px">วิชาเรียน</a>
 </div>
 @if ((string)ViewBag.BUILDING_NAME == "632")
 {

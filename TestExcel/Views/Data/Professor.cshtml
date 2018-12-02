@@ -5,13 +5,13 @@
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
-    @Html.ActionLink("ตอนเรียน", "Section", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("วิชาเรียน", "Subject", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("สาขาวิชา", "Branch", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาคารเรียน/ห้องเรียน", "Building", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("ภาควิชา", "Department", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("อาจารย์", "Professor", "Data", new { style = "color:blue;font-size:20px" })  |
-    @Html.ActionLink("User", "Member", "Data", new { style = "color:blue;font-size:20px" })
+    <a href="~/Data/Section" style="color:blue;font-size:20px">ตอนเรียน |</a>
+    <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
+    <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
+    <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
+    <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ |</a>
+    <a href="~/Data/Member" style="color:blue;font-size:20px">User</a>
 </div>
 <br>
 <div class="container">

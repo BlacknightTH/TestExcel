@@ -251,8 +251,8 @@ namespace TestExcel.Controllers
             {
                 BR_Semester = "1";
                 BR_Year = "2560";
-                SUBJECT = db.SUBJECTs.First();
-                SECTION = db.SECTIONs.Where(x => x.SUBJECT_ID == SUBJECT.SUBJECT_ID).First();
+                SUBJECT = db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
+                SECTION = db.SECTIONs.Where(x => x.SUBJECT_ID == SUBJECT.SUBJECT_ID && x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
                 color = "";
             }
             else
@@ -358,19 +358,27 @@ namespace TestExcel.Controllers
             ViewBag.Semester = BR_Semester;
             ViewBag.Year = BR_Year;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
-            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_ID", SUBJECT.SUBJECT_ID);
+            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).ToList(), "SUBJECT_ID", "SUBJECT_ID", SUBJECT.SUBJECT_ID);
             ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", SUBJECT.SUBJECT_ID);
             return View(query);
         }
         [HttpPost]
         public ActionResult TeSchedule(FormCollection collection)
         {
+            SUBJECT SUBJECT = new SUBJECT();
+            SECTION SECTION = new SECTION();
             var DDL_SUBJECT = collection["SUBJECT"];
             var ddl_Semester = collection["ddl_Semester"];
             var ddl_Year = collection["ddl_Year"];
             var ddl_classroom = collection["ddl_classroom"];
-
-            var SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == DDL_SUBJECT).First();
+            if (DDL_SUBJECT == null)
+            {
+                SUBJECT = db.SUBJECTs.FirstOrDefault();
+            }
+            else
+            {
+                SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == DDL_SUBJECT).FirstOrDefault();
+            }
             var query = from e1 in db.SECTIONs
                     join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                     where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(ddl_Semester) && e2.SEMESTER.Contains(ddl_Semester) && e1.YEAR.Contains(ddl_Year) && e2.YEAR.Contains(ddl_Year)
@@ -411,7 +419,7 @@ namespace TestExcel.Controllers
             ViewBag.Year = ddl_Year;
             ViewBag.CLASSROOM = ddl_classroom;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
-            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_ID", DDL_SUBJECT);
+            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.Where(x => x.SEMESTER == ddl_Semester && x.YEAR == ddl_Year).ToList(), "SUBJECT_ID", "SUBJECT_ID", DDL_SUBJECT);
             ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", DDL_SUBJECT);
             return View(query);
         }
