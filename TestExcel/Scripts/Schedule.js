@@ -355,7 +355,7 @@
     });
 
     function replace() {
-        $("#TableLocation2 tr td div").click(function () {
+        $("#TableLocation2 tr td div").on('click mouseover',function () {
             var optionlisting = "";
             var TimeStart, tmp_id2, tmp12, first_classroom,first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
             var second_id, second_classroom, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;

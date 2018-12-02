@@ -84,6 +84,11 @@
 </style>
 <script>
     $(document).ready(function () {
+        $(document).click(function () {
+            if ($(".dropdown-menu").show()) {
+                $(".dropdown-menu").hide();
+            }
+        });
         var date = ["M", "T", "W", "H", "F", "S"];
         var datethai = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
         $.ajax({

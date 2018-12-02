@@ -285,7 +285,7 @@ namespace TestExcel.Controllers
             {
                query = from e1 in db.SECTIONs
                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where (e1.SUBJECT_ID.Contains(first_subject) || e1.SUBJECT_ID.Contains(last_subject)) && e1.SECTION_CLASSROOM ==classroom && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            where e1.SECTION_CLASSROOM == classroom && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                             select new Section_Subject
                             {
                                 SECTION_ID = e1.SECTION_ID,
