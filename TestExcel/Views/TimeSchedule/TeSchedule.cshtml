@@ -534,6 +534,7 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                                 var TIME = (tmp_last - tmp_first) * 4;
                                 <td id="@tid" colspan="@TIME" width="60px" class="droppable">
                                     <div class="draggable getdata" style="background-color:@color;height:50px">
+                                        <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                         <p>@first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER</p>
                                         @Html.Hidden("searchId", first.SECTION_ID)
                                         @Html.Hidden("First_id_" + first.SECTION_ID, first.SECTION_ID)
@@ -565,6 +566,7 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                                 var TIME = (TIME_END - TIME_START) * 4;
                                 <td id="@tid" colspan="@TIME" width="60px" class="droppable">
                                     <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                        <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                         <p>@WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER</p>
                                         @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
                                         @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
