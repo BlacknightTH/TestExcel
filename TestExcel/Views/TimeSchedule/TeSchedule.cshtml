@@ -85,11 +85,12 @@ using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = 
                 <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "width:80px" })</td>
                 <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
-                    <select class="form-control" id="ddl_Semester" name="ddl_Semester" style="width:70px">
+                    @Html.DropDownList("ddl_Semester", (SelectList)ViewBag.ddl_Semester, new { @class = "form-control", style = "width:70px" })
+                    @*<select class="form-control" id="ddl_Semester" name="ddl_Semester" style="width:70px">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
-                    </select>
+                    </select>*@
                 </td>
                 <td align="right"><b>รหัสวิชา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">

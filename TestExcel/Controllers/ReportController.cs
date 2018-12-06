@@ -50,7 +50,7 @@ namespace TestExcel.Controllers
             try
             {
                 byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
-                return File(abytes, "application/pdf");
+                return File(abytes, "application/pdf", FileName);
             }
             catch
             {
@@ -72,7 +72,7 @@ namespace TestExcel.Controllers
             try
             {
                 byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
-                return File(abytes, "application/pdf");
+                return File(abytes, "application/pdf",FileName);
             }
             catch
             {
