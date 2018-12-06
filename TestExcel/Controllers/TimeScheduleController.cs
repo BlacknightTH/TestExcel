@@ -448,6 +448,7 @@ namespace TestExcel.Controllers
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
             var Year = collection["Year"];
+            var CLASSROOM = collection["FIRST_SAVE_CLASSROOM"];
 
             if (ModelState.IsValid && FIRST_SECTION_ID != "" && SECOND_SECTION_ID == "0")
             {
@@ -517,7 +518,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                return Redirect("/TimeSchedule/TeSchedule/"+ FIRST_SECTION_ID + "/"+ CLASSROOM +"?SUBJECTid="+ SUBJECTid +"&BR_SEMESTER="+ Semester +"&BR_YEAR="+ Year +"&color=#ff0000" + "&Message=" + Message);
             }
         }
         [HttpPost]
@@ -530,6 +531,9 @@ namespace TestExcel.Controllers
             var Year = collection["Year"];
             var SearchId = collection["searchId"];
             var split = SearchId.Split(',');
+            var SEC_ID = collection["SEC_ID"];
+            var CLASSROOM = collection["CLASSROOM"];
+
             for (int i = 0; i < split.Length; i++)
             {
                 var FIRST_SECTION_ID = int.Parse(collection["First_id_" + split[i]]);
@@ -591,7 +595,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&color=#ff0000" + "&Message=" + Message);
             }
         }
     }
