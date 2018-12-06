@@ -15,7 +15,7 @@
 </div>
     <br>
     <div class="container">
-        <a href="#" onclick="AddNew(0)" class="btn btn-info">Add New</a><br /><br />
+        <a href="#" onclick="AddNew(0)" class="btn btn-info pull-right">Add New</a><br /><br />
 
         <table class="w3-table-all" id="DataTable" name="DataTable">
             <thead>
@@ -30,20 +30,20 @@
 
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td id="TdepartName_@item.BRANCH_ID">
-                        <p>@item.DEPARTMENT_NAME</p>
-                    </td>
-                    <td id="TbranchName_@item.BRANCH_ID">
-                        <p>@item.BRANCH_NAME</p>
-                    </td>
-                    <td>
-                        <a href="#" onclick="EditRecord(@item.BRANCH_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
-                    </td>
-                    <td>
-                        <a href="#" onclick="DeleteRecord(@item.BRANCH_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td id="TdepartName_@item.BRANCH_ID">
+                            <p>@item.DEPARTMENT_NAME</p>
+                        </td>
+                        <td id="TbranchName_@item.BRANCH_ID">
+                            <p>@item.BRANCH_NAME</p>
+                        </td>
+                        <td>
+                            <a href="#" onclick="EditRecord(@item.BRANCH_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                        </td>
+                        <td>
+                            <a href="#" onclick="DeleteRecord(@item.BRANCH_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                        </td>
+                    </tr>
                 }
             </tbody>
 

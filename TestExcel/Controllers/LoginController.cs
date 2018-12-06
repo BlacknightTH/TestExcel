@@ -15,24 +15,6 @@ namespace TestExcel.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            //var model = from a in db.SECTIONs
-            //            join b in db.BUILDINGs
-            //            on a.SECTION_CLASSROOM equals b.CLASSROOM_NAME into e
-            //            from b in e.DefaultIfEmpty()
-            //            select new Building_Classroom {
-            //                SUBJECT_ID = a.SUBJECT_ID,
-            //                SECTION_CLASSROOM = a.SECTION_CLASSROOM,
-            //                BUILDING_NAME = b == null? "" : b.BUILDING_NAME
-                        //};
-            //var model = from a in db.SECTIONs
-            //            group a by new
-            //            {
-            //                classroom = a.SECTION_CLASSROOM
-            //            } into s
-            //            select new Section_Subject{
-            //                SECTION_CLASSROOM = s.Key.classroom
-            //            };
-            //var query = db.SECTIONs.GroupBy(x => new { classroom = x.SECTION_CLASSROOM }).Select(y => new Section_Subject { SECTION_CLASSROOM = y.Key.classroom });
             return View();
         }
         [HttpPost]
@@ -48,7 +30,7 @@ namespace TestExcel.Controllers
                 {
                     Session["Username"] = obj.USER_USERNAME.ToString();
                     Session["status"] = obj.USER_STATUS.ToString();
-                    return RedirectToAction("DSchedule", "TimeSchedule");
+                    return RedirectToAction("data", "Report");
                 }
                 else
                 {
