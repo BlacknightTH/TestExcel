@@ -513,5 +513,12 @@ namespace TestExcel.Controllers
                 return RedirectToAction("data");
             }
         }
+
+        public FileResult Download(string id)
+        {
+            string path = Server.MapPath("~/Content/import/" + id + ".pdf");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            return File(fileBytes, "application/pdf", id);
+        }
     }
 }

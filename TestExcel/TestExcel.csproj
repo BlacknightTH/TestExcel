@@ -475,6 +475,7 @@
     <Content Include="fonts\THSarabun Italic.ttf" />
     <Content Include="fonts\THSarabun.ttf" />
     <Content Include="fonts\angsa.ttf" />
+    <Content Include="Content\import\คู่มือการใช้งาน.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
@@ -606,7 +607,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\import\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
