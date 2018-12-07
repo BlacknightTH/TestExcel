@@ -1074,7 +1074,7 @@ namespace TestExcel.Report
                             else
                             {
                                 THSarabunfnt = new Font(bf, 16, 0);
-                                _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชากระจายเสียงวิทยุและโทรทัศน์) (แขนงวิชาโทรคมนาคม)  " + Branch_Name, THSarabunfnt));
+                                _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชากระจายเสียงวิทยุและโทรทัศน์)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                 _pdfPCell.Border = 0;
