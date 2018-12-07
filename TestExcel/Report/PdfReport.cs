@@ -996,21 +996,20 @@ namespace TestExcel.Report
                     _pdfTable.CompleteRow();
                     if (department_name == "MDET" || department_name == "EnET" || department_name == "TDET" || department_name == "InET" || department_name == "PnET")
                     {
+                        THSarabunfnt = new Font(bf, 16, 0);
+                        _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
+                        _pdfPCell.Colspan = _totalColumn;
+                        _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _pdfPCell.Border = 0;
+                        _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                        _pdfPCell.ExtraParagraphSpace = 0;
+                        _pdfTable.AddCell(_pdfPCell);
+                        _pdfTable.CompleteRow();
+
                         if (q.DEPARTMENT_NAME == "MDET")
                         {
-                            THSarabunfnt = new Font(bf, 16, 0);
-                            _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
-                            _pdfPCell.Colspan = _totalColumn;
-                            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            _pdfPCell.Border = 0;
-                            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            _pdfPCell.ExtraParagraphSpace = 0;
-                            _pdfTable.AddCell(_pdfPCell);
-                            _pdfTable.CompleteRow();
-
                             if (Branch_Name.Contains("(M)"))
                             {
-
                                 THSarabunfnt = new Font(bf, 16, 0);
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาสร้างเครื่องจักรกล)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
@@ -1036,16 +1035,6 @@ namespace TestExcel.Report
                         }
                         if (q.DEPARTMENT_NAME == "EnET")
                         {
-                            THSarabunfnt = new Font(bf, 16, 0);
-                            _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
-                            _pdfPCell.Colspan = _totalColumn;
-                            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            _pdfPCell.Border = 0;
-                            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            _pdfPCell.ExtraParagraphSpace = 0;
-                            _pdfTable.AddCell(_pdfPCell);
-                            _pdfTable.CompleteRow();
-
                             if (Branch_Name.Contains("(T)"))
                             {
                                 THSarabunfnt = new Font(bf, 16, 0);
@@ -1097,16 +1086,6 @@ namespace TestExcel.Report
                         }
                         if (q.DEPARTMENT_NAME == "TDET")
                         {
-                            THSarabunfnt = new Font(bf, 16, 0);
-                            _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
-                            _pdfPCell.Colspan = _totalColumn;
-                            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            _pdfPCell.Border = 0;
-                            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            _pdfPCell.ExtraParagraphSpace = 0;
-                            _pdfTable.AddCell(_pdfPCell);
-                            _pdfTable.CompleteRow();
-
                             if (Branch_Name.Contains("(P)"))
                             {
                                 THSarabunfnt = new Font(bf, 16, 0);
@@ -1134,16 +1113,6 @@ namespace TestExcel.Report
                         }
                         if (q.DEPARTMENT_NAME == "InET")
                         {
-                            THSarabunfnt = new Font(bf, 16, 0);
-                            _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
-                            _pdfPCell.Colspan = _totalColumn;
-                            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            _pdfPCell.Border = 0;
-                            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            _pdfPCell.ExtraParagraphSpace = 0;
-                            _pdfTable.AddCell(_pdfPCell);
-                            _pdfTable.CompleteRow();
-
                             if (Branch_Name.Contains("(M)"))
                             {
                                 THSarabunfnt = new Font(bf, 16, 0);
@@ -1171,16 +1140,6 @@ namespace TestExcel.Report
                         }
                         if (q.DEPARTMENT_NAME == "PnET")
                         {
-                            THSarabunfnt = new Font(bf, 16, 0);
-                            _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
-                            _pdfPCell.Colspan = _totalColumn;
-                            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                            _pdfPCell.Border = 0;
-                            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                            _pdfPCell.ExtraParagraphSpace = 0;
-                            _pdfTable.AddCell(_pdfPCell);
-                            _pdfTable.CompleteRow();
-
                             if (Branch_Name.Contains("(PE)"))
                             {
                                 THSarabunfnt = new Font(bf, 16, 0);
