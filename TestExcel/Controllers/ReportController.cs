@@ -363,7 +363,9 @@ namespace TestExcel.Controllers
         {
             var semester = collection["semester"];
             var year = collection["year_export"];
-            string FilePath = @"C:\ขบวน" + semester + "-" + year + ".xlsx";
+            //string FilePath = @"C:\ขบวน" + semester + "-" + year + ".xlsx";
+            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + ".xlsx");
+            System.IO.File.Delete(FilePath);
             string FileName = Path.GetFileName(FilePath);
             Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
             if (db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).Any() != false)
@@ -458,22 +460,21 @@ namespace TestExcel.Controllers
                     workbook.SaveAs(FilePath);
                     workbook.Close();
 
-                    Response.Clear();
-                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("Content-Disposition", "attachment; filename=" + FileName);
-                    Response.TransmitFile(FilePath);
-                    Response.Flush();
-                    Response.End();
-
-
-                    Marshal.ReleaseComObject(workbook);
-
+                    //Response.Clear();
+                    //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    //Response.AddHeader("Content-Disposition", "attachment; filename=" + FileName);
+                    //Response.TransmitFile(FilePath);
+                    //Response.Flush();
+                    //Response.End();
                     application.Quit();
-                    Marshal.FinalReleaseComObject(application);
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", FileName);
+                    //Marshal.ReleaseComObject(workbook);
+                    //Marshal.FinalReleaseComObject(application);
                 }
                 catch
                 {
-
+                return RedirectToAction("data");
                 }
                 finally
                 {
@@ -495,8 +496,7 @@ namespace TestExcel.Controllers
                         }
                     }
                 }
-                System.IO.File.Delete(FilePath);
-                return RedirectToAction("data");
+                //return JavaScript("window.close();");
             }
             else
             {
