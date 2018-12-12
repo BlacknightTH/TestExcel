@@ -11,9 +11,7 @@ using TestExcel.Data;
 using TestExcel.Report;
 using TestExcel.Models;
 using TestExcel.Utility;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using OfficeOpenXml;
 
 namespace TestExcel.Controllers
 {
@@ -72,7 +70,7 @@ namespace TestExcel.Controllers
             try
             {
                 byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
-                return File(abytes, "application/pdf",FileName);
+                return File(abytes, "application/pdf", FileName);
             }
             catch
             {
@@ -127,8 +125,6 @@ namespace TestExcel.Controllers
                     if (System.IO.File.Exists(path))
                         System.IO.File.Delete(path);
                     excelfile.SaveAs(path);
-                    //Read data from excel file
-                    Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
                     try
                     {
                         int FilenameLength = excelfile.FileName.Length;
@@ -136,10 +132,10 @@ namespace TestExcel.Controllers
                         string FileName = excelfile.FileName.Substring(FilenameLength);
                         string[] tmpstring = FileName.Split('.', '-');
 
-                        Excel.Application excelapplication = new Excel.Application();
-                        Excel.Workbook workbook = excelapplication.Workbooks.Open(path);
-                        Excel.Worksheet worksheet = workbook.ActiveSheet;
-                        Excel.Range range = worksheet.UsedRange;
+                        var package = new ExcelPackage(new FileInfo(path));
+                        var workbook = package.Workbook;
+                        var worksheet = workbook.Worksheets[1]; //read sheet 1
+                        int totalRows = worksheet.Dimension.End.Row;
 
                         string tmp = "";
                         string tmp2 = "";
@@ -166,15 +162,16 @@ namespace TestExcel.Controllers
                             }
                             db.SaveChanges();
                         }
-                        for (int row = 1; row < range.Rows.Count; row++)
+
+                        for (int row = 1; row < totalRows; row++)
                         {
-                            string B = ((Excel.Range)range.Cells[row, 2]).Text;
-                            string C = ((Excel.Range)range.Cells[row, 3]).Text;
-                            string D = ((Excel.Range)range.Cells[row, 4]).Text;
-                            string E = ((Excel.Range)range.Cells[row, 5]).Text;
-                            string F = ((Excel.Range)range.Cells[row, 6]).Text;
-                            string G = ((Excel.Range)range.Cells[row, 7]).Text;
-                            string H = ((Excel.Range)range.Cells[row, 8]).Text;
+                            string B = worksheet.Cells[row, 2].Text;
+                            string C = worksheet.Cells[row, 3].Text;
+                            string D = worksheet.Cells[row, 4].Text;
+                            string E = worksheet.Cells[row, 5].Text;
+                            string F = worksheet.Cells[row, 6].Text;
+                            string G = worksheet.Cells[row, 7].Text;
+                            string H = worksheet.Cells[row, 8].Text;
 
                             if (B.Length > 4 && B.Length < 12)
                             {
@@ -187,10 +184,10 @@ namespace TestExcel.Controllers
                                         string Subject_ID = B;
                                         string subject_NAME = C;
                                         string subject_CREDIT = G;
-                                        string subject_MIDTERM_DATE = ((Excel.Range)range.Cells[row, 10]).Text;
-                                        string subject_FINAL_DATE = ((Excel.Range)range.Cells[row + 1, 10]).Text;
-                                        string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
-                                        string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+                                        string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                        string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                        string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                        string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
 
                                         saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                     }
@@ -199,10 +196,10 @@ namespace TestExcel.Controllers
                                         string Subject_ID = B;
                                         string subject_NAME = C;
                                         string subject_CREDIT = H.Trim();
-                                        string subject_MIDTERM_DATE = ((Excel.Range)range.Cells[row, 10]).Text;
-                                        string subject_FINAL_DATE = ((Excel.Range)range.Cells[row + 1, 10]).Text;
-                                        string subject_MIDTERM_TIME = ((Excel.Range)range.Cells[row, 11]).Text;
-                                        string subject_FINAL_TIME = ((Excel.Range)range.Cells[row + 1, 11]).Text;
+                                        string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                        string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                        string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                        string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
 
                                         saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                     }
@@ -216,7 +213,7 @@ namespace TestExcel.Controllers
                                     string[] split_date = D.Split('-');
                                     if (G.LastOrDefault().ToString() == ",")
                                     {
-                                        G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                        G = G + worksheet.Cells[row + 1, 7].Text;
                                     }
 
                                     string Subject_ID = tmp;
@@ -238,7 +235,7 @@ namespace TestExcel.Controllers
                                             string[] split_date = D.Split('-');
                                             if (G.LastOrDefault().ToString() == ",")
                                             {
-                                                G = G + ((Excel.Range)range.Cells[row + 1, 7]).Text;
+                                                G = G + worksheet.Cells[row + 1, 7].Text;
                                             }
 
                                             string Subject_ID = tmp;
@@ -251,23 +248,23 @@ namespace TestExcel.Controllers
                                             string Section_Branch_Name = G;
                                             saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
                                         }
-                                        else if(D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
+                                        else if (D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
                                         {
-                                                string[] split_date = E.Split('-');
-                                                if (H.LastOrDefault().ToString() == ",")
-                                                {
-                                                    H = H + ((Excel.Range)range.Cells[row + 1, 7]).Text;
-                                                }
+                                            string[] split_date = E.Split('-');
+                                            if (H.LastOrDefault().ToString() == ",")
+                                            {
+                                                H = H + worksheet.Cells[row + 1, 7].Text;
+                                            }
 
-                                                string Subject_ID = tmp;
-                                                string Section_Number = C;
-                                                string Section_Date = D;
-                                                string Section_Start_Time = split_date[0];
-                                                string Section_End_Time = split_date[1];
-                                                string Section_Classroom = F;
-                                                string Section_Professor = G;
-                                                string Section_Branch_Name = H;
-                                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                            string Subject_ID = tmp;
+                                            string Section_Number = C;
+                                            string Section_Date = D;
+                                            string Section_Start_Time = split_date[0];
+                                            string Section_End_Time = split_date[1];
+                                            string Section_Classroom = F;
+                                            string Section_Professor = G;
+                                            string Section_Branch_Name = H;
+                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
                                         }
                                     }
                                 }
@@ -277,26 +274,6 @@ namespace TestExcel.Controllers
                     catch
                     {
 
-                    }
-                    finally
-                    {
-                        //Compare the EXCEL ID and Kill it 
-                        Process[] excelProcsNew = Process.GetProcessesByName("EXCEL");
-                        foreach (Process procNew in excelProcsNew)
-                        {
-                            int exist = 0;
-                            foreach (Process procOld in excelProcsOld)
-                            {
-                                if (procNew.Id == procOld.Id)
-                                {
-                                    exist++;
-                                }
-                            }
-                            if (exist == 0)
-                            {
-                                procNew.Kill();
-                            }
-                        }
                     }
                     return RedirectToAction("DSchedule", "TimeSchedule");
                 }
@@ -367,136 +344,104 @@ namespace TestExcel.Controllers
             string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + ".xlsx");
             System.IO.File.Delete(FilePath);
             string FileName = Path.GetFileName(FilePath);
-            Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
+
             if (db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).Any() != false)
             {
                 try
                 {
-                    Excel.Application application = new Excel.Application();
-                    Excel.Workbook workbook = application.Workbooks.Add(System.Reflection.Missing.Value);
-                    Excel.Worksheet worksheet = workbook.ActiveSheet;
-                    Excel.Range range = worksheet.UsedRange;
-                    Excel.XlHAlign center = Excel.XlHAlign.xlHAlignCenter;
+                    var package = new ExcelPackage(new FileInfo(FilePath));
+                    var workbook = package.Workbook;
+                    var worksheet = workbook.Worksheets.Add("ขบวน"+ semester + "-" + year); //read sheet 1
+                  
+                    //------------------------------------------------------//
+                    worksheet.Cells["B:K"].Style.Font.Name = "TH SarabunPSK";
+                    worksheet.Cells["B:K"].Style.Font.Size = 15;
+                    worksheet.Column(2).Style.Numberformat.Format = "@";
+                    //------------------------------------------------------//
 
-                    worksheet.Range["B:K"].Font.Name = "TH SarabunPSK";
-                    worksheet.Range["B:K"].Font.Size = "15";
-                    worksheet.Columns[2].NumberFormat = "@";
                     //-------------------------------------------//
-                    var rangeA2 = worksheet.get_Range("A2", "K3");
-                    rangeA2.Merge();
-                    rangeA2.Value = "ขบวนวิชาที่เปิดสอนระดับปริญญาตรี";
-                    rangeA2.Font.Name = "Angsana New";
-                    rangeA2.Font.Size = "20";
-                    rangeA2.Font.Bold = true;
-                    rangeA2.Font.Underline = true;
-                    rangeA2.HorizontalAlignment = center;
+                    using (ExcelRange range = worksheet.Cells["A2:K3"])
+                    {
+                        range.Merge = true;
+                        range.Value = "ขบวนวิชาที่เปิดสอนระดับปริญญาตรี";
+                        range.Style.Font.Name = "Angsana New";
+                        range.Style.Font.Size = 20;
+                        range.Style.Font.Bold = true;
+                        range.Style.Font.UnderLine = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    }
                     //-------------------------------------------//
-                    var rangeA4 = worksheet.get_Range("A4", "K4");
-                    rangeA4.Merge();
-                    rangeA4.Value = "ภาคการศึกษาที่ " + semester + " ปีการศึกษา " + year;
-                    rangeA4.Font.Name = "Angsana New";
-                    rangeA4.Font.Size = "20";
-                    rangeA4.Font.Bold = true;
-                    rangeA4.Font.Underline = true;
-                    rangeA4.HorizontalAlignment = center;
+                    using (ExcelRange range = worksheet.Cells["A4:K4"])
+                    {
+                        range.Merge = true;
+                        range.Value = "ภาคการศึกษาที่ " + semester + " ปีการศึกษา " + year;
+                        range.Style.Font.Name = "Angsana New";
+                        range.Style.Font.Size = 20;
+                        range.Style.Font.Bold = true;
+                        range.Style.Font.UnderLine = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    }
                     //-------------------------------------------//
-                    worksheet.Columns[10].NumberFormat = "DD MMM YY";
-                    //Excel.Range er = worksheet.get_Range(System.Type.Missing, "B:K");
-                    //er.EntireColumn.Font.Name = "TH SarabunPSK";
-                    //er.EntireColumn.Font.Size = "15";
+                    worksheet.Column(10).Style.Numberformat.Format = "DD MMM YY";
+                    worksheet.Column(2).Width = 12f;
+                    worksheet.Column(4).Width = 13f;
+                    worksheet.Column(5).Width = 16f;
+                    worksheet.Column(6).Width = 21f;
+                    worksheet.Column(7).Width = 30f;
+                    worksheet.Column(11).Width = 11f;
                     int row = 5;
                     foreach (SUBJECT p in db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).ToList())
                     {
                         //-------------------------------------------//
-                        var rangeheader = worksheet.get_Range("B" + row, "B2");
-                        worksheet.Cells[row, 2] = p.SUBJECT_ID;
+                        worksheet.Cells[row, 2].Value = p.SUBJECT_ID;
+                        worksheet.Cells[row, 3].Value = p.SUBJECT_NAME;
+                        worksheet.Cells[row, 7].Value = p.SUBJECT_CREDIT;
                         //-------------------------------------------//
-                        var rangeheader2 = worksheet.get_Range("C" + row, "F" + row);
-                        rangeheader2.Merge();
-                        rangeheader2.Value = p.SUBJECT_NAME;
-                        rangeheader2.NumberFormat = "@";
-                        //-------------------------------------------//
-                        worksheet.Cells[row, 7] = p.SUBJECT_CREDIT;
-
                         var midtermcheck = p.SUBJECT_MIDTERM_DATE.Any();
                         var finalcheck = p.SUBJECT_FINAL_DATE.Any();
                         if (midtermcheck == true && finalcheck == true)
                         {
-                            worksheet.Cells[row, 9] = "Mid";
-                            worksheet.Cells[row + 1, 9] = "Final";
-                            worksheet.Cells[row, 10] = p.SUBJECT_MIDTERM_DATE;
-                            worksheet.Cells[row, 11] = p.SUBJECT_MIDTERM_TIME;
-                            worksheet.Cells[row + 1, 10] = p.SUBJECT_FINAL_DATE;
-                            worksheet.Cells[row + 1, 11] = p.SUBJECT_FINAL_TIME;
+                            worksheet.Cells[row, 9].Value = "Mid";
+                            worksheet.Cells[row + 1, 9].Value = "Final";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
+                            worksheet.Cells[row + 1, 10].Value = p.SUBJECT_FINAL_DATE;
+                            worksheet.Cells[row + 1, 11].Value = p.SUBJECT_FINAL_TIME;
                         }
                         else if (midtermcheck == true && finalcheck == false)
                         {
-                            worksheet.Cells[row, 9] = "Mid";
-                            worksheet.Cells[row, 10] = p.SUBJECT_MIDTERM_DATE;
-                            worksheet.Cells[row, 11] = p.SUBJECT_MIDTERM_TIME;
+                            worksheet.Cells[row, 9].Value = "Mid";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
                         }
                         else if (midtermcheck == false && finalcheck == true)
                         {
-                            worksheet.Cells[row, 9] = "Final";
-                            worksheet.Cells[row, 10] = p.SUBJECT_FINAL_DATE;
-                            worksheet.Cells[row, 11] = p.SUBJECT_FINAL_TIME;
+                            worksheet.Cells[row, 9].Value = "Final";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_FINAL_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_FINAL_TIME;
                         }
                         row++;
                         foreach (SECTION r in db.SECTIONs.Where(x => x.SUBJECT_ID == p.SUBJECT_ID && x.SEMESTER == semester && x.YEAR == year).ToList())
                         {
-                            worksheet.Cells[row, 2] = r.SECTION_NUMBER;
-                            worksheet.Cells[row, 3] = r.SECTION_DATE;
-                            //float number = 17.3f;
-                            //string aa = Convert.ToDecimal(number).ToString("#,###.00");
-                            worksheet.Cells[row, 4] = Convert.ToDecimal(r.SECTION_TIME_START).ToString("0#.00") + "-" + Convert.ToDecimal(r.SECTION_TIME_END).ToString("0#.00");
-                            worksheet.Cells[row, 5] = r.SECTION_CLASSROOM;
-                            worksheet.Cells[row, 6] = r.SECTION_PROFESSOR_SHORTNAME;
-                            worksheet.Cells[row, 7] = r.SECTION_BRANCH_NAME;
+                            worksheet.Cells[row, 2].Value = r.SECTION_NUMBER;
+                            worksheet.Cells[row, 3].Value = r.SECTION_DATE;
+                            worksheet.Cells[row, 4].Value = Convert.ToDecimal(r.SECTION_TIME_START).ToString("0#.00") + "-" + Convert.ToDecimal(r.SECTION_TIME_END).ToString("0#.00");
+                            worksheet.Cells[row, 5].Value = r.SECTION_CLASSROOM;
+                            worksheet.Cells[row, 6].Value = r.SECTION_PROFESSOR_SHORTNAME;
+                            worksheet.Cells[row, 7].Value = r.SECTION_BRANCH_NAME;
                             row++;
                         }
                         row++;
                     }
-
-                    workbook.SaveAs(FilePath);
-                    workbook.Close();
-
-                    //Response.Clear();
-                    //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    //Response.AddHeader("Content-Disposition", "attachment; filename=" + FileName);
-                    //Response.TransmitFile(FilePath);
-                    //Response.Flush();
-                    //Response.End();
-                    application.Quit();
+                    //-------------------------------------------//
+                    package.SaveAs(new FileInfo(FilePath));
                     byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
                     return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", FileName);
-                    //Marshal.ReleaseComObject(workbook);
-                    //Marshal.FinalReleaseComObject(application);
                 }
                 catch
                 {
-                return RedirectToAction("data");
+                    return RedirectToAction("data");
                 }
-                finally
-                {
-                    //Compare the EXCEL ID and Kill it 
-                    Process[] excelProcsNew = Process.GetProcessesByName("EXCEL");
-                    foreach (Process procNew in excelProcsNew)
-                    {
-                        int exist = 0;
-                        foreach (Process procOld in excelProcsOld)
-                        {
-                            if (procNew.Id == procOld.Id)
-                            {
-                                exist++;
-                            }
-                        }
-                        if (exist == 0)
-                        {
-                            procNew.Kill();
-                        }
-                    }
-                }
-                //return JavaScript("window.close();");
             }
             else
             {

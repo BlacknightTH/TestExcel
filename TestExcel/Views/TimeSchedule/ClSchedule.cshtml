@@ -133,7 +133,7 @@ else
                         var check1 = Model.Item1.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)
                         {
-                            var trigger = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).Count();
+                            var trigger = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim()) && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).Count();
                             if (trigger == 1)
                             {
                                 var TIME_START = Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString()));
@@ -149,8 +149,8 @@ else
                             }
                             else if (trigger == 2)
                             {
-                                var first = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).First();
-                                var second = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).Last();
+                                var first = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim()) && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).First();
+                                var second = Model.Item1.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim()) && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom).Last();
                                 int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
                                 int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 

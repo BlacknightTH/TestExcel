@@ -137,7 +137,7 @@ else
                 i++;
                 for (int a = 0; a < 6; a++)
                 {
-                    var trigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
+                    var trigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(item.SECTION_BRANCH_NAME.Trim()) && x.SECTION_DATE == date[a]).Count();
                     if (trigger == 1)
                     {
                         <tr>
@@ -173,8 +173,8 @@ else
                     }
                     else if (trigger == 2)
                     {
-                        var first = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).First();
-                        var second = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == item.SECTION_BRANCH_NAME).Last();
+                        var first = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME.Contains(item.SECTION_BRANCH_NAME.Trim())).First();
+                        var second = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME.Contains(item.SECTION_BRANCH_NAME.Trim())).Last();
                         int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
                         int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
                         var TIME = (tmp_last - tmp_first);
@@ -450,7 +450,7 @@ else
                         var check1 = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)
                         {
-                            var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[a]).Count();
+                            var trigger = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim()) && x.SECTION_DATE == date[a]).Count();
                             if (trigger == 1)
                             {
                                 var TIME_START = int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString());
@@ -516,8 +516,8 @@ else
                             }
                             else if (trigger == 2)
                             {
-                                var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
-                                var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
+                                var first = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim())).First();
+                                var second = Model.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[a] && x.SECTION_BRANCH_NAME.Contains(check.SECTION_BRANCH_NAME.Trim())).Last();
                                 int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
                                 int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
