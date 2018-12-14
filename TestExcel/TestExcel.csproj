@@ -238,6 +238,7 @@
     <Compile Include="Models\Building_Classroom.cs" />
     <Compile Include="Models\Department_Branch.cs" />
     <Compile Include="Models\DistinctBuilding.cs" />
+    <Compile Include="Models\Section_Professor.cs" />
     <Compile Include="Models\Section_Subject.cs" />
     <Compile Include="Models\SemesterYear.cs" />
     <Compile Include="Models\TimeCrash.cs" />
@@ -625,6 +626,7 @@
     <Content Include="Views\Data\Building.cshtml" />
     <Content Include="Views\Data\Branch.cshtml" />
     <Content Include="Views\Report\data.cshtml" />
+    <Content Include="Views\TimeSchedule\PSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

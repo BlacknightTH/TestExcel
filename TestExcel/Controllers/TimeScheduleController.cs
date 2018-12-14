@@ -42,6 +42,32 @@ namespace TestExcel.Controllers
             section_subject = query.OrderBy(x => x.YEAR).ToList();
             return section_subject;
         }
+        public List<Section_Subject> PGetData(string semester, string year)
+        {
+            List<Section_Subject> section_subject = new List<Section_Subject>();
+            var query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        join e3 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e3.PROFESSOR_SHORTNAME
+                        where e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                        select new Section_Subject
+                        {
+                            SECTION_ID = e1.SECTION_ID,
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
+                        };
+            section_subject = query.OrderBy(x => x.YEAR).ToList();
+            return section_subject;
+        }
         public List<Building_Classroom> TEGetData(string Building, string semester, string year)
         {
             List<Building_Classroom> Building_subject = new List<Building_Classroom>();
@@ -131,7 +157,101 @@ namespace TestExcel.Controllers
             return View(query);
         }
         [HttpPost]
-        public ActionResult Dschedule(FormCollection collection)
+        public ActionResult DSchedule(FormCollection collection)
+        {
+            int Branch_id = int.Parse(collection["DDL_BRANCH"]);
+            int Depart_id = int.Parse(collection["DDL_DEPARTMENT"]);
+            int count = int.Parse(collection["Count"]);
+            string ddl_Year = collection["ddl_Year"];
+            string ddl_Semester = collection["ddl_Semester"];
+            string temp, contain, BRANCH_NAME;
+            if (count == 1)
+            {
+                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
+                BRANCH_NAME = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_NAME;
+                int BRANCH_ID = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_ID;
+                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
+                contain = BRANCH_NAME;
+                Branch_id = BRANCH_ID;
+            }
+            else
+            {
+                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
+                BRANCH_NAME = db.BRANCHes.Where(x => x.BRANCH_ID == Branch_id).First().BRANCH_NAME;
+                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
+                string[] br = BRANCH_NAME.Split('\r');
+                contain = br[0];
+            }
+            var query = GetData(contain, ddl_Semester, ddl_Year);
+            if (query.Count == 0)
+            {
+                ddl_Semester = db.SUBJECTs.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.SEMESTER).First().SEMESTER;
+                query = GetData(contain, ddl_Semester, ddl_Year);
+            }
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
+                               };
+            ViewBag.BRANCH_NAME = BRANCH_NAME;
+            ViewBag.DDLSelected = Branch_id;
+            ViewBag.DepartDDLSelected = Depart_id;
+            ViewBag.Semester = ddl_Semester;
+            ViewBag.Year = ddl_Year;
+
+
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
+            ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
+            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
+            return View(query);
+        }
+        public ActionResult PSchedule(string BR_Semester, string BR_Year, string Message)
+        {
+            if (BR_Semester == null && BR_Year == null)
+            {
+                var t = db.SUBJECTs.OrderBy(x => x.YEAR).First();
+                BR_Semester = t.SEMESTER;
+                BR_Year = t.YEAR;
+            }
+            if (Message != null)
+            {
+                CheckMessage = int.Parse(Message);
+            }
+            var query = PGetData(BR_Semester, BR_Year);
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
+                               };
+            ViewBag.Semester = BR_Semester;
+            ViewBag.Year = BR_Year;
+            if (CheckMessage == 1)
+            {
+                ViewBag.Message = "Save Success";
+                ViewBag.ErrorMessage = "";
+            }
+            else if (CheckMessage == 2)
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "Error";
+            }
+            else
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "";
+            }
+
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
+            ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
+            return View(query);
+        }
+        [HttpPost]
+        public ActionResult PSchedule(FormCollection collection)
         {
             int Branch_id = int.Parse(collection["DDL_BRANCH"]);
             int Depart_id = int.Parse(collection["DDL_DEPARTMENT"]);
