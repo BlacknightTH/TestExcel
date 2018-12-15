@@ -10,7 +10,6 @@ using TestExcel.Utility;
 
 namespace TestExcel.Controllers
 {
-    [adminauthen]
     public class TimeScheduleController : Controller
     {
         List<Department_Branch> _department_branch = new List<Department_Branch>();
@@ -42,13 +41,13 @@ namespace TestExcel.Controllers
             section_subject = query.OrderBy(x => x.YEAR).ToList();
             return section_subject;
         }
-        public List<Section_Subject> PGetData(string semester, string year)
+        public List<Section_Subject> PGetData(string Professor,string semester, string year)
         {
             List<Section_Subject> section_subject = new List<Section_Subject>();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e3.PROFESSOR_SHORTNAME
-                        where e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(Professor) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {
                             SECTION_ID = e1.SECTION_ID,
@@ -208,19 +207,28 @@ namespace TestExcel.Controllers
             ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
-        public ActionResult PSchedule(string BR_Semester, string BR_Year, string Message)
+        public ActionResult PSchedule(string BR_Professor,string BR_Semester, string BR_Year, string Message)
         {
-            if (BR_Semester == null && BR_Year == null)
+            if (BR_Professor == null && BR_Semester == null && BR_Year == null)
             {
                 var t = db.SUBJECTs.OrderBy(x => x.YEAR).First();
                 BR_Semester = t.SEMESTER;
                 BR_Year = t.YEAR;
+                BR_Professor = db.PROFESSORs.First().PROFESSOR_SHORTNAME;
             }
             if (Message != null)
             {
                 CheckMessage = int.Parse(Message);
             }
-            var query = PGetData(BR_Semester, BR_Year);
+            var query = PGetData(BR_Professor, BR_Semester, BR_Year);
+            var professor = (from e1 in db.SECTIONs
+                             join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
+                             where e1.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year)
+                             select new Section_Professor
+                             {
+                                 PROFESSOR_ID = e2.PROFESSOR_ID,
+                                 SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME
+                             }).OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -228,6 +236,7 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
+            ViewBag.PROFESSOR_NAME = query.First().SECTION_PROFESSOR_SHORTNAME;
             ViewBag.Semester = BR_Semester;
             ViewBag.Year = BR_Year;
             if (CheckMessage == 1)
@@ -245,7 +254,7 @@ namespace TestExcel.Controllers
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "";
             }
-
+            ViewBag.ddl_Professor = new SelectList(professor.Select(x => new { x.PROFESSOR_ID, x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "SECTION_PROFESSOR_SHORTNAME", "SECTION_PROFESSOR_SHORTNAME", query.First().SECTION_PROFESSOR_SHORTNAME);
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
             return View(query);
@@ -253,35 +262,24 @@ namespace TestExcel.Controllers
         [HttpPost]
         public ActionResult PSchedule(FormCollection collection)
         {
-            int Branch_id = int.Parse(collection["DDL_BRANCH"]);
-            int Depart_id = int.Parse(collection["DDL_DEPARTMENT"]);
-            int count = int.Parse(collection["Count"]);
+            string ddl_Professor = collection["ddl_Professor"];
             string ddl_Year = collection["ddl_Year"];
             string ddl_Semester = collection["ddl_Semester"];
-            string temp, contain, BRANCH_NAME;
-            if (count == 1)
-            {
-                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
-                BRANCH_NAME = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_NAME;
-                int BRANCH_ID = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_ID;
-                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
-                contain = BRANCH_NAME;
-                Branch_id = BRANCH_ID;
-            }
-            else
-            {
-                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
-                BRANCH_NAME = db.BRANCHes.Where(x => x.BRANCH_ID == Branch_id).First().BRANCH_NAME;
-                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
-                string[] br = BRANCH_NAME.Split('\r');
-                contain = br[0];
-            }
-            var query = GetData(contain, ddl_Semester, ddl_Year);
-            if (query.Count == 0)
-            {
-                ddl_Semester = db.SUBJECTs.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.SEMESTER).First().SEMESTER;
-                query = GetData(contain, ddl_Semester, ddl_Year);
-            }
+
+            var query = PGetData(ddl_Professor, ddl_Semester, ddl_Year);
+            //if (query.Count == 0)
+            //{
+            //    ddl_Semester = db.SUBJECTs.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.SEMESTER).First().SEMESTER;
+            //    query = GetData(ddl_Professor, ddl_Semester, ddl_Year);
+            //}
+            var professor = (from e1 in db.SECTIONs
+                             join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
+                             where e1.SEMESTER.Contains(ddl_Semester) && e1.YEAR.Contains(ddl_Year)
+                             select new Section_Professor
+                             {
+                                 PROFESSOR_ID = e2.PROFESSOR_ID,
+                                 SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME
+                             }).OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -289,17 +287,13 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-            ViewBag.BRANCH_NAME = BRANCH_NAME;
-            ViewBag.DDLSelected = Branch_id;
-            ViewBag.DepartDDLSelected = Depart_id;
+            ViewBag.PROFESSOR_NAME = ddl_Professor;
             ViewBag.Semester = ddl_Semester;
             ViewBag.Year = ddl_Year;
 
-
+            ViewBag.ddl_Professor = new SelectList(professor.Select(x => new { x.PROFESSOR_ID, x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "SECTION_PROFESSOR_SHORTNAME", "SECTION_PROFESSOR_SHORTNAME", ddl_Professor);
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
-            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         public ActionResult ClSchedule()
@@ -564,6 +558,7 @@ namespace TestExcel.Controllers
             var Message = "0";
             var FIRST_SECTION_ID = collection["FIRST_SECTION_ID"];
             var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
+            var BR_Professor = collection["BR_Professor"];
             var SUBJECTid = collection["SUBJECTid"];
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
@@ -636,6 +631,10 @@ namespace TestExcel.Controllers
             {
                 return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
             }
+            else if (BR_Professor != null)
+            {
+                return Redirect("/TimeSchedule/PSchedule?BR_Professor=" + BR_Professor + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
             else
             {
                 return Redirect("/TimeSchedule/TeSchedule/"+ FIRST_SECTION_ID + "/"+ CLASSROOM +"?SUBJECTid="+ SUBJECTid +"&BR_SEMESTER="+ Semester +"&BR_YEAR="+ Year +"&color=#ff0000" + "&Message=" + Message);
@@ -649,6 +648,7 @@ namespace TestExcel.Controllers
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
             var Year = collection["Year"];
+            var BR_Professor = collection["BR_Professor"];
             var SearchId = collection["searchId"];
             var split = SearchId.Split(',');
             var SEC_ID = collection["SEC_ID"];
@@ -712,6 +712,10 @@ namespace TestExcel.Controllers
             if (BR_NAME != null && SUBJECTid == null)
             {
                 return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+            }
+            else if (BR_Professor != null)
+            {
+                return Redirect("/TimeSchedule/PSchedule?BR_Professor=" + BR_Professor + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
             }
             else
             {

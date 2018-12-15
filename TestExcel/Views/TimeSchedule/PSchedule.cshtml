@@ -7,30 +7,26 @@
     string[] date = { "M", "T", "W", "H", "F", "S" };
     string SEMESTER = ViewBag.Semester;
     string YEAR = ViewBag.Year;
-    string BRANCH_NAME = ViewBag.BRANCH_NAME;
+    string PROFESSOR_NAME = ViewBag.PROFESSOR_NAME;
     string Message = ViewBag.Message;
     string ErrorMessage = ViewBag.ErrorMessage;
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <script>
-        $(document).ready(function () {
-            $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
-            $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
+    $(document).ready(function () {
+            var cc = "@PROFESSOR_NAME";
+            $("#ddl_Professor").val(cc);
             $("#ddl_Semester").val(@ViewBag.Semester);
             $("#ddl_Year").val(@ViewBag.Year);
 
-            $("#DDL_DEPARTMENT").change(function () {
-                $("#Count").val(1);
-                $("#BRANCH_FORM").submit();
+            $("#ddl_Professor").change(function () {
+                $("#PROFESSOR_FORM").submit();
             });
             $("#ddl_Year").change(function () {
-                $("#BRANCH_FORM").submit();
+                $("#PROFESSOR_FORM").submit();
             });
             $("#ddl_Semester").change(function () {
-                $("#BRANCH_FORM").submit();
-            });
-            $("#DDL_BRANCH").change(function () {
-                $("#BRANCH_FORM").submit();
+                $("#PROFESSOR_FORM").submit();
             });
 
             var Message = $("#Alert p").html();
@@ -55,14 +51,14 @@
     <a href="~/TimeSchedule/ClSchedule" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
     <a href="~/TimeSchedule/TeSchedule" style="color:blue;font-size:20px">วิชาเรียน</a>
 </div>
-<h2>@BRANCH_NAME</h2>
+<h2>@PROFESSOR_NAME</h2>
 <div id="Alert" class="alert alert-success collapse">
     <p>@Message</p>
 </div>
 <div id="ErrorAlert" class="alert alert-danger collapse">
     <p>@ErrorMessage</p>
 </div>
-@using (Html.BeginForm("PSchedule", "TimeSchedule", FormMethod.Post, new { id = "BRANCH_FORM", name = "BRANCH_FORM" }))
+@using (Html.BeginForm("PSchedule", "TimeSchedule", FormMethod.Post, new { id = "PROFESSOR_FORM", name = "PROFESSOR_FORM" }))
 {
     <table border="0" align="left">
         <tbody>
@@ -74,6 +70,10 @@
                 <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
                     @Html.DropDownList("ddl_Semester", (SelectList)ViewBag.ddl_Semester, new { @class = "form-control", style = "width:70px" })
+                </td>
+                <td align="right"><b>ครูผู้สอน&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("ddl_Professor", (SelectList)ViewBag.ddl_Professor, new { @class = "form-control", style = "" })
                 </td>
             </tr>
         </tbody>
@@ -234,7 +234,7 @@
 
 @using (Html.BeginForm("singleupdatedata", "TimeSchedule", FormMethod.Post))
 {
-    @Html.Hidden("BR_NAME", BRANCH_NAME);
+    @Html.Hidden("BR_Professor", PROFESSOR_NAME)
     @Html.Hidden("Semester", SEMESTER)
     @Html.Hidden("Year", YEAR)
     <div class="w3-row">
@@ -400,7 +400,7 @@
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
 {
-    @Html.Hidden("BR_NAME", BRANCH_NAME);
+    @Html.Hidden("BR_Professor", PROFESSOR_NAME)
     @Html.Hidden("Semester", SEMESTER)
     @Html.Hidden("Year", YEAR)
     <table class="table table-responsive fix-font" id="TableLocation2" style="font-size:12px" align=center border=1 cellspacing=0 cellpadding=3 bgcolor=#F1F1FD>

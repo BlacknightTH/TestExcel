@@ -13,8 +13,9 @@
             @Html.ActionLink("Home", "DSchedule", "TimeSchedule", new { area = "" }, new { @class = "navbar-brand" })
         </div>
         <div class="navbar-collapse collapse">
-            @if (Session["Username"] != null)
-            {<ul class="nav navbar-nav">
+            @*@if (Session["Username"] != null)
+            {*@
+                <ul class="nav navbar-nav">
                 <li><a href="@Url.Action("DSchedule","TimeSchedule")">ตารางเรียน</a></li>
                 <li><a href="@Url.Action("data","Report")">Import/Export Pdf/Excel</a></li>
                 <li><a href="@Url.Action("Section","Data")">แก้ไขข้อมูล</a></li>
@@ -27,17 +28,17 @@
                     </a>
                     <ul class="dropdown-menu" id="notiContent"></ul>
                 </li>
-                <li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
-                <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+                @*<li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
+                <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>*@
             </ul>
-            }
+            @*}
             else
             {
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
             </ul>
-            }
+            }*@
 
         </div>
     </div>

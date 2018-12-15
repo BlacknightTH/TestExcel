@@ -12,7 +12,6 @@ using TestExcel.Models;
 
 namespace TestExcel.Controllers
 {
-    [adminauthen]
     public class DataController : Controller
     {
         TestExcelEntities db = new TestExcelEntities();

@@ -15,7 +15,7 @@ namespace TestExcel.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            var query = (from e1 in db.SECTIONs
+            var professor = (from e1 in db.SECTIONs
                         join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
                         where e1.SEMESTER.Contains("1") && e1.YEAR.Contains("2560")
                         select new Section_Professor
@@ -23,8 +23,8 @@ namespace TestExcel.Controllers
                            PROFESSOR_ID = e2.PROFESSOR_ID,
                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME
                         }).OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
-            ViewBag.ddl_Year = new SelectList(query.Select(x => new { x.PROFESSOR_ID,x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "PROFESSOR_ID", "SECTION_PROFESSOR_SHORTNAME");
-            return View(query);
+            ViewBag.ddl_Professor = new SelectList(professor.Select(x => new { x.PROFESSOR_ID,x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "PROFESSOR_ID", "SECTION_PROFESSOR_SHORTNAME");
+            return View();
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)
