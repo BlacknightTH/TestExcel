@@ -188,6 +188,7 @@ namespace TestExcel.Controllers
                             string F = worksheet.Cells[row, 6].Text;
                             string G = worksheet.Cells[row, 7].Text;
                             string H = worksheet.Cells[row, 8].Text;
+                            string L = worksheet.Cells[row, 12].Text;
 
                             if (B.Length > 4 && B.Length < 12)
                             {
@@ -197,27 +198,57 @@ namespace TestExcel.Controllers
                                 {
                                     if (G.Length != 0)
                                     {
-                                        string Subject_ID = B;
-                                        string subject_NAME = C;
-                                        string subject_CREDIT = G;
-                                        string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                        string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                        string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                        string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                        if (L.Length == 0)
+                                        {
+                                            string Subject_ID = B;
+                                            string subject_NAME = C;
+                                            string subject_CREDIT = G;
+                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                        }
+                                        else
+                                        {
+                                            string Subject_ID = B;
+                                            string subject_NAME = C;
+                                            string subject_CREDIT = G;
+                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+
+                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                        }
                                     }
                                     else
                                     {
-                                        string Subject_ID = B;
-                                        string subject_NAME = C;
-                                        string subject_CREDIT = H.Trim();
-                                        string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                        string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                        string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                        string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                        if (L.Length == 0)
+                                        {
+                                            string Subject_ID = B;
+                                            string subject_NAME = C;
+                                            string subject_CREDIT = H.Trim();
+                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
 
-                                        saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                        }
+                                        else
+                                        {
+                                            string Subject_ID = B;
+                                            string subject_NAME = C;
+                                            string subject_CREDIT = H.Trim();
+                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+
+                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                        }
                                     }
                                 }
                             }
@@ -241,6 +272,7 @@ namespace TestExcel.Controllers
                                     string Section_Professor = F;
                                     string Section_Branch_Name = G;
                                     saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                    saveProfessor(Section_Professor,db);
                                 }
                                 else
                                 {
@@ -263,6 +295,7 @@ namespace TestExcel.Controllers
                                             string Section_Professor = F;
                                             string Section_Branch_Name = G;
                                             saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                            saveProfessor(Section_Professor,db);
                                         }
                                         else if (D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
                                         {
@@ -281,6 +314,7 @@ namespace TestExcel.Controllers
                                             string Section_Professor = G;
                                             string Section_Branch_Name = H;
                                             saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                            saveProfessor(Section_Professor,db);
                                         }
                                     }
                                 }
@@ -325,7 +359,41 @@ namespace TestExcel.Controllers
 
             }
         }
+        public void saveProfessor(string SECTION_PROFESSOR_SHORTNAME, TestExcelEntities db)
+        {
+            try
+            {
+            var item2 = new PROFESSOR();
+            var model = db.PROFESSORs;
+                if (SECTION_PROFESSOR_SHORTNAME.Contains("/"))
+                {
+                    string[] tmp = SECTION_PROFESSOR_SHORTNAME.Split('/');
+                    for (int i = 0; i < tmp.Length ; i++) 
+                    {
+                        model.Where(x => x.PROFESSOR_SHORTNAME == tmp[i]);
+                        if (model.Count() == 0)
+                        {
+                            item2.PROFESSOR_SHORTNAME = tmp[i];
+                            db.PROFESSORs.Add(item2);
+                        }
+                    }
+                }
+                else
+                {
+                    model.Where(x => x.PROFESSOR_SHORTNAME == SECTION_PROFESSOR_SHORTNAME);
+                    if (model.Count() == 0)
+                    {
+                        item2.PROFESSOR_SHORTNAME = SECTION_PROFESSOR_SHORTNAME;
+                        db.PROFESSORs.Add(item2);
+                    }
+                }
+                db.SaveChanges();
+            }
+            catch
+            {
 
+            }
+        }
         public void saveSection(string SUBJECT_ID, string SECTION_NUMBER, string SECTION_DATE, string SECTION_TIME_START, string SECTION_TIME_END,
                                 string SECTION_CLASSROOM, string SECTION_PROFESSOR_SHORTNAME, string SECTION_BRANCH_NAME, string SEMESTER, string YEAR, TestExcelEntities db)
         {
