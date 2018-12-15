@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<TestExcel.Data.DEPARTMENT>
+@{
     ViewBag.Title = "อัพโหลด/ดาวน์โหลด";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
@@ -74,9 +75,9 @@
         });
     });
 </script>
-<div class="container" style="padding-top:40px">
+<div class="container con2" style="padding-top:40px">
     <div class="w3-row">
-        <div class="w3-half w3-margin-bottom">
+        <div class="w3-third w3-margin-bottom">
             <div class="w3-container">
                 <div class="w3-card-4" style="max-width:400px;height:400px">
                     <header class="w3-container w3-blue">
@@ -85,7 +86,7 @@
                     <div class="w3-container">
                         <h4 class="w3-center">อัพโหลดไฟล์ Excel</h4>
                         <hr>
-                        <div><p>*หมายเหตุ:การอัพโหลดไฟล์ใช้เวลาประมาณ 2 นาที</p></div>
+                        <div><p>*หมายเหตุ:การอัพโหลดไฟล์ใช้เวลาประมาณ 1 นาที</p></div>
                         @using (Html.BeginForm("Import", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
                             @Html.Raw(ViewBag.Error)
@@ -114,7 +115,7 @@
                 </div>
             </div>
         </div>
-        <div class="w3-half w3-margin-bottom">
+        <div class="w3-third w3-margin-bottom">
             <div class="w3-container">
                 <div class="w3-card-4" style="max-width:400px;height:400px">
                     <header class="w3-container w3-blue">
@@ -123,7 +124,6 @@
                     <div class="w3-container">
                         <h4 class="w3-center">ดาวน์โหลดไฟล์ Excel</h4>
                         <hr>
-                        <div><p>*หมายเหตุ:การดาวน์โหลดไฟล์ใช้เวลาประมาณ 2 นาที</p></div>
                         @*@using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal", target = "_blank" }))*@
                         @using (Html.BeginForm("Export", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                         {
@@ -137,12 +137,48 @@
                                 <label>ปีการศึกษา</label>
                                 @Html.DropDownList("year_export", (SelectList)ViewBag.ddl_Year, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
                                 <hr>
-                                <div class="w3-center">
+                                <div class="w3-center" style="margin-top:50px">
                                     <input type="submit" value="DOWNLOAD" class="w3-btn w3-green w3-margin-bottom">
                                 </div>
                             </div>
                         }
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="w3-third w3-margin-bottom">
+            <div class="w3-container">
+                <div class="w3-card-4" style="max-width:400px;height:400px">
+                    <header class="w3-container w3-blue">
+                        <h2 class="w3-center">PDF ภาระผู้สอน</h2>
+                    </header>
+                    @using (Html.BeginForm("PfReport", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                    <div class="w3-container">
+                        <div class="w3-container">
+                            <label class="w3-margin-top">ภาควิชา</label>
+                            <select class="w3-select w3-border" id="department" name="department">
+                                @foreach (var item in Model)
+                                {
+                                    <option value="@item.DEPARTMENT_NAME">@item.DEPARTMENT_NAME @item.DEPARTMENT_THAI_NAME</option>
+                                }
+                            </select>
+                            <label class="w3-margin-top">ภาคการศึกษา</label>
+                            <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <br>
+                            <label>ปีการศึกษา</label>
+                            @Html.DropDownList("year", (SelectList)ViewBag.ddl_Year, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                            <div class="w3-center" style="margin-top:10px">
+                                <hr>
+                                <button type="submit" href="#" class="w3-button w3-green w3-margin-bottom">DOWNLOAD</button>
+                            </div>
+                        </div>
+                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -154,7 +190,7 @@
                 <div class="w3-container">
                     <div class="w3-card-4" style="max-width:400px;height:400px">
                         <header class="w3-container w3-blue">
-                            <h1>PDF สาขาวิชา</h1>
+                            <h2 class="w3-center">PDF สาขาวิชา</h2>
                         </header>
                         @using (Html.BeginForm("Report", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                         {
@@ -185,7 +221,7 @@
                 <div class="w3-container">
                     <div class="w3-card-4" style="max-width:400px;height:400px">
                         <header class="w3-container w3-blue">
-                            <h1>PDF อาคารเรียน</h1>
+                            <h2 class="w3-center">PDF อาคารเรียน</h2>
                         </header>
                         @using (Html.BeginForm("TeReport", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                         {
@@ -222,7 +258,7 @@
                 <div class="w3-container">
                     <div class="w3-card-4" style="max-width:400px;height:400px">
                         <header class="w3-container w3-blue">
-                            <h1>PDF ห้องเรียน</h1>
+                            <h2 class="w3-center">PDF ห้องเรียน</h2>
                         </header>
                         @using (Html.BeginForm("ClReport", "Report", FormMethod.Post, new { @class = "form-horizontal" }))
                         {

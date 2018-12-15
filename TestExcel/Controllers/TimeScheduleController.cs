@@ -227,7 +227,7 @@ namespace TestExcel.Controllers
                              select new Section_Professor
                              {
                                  PROFESSOR_ID = e2.PROFESSOR_ID,
-                                 SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME
+                                 SECTION_PROFESSOR_SHORTNAME = e2.PROFESSOR_SHORTNAME
                              }).OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear

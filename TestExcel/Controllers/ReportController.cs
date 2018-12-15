@@ -15,6 +15,7 @@ using OfficeOpenXml;
 
 namespace TestExcel.Controllers
 {
+    //[adminauthen]
     public class ReportController : Controller
     {
         string[] date = { "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์" };
@@ -29,11 +30,12 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
+            var model = db.DEPARTMENTs.ToList();
             string first_Year;
             first_Year = "2560";
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
             ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
-            return View();
+            return View(model);
         }
         [HttpPost]
         public ActionResult Report(FormCollection collection)
@@ -53,9 +55,25 @@ namespace TestExcel.Controllers
             {
                 return RedirectToAction("data");
             }
-
-
-            //return File(abytes, "application/pdf", FileName);
+        }
+        public ActionResult PfReport(FormCollection collection)
+        {
+            string department = collection["department"];
+            string semester = collection["semester"];
+            string year = collection["year"];
+            string FilePath = @"C:\\ภาระการสอน_" + semester + "-" + year + ".pdf";
+            string FileName = Path.GetFileName(FilePath);
+            PdfReport pdfReport = new PdfReport();
+            try
+            {
+                byte[] abytes = pdfReport.PfPrepareReport(department, semester, year);
+                //return File(abytes, "application/pdf");
+                return File(abytes, "application/pdf", FileName);
+            }
+            catch
+            {
+                return RedirectToAction("data");
+            }
         }
         [HttpPost]
         public ActionResult TeReport(FormCollection collection)
@@ -86,7 +104,6 @@ namespace TestExcel.Controllers
             try
             {
                 byte[] abytes = pdfReport.ClPrepareReport(BUILDING, semester, year);
-                //return File(abytes, "application/pdf", FileName);
                 if (BUILDING == "632")
                 {
                     BUILDING = "อาคารเรียน " + BUILDING + " (อาคารเรียนสีเทา ตึกใหม่)";
@@ -339,7 +356,6 @@ namespace TestExcel.Controllers
         {
             var semester = collection["semester"];
             var year = collection["year_export"];
-            //string FilePath = @"C:\ขบวน" + semester + "-" + year + ".xlsx";
             string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + ".xlsx");
             System.IO.File.Delete(FilePath);
             string FileName = Path.GetFileName(FilePath);
