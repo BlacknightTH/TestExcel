@@ -442,13 +442,17 @@
                         var tid = date[a] + "id_" + b;
                         var WhereTimeDate = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) == b && x.SECTION_DATE == date[a]);
                         var check = WhereTimeDate.LastOrDefault();
-                        if (check != null && check.SUBJECT_CREDIT.Contains("-0-"))
+                        if (check != null && check.CRASH == "1")
                         {
                             color = "#25b0ee";
                         }
-                        else
+                        else if (check != null && check.CRASH == "2")
                         {
                             color = "#D3D3D3";
+                        }
+                        else
+                        {
+                            color = "#ff0000";
                         }
                         var check1 = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[a]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)

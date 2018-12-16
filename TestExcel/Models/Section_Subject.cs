@@ -20,5 +20,6 @@ namespace TestExcel.Models
         public string SECTION_PROFESSOR_SHORTNAME { get; set; }
         public string SEMESTER { get; set; }
         public string YEAR { get; set; }
+        public string CRASH { get; set; }
     }
 }

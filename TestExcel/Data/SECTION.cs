@@ -25,5 +25,6 @@ namespace TestExcel.Data
         public string SECTION_BRANCH_NAME { get; set; }
         public string SEMESTER { get; set; }
         public string YEAR { get; set; }
+        public string CRASH { get; set; }
     }
 }

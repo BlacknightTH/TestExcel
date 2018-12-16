@@ -123,13 +123,17 @@ else
                         var WhereTimeDate = Model.Item1.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) == b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM == classroom);
                         var check = WhereTimeDate.LastOrDefault();
                         var Bcolor = Model.Item1.Where(x => x.SUBJECT_CREDIT == "3(3-0-6)").Any();
-                        if (check != null && check.SUBJECT_CREDIT.Contains("-0-"))
+                        if (check != null && check.CRASH == "1")
                         {
                             color = "#25b0ee";
                         }
-                        else
+                        else if (check != null && check.CRASH == "2")
                         {
                             color = "#D3D3D3";
+                        }
+                        else
+                        {
+                            color = "#ff0000";
                         }
                         var check1 = Model.Item1.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) <= b && Math.Floor(decimal.Parse(x.SECTION_TIME_END.ToString())) > b && x.SECTION_DATE == date[ViewBag.DATE] && x.SECTION_CLASSROOM ==classroom).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
                         if (check != null)

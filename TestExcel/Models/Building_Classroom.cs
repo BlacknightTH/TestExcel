@@ -21,6 +21,6 @@ namespace TestExcel.Models
         public string SEMESTER { get; set; }
         public string YEAR { get; set; }
         public string BUILDING_NAME { get; set; }
-        
+        public string CRASH { get; set; }
     }
 }

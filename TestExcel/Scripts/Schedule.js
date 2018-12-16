@@ -194,7 +194,6 @@
                 subject_timeend = $(this).find("#subject_timeend").val();
                 subject_date = $(this).find("#subject_date").val();
                 subject_classroom = $(this).find("#subject_classroom").val();
-
                 last_subject_id = "0";
                 last_subject_name = "";
                 last_subject_credit = "";
@@ -258,7 +257,7 @@
             var stringpart = "";
             var last_stringpart = "";
             var color = "";
-            if (subject_credit == "3(3-0-6)") {
+            if (subject_credit.includes("-0-")) {
                 color = "#25b0ee";
             }
             else {

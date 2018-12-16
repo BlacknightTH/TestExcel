@@ -547,6 +547,7 @@ namespace TestExcel.Controllers
         }
         public List<TimeCrash> SetNotification()
         {
+            var section = db.SECTIONs;
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -557,8 +558,29 @@ namespace TestExcel.Controllers
             foreach (var i in semesteryear.ToList())
             {
                    _section_subject = GetModel(i.SEMESTER, i.YEAR);
-                foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == i.SEMESTER && x.YEAR == i.YEAR).OrderBy(x => x.SECTION_TIME_START).ToList())
+                //foreach (var k in _section_subject)
+                //{
+                //    var model = db.SECTIONs.Where(x => x.SECTION_ID == k.SECTION_ID).First();
+                //    if (k.SUBJECT_CREDIT.Contains("-0-"))
+                //    {
+                //        model.CRASH = "1";
+                //    }
+                //    else
+                //    {
+                //        model.CRASH = "2";
+                //    }
+                //}
+                foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == i.SEMESTER && x.YEAR == i.YEAR).OrderBy(x => x.SECTION_TIME_START))
                 {
+                    //T = _section_subject.Where(x => x.SECTION_ID == j.SECTION_ID).First();
+                    //if (T.SUBJECT_CREDIT.Contains("-0-") && j.CRASH == "3")
+                    //{
+                    //    j.CRASH = "1";
+                    //}
+                    //else if(!T.SUBJECT_CREDIT.Contains("-0-") && j.CRASH == "3")
+                    //{
+                    //    j.CRASH = "2";
+                    //}
                     var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START);
                     if (WhereTimeDate.Count() > 1)
                     {
@@ -566,9 +588,19 @@ namespace TestExcel.Controllers
                         var Firsttimeend = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
                         var Lasttimestart = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
                         var Lasttimeend = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
-                        if (Lasttimestart < Firsttimeend || Firsttimestart == Lasttimestart)
+
+                        //if (Lasttimestart < Firsttimeend || Firsttimestart == Lasttimestart)
+                        if (Firsttimestart <= Lasttimestart && Firsttimestart < Lasttimeend && Firsttimeend > Lasttimestart)
                         {
                             var item = new TimeCrash();
+                            var sec1 = WhereTimeDate.First().SECTION_ID;
+                            var sec2 = WhereTimeDate.Last().SECTION_ID;
+                            var e = section.Where(x => x.SECTION_ID == sec1).First();
+                            var ee = section.Where(x => x.SECTION_ID == sec2).First();
+
+                            e.CRASH = "3";
+                            ee.CRASH = "3";
+
                             item.SECTION_ID_First = WhereTimeDate.FirstOrDefault().SECTION_ID;
                             item.SUBJECT_ID_First = WhereTimeDate.FirstOrDefault().SUBJECT_ID;
                             item.SUBJECT_NAME_First = WhereTimeDate.FirstOrDefault().SUBJECT_NAME;
@@ -588,15 +620,14 @@ namespace TestExcel.Controllers
                             item.SECTION_TIME_END_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
                             item.SECTION_CLASSROOM_Last = WhereTimeDate.LastOrDefault().SECTION_CLASSROOM;
                             item.SECTION_BRANCH_NAME_Last = WhereTimeDate.LastOrDefault().SECTION_BRANCH_NAME;
-
                             item.SEMESTER = i.SEMESTER;
                             item.YEAR = i.YEAR;
                             _TimeCrash.Add(item);
                         }
-
                     }
                 }
             }
+            db.SaveChanges();
             var TimeCrash = _TimeCrash.OrderByDescending(x => x.YEAR).OrderByDescending(y => y.SEMESTER).ToList();
             return TimeCrash;
         }
@@ -614,6 +645,8 @@ namespace TestExcel.Controllers
         public List<Section_Subject> GetModel(string semester, string year)
         {
             List<Section_Subject> section_subject = new List<Section_Subject>();
+            var Section = db.SECTIONs;
+            SECTION a = new SECTION();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         where  e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
@@ -631,8 +664,22 @@ namespace TestExcel.Controllers
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                             SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
                         };
+            foreach (var i in query)
+            {
+                if (i.SUBJECT_CREDIT.Contains("-0-") && (i.CRASH == "3" || i.CRASH == null))
+                {
+                    a = Section.Where(x => x.SECTION_ID == i.SECTION_ID).First();
+                    a.CRASH = "1";
+                }
+                else if (i.SUBJECT_CREDIT.Contains("-0-") && (i.CRASH == "3" || i.CRASH == null))
+                {
+                    a = Section.Where(x => x.SECTION_ID == i.SECTION_ID).First();
+                    a.CRASH = "2";
+                }
+            }
             section_subject = query.OrderBy(x => x.SECTION_ID).ToList();
             return section_subject;
         }

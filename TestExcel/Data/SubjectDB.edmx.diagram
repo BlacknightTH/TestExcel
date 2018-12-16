@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2ec5dd57eba5418498896a16b35c8c03" Name="Diagram1">
+      <Diagram DiagramId="2ec5dd57eba5418498896a16b35c8c03" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="TestExcelModel.BRANCH" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="TestExcelModel.BUILDING" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="TestExcelModel.COURSE" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="TestExcelModel.DEPARTMENT" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TestExcelModel.PROFESSOR" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="TestExcelModel.SECTION" Width="1.5" PointX="4.75" PointY="3.75" />
         <EntityTypeShape EntityType="TestExcelModel.SUBJECT" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="TestExcelModel.USER" Width="1.5" PointX="0.75" PointY="6.75" />
-        <EntityTypeShape EntityType="TestExcelModel.PROFESSOR" Width="1.5" PointX="9.375" PointY="3.375" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

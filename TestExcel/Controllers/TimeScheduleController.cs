@@ -36,7 +36,8 @@ namespace TestExcel.Controllers
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                             SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
                         };
             section_subject = query.OrderBy(x => x.YEAR).ToList();
             return section_subject;
@@ -62,7 +63,8 @@ namespace TestExcel.Controllers
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                             SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
                         };
             section_subject = query.OrderBy(x => x.YEAR).ToList();
             return section_subject;
@@ -88,7 +90,8 @@ namespace TestExcel.Controllers
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                             BUILDING_NAME = e3.BUILDING_NAME,
                             SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
                         };
             Building_subject = query.ToList();
             return Building_subject;
@@ -379,7 +382,7 @@ namespace TestExcel.Controllers
             var tupleData = new Tuple<IEnumerable<Building_Classroom>, IEnumerable<BUILDING>>(query, BUILDING);
             return View(tupleData);
         }
-        public ActionResult TeSchedule(string id,string classroom,string SUBJECTid, string BR_Semester, string BR_Year, string Message,string color)
+        public ActionResult TeSchedule(string id,string classroom,string SUBJECTid, string BR_Semester, string BR_Year, string Message)
         {
             SUBJECT SUBJECT = new SUBJECT();
             SECTION SECTION = new SECTION();
@@ -393,7 +396,6 @@ namespace TestExcel.Controllers
                 BR_Year = g.YEAR;
                 SUBJECT = db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
                 SECTION = db.SECTIONs.Where(x => x.SUBJECT_ID == SUBJECT.SUBJECT_ID && x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
-                color = "";
             }
             else
             {
@@ -440,7 +442,8 @@ namespace TestExcel.Controllers
                                 SECTION_TIME_START = e1.SECTION_TIME_START,
                                 SECTION_TIME_END = e1.SECTION_TIME_END,
                                 SEMESTER = e1.SEMESTER,
-                                YEAR = e1.YEAR
+                                YEAR = e1.YEAR,
+                                CRASH = e1.CRASH
                             };
                 ViewBag.CLASSROOM = " ";
             }
@@ -473,7 +476,8 @@ namespace TestExcel.Controllers
                                 SECTION_TIME_START = e1.SECTION_TIME_START,
                                 SECTION_TIME_END = e1.SECTION_TIME_END,
                                 SEMESTER = e1.SEMESTER,
-                                YEAR = e1.YEAR
+                                YEAR = e1.YEAR,
+                                CRASH = e1.CRASH
                             };
             }
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
@@ -483,9 +487,8 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-            if (id != "" && color != null)
+            if (id != "")
             {
-                ViewBag.color = "#ff0000";
                 ViewBag.Number = id;
             }
             else
@@ -557,7 +560,8 @@ namespace TestExcel.Controllers
                             SECTION_TIME_START = e1.SECTION_TIME_START,
                             SECTION_TIME_END = e1.SECTION_TIME_END,
                             SEMESTER = e1.SEMESTER,
-                            YEAR = e1.YEAR
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
                         };
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
@@ -594,7 +598,8 @@ namespace TestExcel.Controllers
             var BR_NAME = collection["BR_NAME"];
             var Semester = collection["Semester"];
             var Year = collection["Year"];
-            var CLASSROOM = collection["FIRST_SAVE_CLASSROOM"];
+            var SEC_ID = collection["SEC_ID2"];
+            string CLASSROOM = collection["CLASSROOM"];
 
             if (ModelState.IsValid && FIRST_SECTION_ID != "" && SECOND_SECTION_ID == "0")
             {
@@ -668,7 +673,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule/"+ FIRST_SECTION_ID + "/"+ CLASSROOM +"?SUBJECTid="+ SUBJECTid +"&BR_SEMESTER="+ Semester +"&BR_YEAR="+ Year +"&color=#ff0000" + "&Message=" + Message);
+                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
             }
         }
         [HttpPost]
@@ -750,7 +755,7 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&color=#ff0000" + "&Message=" + Message);
+                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
             }
         }
     }

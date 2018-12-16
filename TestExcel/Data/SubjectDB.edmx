@@ -63,6 +63,7 @@
           <Property Name="SECTION_BRANCH_NAME" Type="varchar" MaxLength="200" />
           <Property Name="SEMESTER" Type="varchar" MaxLength="20" />
           <Property Name="YEAR" Type="varchar" MaxLength="20" />
+          <Property Name="CRASH" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="SUBJECT">
           <Key>
@@ -110,10 +111,10 @@
           <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
           <EntitySet Name="COURSEs" EntityType="TestExcelModel.COURSE" />
           <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
+          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
-          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
         </EntityContainer>
         <EntityType Name="BRANCH">
           <Key>
@@ -148,6 +149,16 @@
           <Property Name="DEPARTMENT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="PROFESSOR">
+          <Key>
+            <PropertyRef Name="PROFESSOR_ID" />
+          </Key>
+          <Property Name="PROFESSOR_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PROFESSOR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="SECTION">
           <Key>
             <PropertyRef Name="SECTION_ID" />
@@ -163,6 +174,7 @@
           <Property Name="SECTION_BRANCH_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="SEMESTER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="YEAR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CRASH" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SUBJECT">
           <Key>
@@ -190,16 +202,6 @@
           <Property Name="USER_FIRSTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="USER_LASTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="USER_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="PROFESSOR">
-          <Key>
-            <PropertyRef Name="PROFESSOR_ID" />
-          </Key>
-          <Property Name="PROFESSOR_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PROFESSOR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -244,9 +246,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PROFESSORs">
+            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
+              <MappingFragment StoreEntitySet="PROFESSOR">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
+                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
+                <ScalarProperty Name="PROFESSOR_NAME" ColumnName="PROFESSOR_NAME" />
+                <ScalarProperty Name="PROFESSOR_ID" ColumnName="PROFESSOR_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="SECTIONs">
             <EntityTypeMapping TypeName="TestExcelModel.SECTION">
               <MappingFragment StoreEntitySet="SECTION">
+                <ScalarProperty Name="CRASH" ColumnName="CRASH" />
                 <ScalarProperty Name="YEAR" ColumnName="YEAR" />
                 <ScalarProperty Name="SEMESTER" ColumnName="SEMESTER" />
                 <ScalarProperty Name="SECTION_BRANCH_NAME" ColumnName="SECTION_BRANCH_NAME" />
@@ -287,17 +301,6 @@
                 <ScalarProperty Name="USER_PASSWORD" ColumnName="USER_PASSWORD" />
                 <ScalarProperty Name="USER_USERNAME" ColumnName="USER_USERNAME" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PROFESSORs">
-            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
-              <MappingFragment StoreEntitySet="PROFESSOR">
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
-                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
-                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
-                <ScalarProperty Name="PROFESSOR_NAME" ColumnName="PROFESSOR_NAME" />
-                <ScalarProperty Name="PROFESSOR_ID" ColumnName="PROFESSOR_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
