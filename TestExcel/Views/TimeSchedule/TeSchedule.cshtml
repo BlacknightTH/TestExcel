@@ -237,7 +237,7 @@ else
     </tfoot>
 </table>
 <br>
-@using (Html.BeginForm("singleupdatedata", "TimeSchedule", FormMethod.Post))
+@using (Html.BeginForm("singleupdatedata", "TimeSchedule", FormMethod.Post, new { id = "PSingleSave", name = "PSingleSave" }))
 {
     @Html.Hidden("SUBJECTid", Subject_id);
     @Html.Hidden("Semester", SEMESTER)
@@ -399,11 +399,11 @@ else
         </div>
     </div>
     <br>
-    <input type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
-    <br>
 }
+<input id="save" name="save" type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
 <br>
-@using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post))
+<br>
+@using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post, new { id = "PSaveAll", name = "PSaveAll" }))
 {
     @Html.Hidden("SUBJECTid", Subject_id);
     @Html.Hidden("Semester", SEMESTER)
@@ -440,7 +440,7 @@ else
                         var tid = date[a] + "id_" + b;
                         var WhereTimeDate = Model.Where(x => Math.Floor(decimal.Parse(x.SECTION_TIME_START.ToString())) == b && x.SECTION_DATE == date[a]);
                         var check = WhereTimeDate.LastOrDefault();
-                        if (check != null && check.SUBJECT_CREDIT == "3(3-0-6)")
+                        if (check != null && check.SUBJECT_CREDIT.Contains("-0-"))
                         {
                             color = "#25b0ee";
                         }
@@ -460,23 +460,44 @@ else
                                 <td id="@tid" colspan="@TIME" class="droppable revert" width="60px">
                                     @if (WhereTimeDate.First().SUBJECT_ID == WhereTimeDate.Last().SUBJECT_ID)
                                     {
-                                        <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
-                                            <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
-                                            <p>
-                                                @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
-                                            </p>
-                                            @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
-                                            @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
-                                            @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
-                                            @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
-                                            @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
-                                            @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
-                                            @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
-                                            @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
-                                            @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
-                                            @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
-
-                                        </div>
+                                        if (WhereTimeDate.First().SUBJECT_CREDIT.Contains("-0-"))
+                                        {
+                                            <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                                <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
+                                                <p>
+                                                    @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="getdata" style="background-color:@color;width:100%;height:50px">
+                                                @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
+                                                <p>
+                                                    @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
 
                                     }
                                     else
@@ -532,30 +553,64 @@ else
                                 {
                                     var TIME = (tmp_last - tmp_first) * 4;
                                     <td id="@tid" colspan="@TIME" width="60px" class="droppable">
-                                        <div class="draggable getdata" style="background-color:@color;height:50px">
-                                            <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
-                                            <p>@first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER</p>
-                                            @Html.Hidden("searchId", first.SECTION_ID)
-                                            @Html.Hidden("First_id_" + first.SECTION_ID, first.SECTION_ID)
-                                            @Html.Hidden("First_subjectid_" + first.SECTION_ID, first.SUBJECT_ID)
-                                            @Html.Hidden("First_name_" + first.SECTION_ID, first.SUBJECT_NAME)
-                                            @Html.Hidden("First_number_" + first.SECTION_ID, first.SECTION_NUMBER)
-                                            @Html.Hidden("First_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString()))
-                                            @Html.Hidden("First_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString()))
-                                            @Html.Hidden("First_date_" + first.SECTION_ID, first.SECTION_DATE)
-                                            @Html.Hidden("First_classroom_" + first.SECTION_ID, first.SECTION_CLASSROOM)
-                                            @Html.Hidden("First_branch_" + first.SECTION_ID, first.SECTION_BRANCH_NAME)
+                                        @if (first.SUBJECT_CREDIT.Contains("-0-"))
+                                        {
+                                            <div class="draggable getdata" style="background-color:@color;height:50px">
+                                                <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
+                                                <p>
+                                                    @first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", first.SECTION_ID)
+                                                @Html.Hidden("First_id_" + first.SECTION_ID, first.SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + first.SECTION_ID, first.SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + first.SECTION_ID, first.SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + first.SECTION_ID, first.SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + first.SECTION_ID, first.SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + first.SECTION_ID, first.SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + first.SECTION_ID, first.SECTION_BRANCH_NAME)
 
-                                            @Html.Hidden("Second_id_" + first.SECTION_ID, second.SECTION_ID)
-                                            @Html.Hidden("Second_subjectid_" + first.SECTION_ID, second.SUBJECT_ID)
-                                            @Html.Hidden("Second_name_" + first.SECTION_ID, second.SUBJECT_NAME)
-                                            @Html.Hidden("Second_number_" + first.SECTION_ID, second.SECTION_NUMBER)
-                                            @Html.Hidden("Second_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString()))
-                                            @Html.Hidden("Second_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString()))
-                                            @Html.Hidden("Second_date_" + first.SECTION_ID, second.SECTION_DATE)
-                                            @Html.Hidden("Second_classroom_" + first.SECTION_ID, second.SECTION_CLASSROOM)
-                                            @Html.Hidden("Second_branch_" + first.SECTION_ID, second.SECTION_BRANCH_NAME)
-                                        </div>
+                                                @Html.Hidden("Second_id_" + first.SECTION_ID, second.SECTION_ID)
+                                                @Html.Hidden("Second_subjectid_" + first.SECTION_ID, second.SUBJECT_ID)
+                                                @Html.Hidden("Second_name_" + first.SECTION_ID, second.SUBJECT_NAME)
+                                                @Html.Hidden("Second_number_" + first.SECTION_ID, second.SECTION_NUMBER)
+                                                @Html.Hidden("Second_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("Second_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("Second_date_" + first.SECTION_ID, second.SECTION_DATE)
+                                                @Html.Hidden("Second_classroom_" + first.SECTION_ID, second.SECTION_CLASSROOM)
+                                                @Html.Hidden("Second_branch_" + first.SECTION_ID, second.SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="getdata" style="background-color:@color;height:50px">
+                                                @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
+                                                <p>
+                                                    @first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", first.SECTION_ID)
+                                                @Html.Hidden("First_id_" + first.SECTION_ID, first.SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + first.SECTION_ID, first.SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + first.SECTION_ID, first.SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + first.SECTION_ID, first.SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + first.SECTION_ID, first.SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + first.SECTION_ID, first.SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + first.SECTION_ID, first.SECTION_BRANCH_NAME)
+
+                                                @Html.Hidden("Second_id_" + first.SECTION_ID, second.SECTION_ID)
+                                                @Html.Hidden("Second_subjectid_" + first.SECTION_ID, second.SUBJECT_ID)
+                                                @Html.Hidden("Second_name_" + first.SECTION_ID, second.SUBJECT_NAME)
+                                                @Html.Hidden("Second_number_" + first.SECTION_ID, second.SECTION_NUMBER)
+                                                @Html.Hidden("Second_timestart_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("Second_timeend_" + first.SECTION_ID, int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("Second_date_" + first.SECTION_ID, second.SECTION_DATE)
+                                                @Html.Hidden("Second_classroom_" + first.SECTION_ID, second.SECTION_CLASSROOM)
+                                                @Html.Hidden("Second_branch_" + first.SECTION_ID, second.SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
                                     </td>
                                 }
                                 else if (tmpl_first != tmpl_last)
@@ -564,20 +619,44 @@ else
                                     var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                     var TIME = (TIME_END - TIME_START) * 4;
                                     <td id="@tid" colspan="@TIME" width="60px" class="droppable">
-                                        <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
-                                            <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
-                                            <p>@WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER</p>
-                                            @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
-                                            @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
-                                            @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
-                                            @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
-                                            @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
-                                            @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
-                                            @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
-                                            @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
-                                            @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
-                                            @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
-                                        </div>
+                                        @if (WhereTimeDate.First().SUBJECT_CREDIT.Contains("-0-"))
+                                        {
+                                            <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                                <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
+                                                <p>
+                                                    @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="getdata" style="background-color:@color;width:100%;height:50px">
+                                                @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
+                                                <p>
+                                                    @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
+                                                </p>
+                                                @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_id_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_ID)
+                                                @Html.Hidden("First_subjectid_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_ID)
+                                                @Html.Hidden("First_name_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SUBJECT_NAME)
+                                                @Html.Hidden("First_number_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_NUMBER)
+                                                @Html.Hidden("First_timestart_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_START.ToString())).ToString()))
+                                                @Html.Hidden("First_timeend_" + WhereTimeDate.First().SECTION_ID, int.Parse(Math.Floor(decimal.Parse(WhereTimeDate.First().SECTION_TIME_END.ToString())).ToString()))
+                                                @Html.Hidden("First_date_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_DATE)
+                                                @Html.Hidden("First_classroom_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_CLASSROOM)
+                                                @Html.Hidden("First_branch_" + WhereTimeDate.First().SECTION_ID, WhereTimeDate.First().SECTION_BRANCH_NAME)
+                                            </div>
+                                        }
                                     </td>
                                 }
                             }
@@ -598,7 +677,8 @@ else
             }
         </tbody>
     </table>
-    <div>
-        <input type="submit" value="Save_All" class="w3-btn w3-green w3-center registerbtn pull-right" />
-    </div>
 }
+
+<div>
+    <input id="save_all" name="save_all" type="submit" value="Save_All" class="w3-btn w3-green w3-center registerbtn pull-right" />
+</div>

@@ -479,7 +479,72 @@ namespace TestExcel.Controllers
             var list = SetNotification();
             return new JsonResult {Data = list.ToList() ,JsonRequestBehavior = JsonRequestBehavior.AllowGet};
         }
+        [HttpPost]
+        public JsonResult Warning(string data, string semester, string year)
+        {
+            var list = GetWarning(data,semester,year);
+            return new JsonResult { Data = list.ToList(), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+        public List<TimeCrash> GetWarning(string data,string semester,string year)
+        {
+            List<Section_Subject> _Section_Subject = new List<Section_Subject>();
+            var split = data.Split(',');
+            var count = 0;
+            for (int i = 0; i < split.Length - 1; i++)
+            {
+                int sp = int.Parse(split[i]);
+                var have = db.SECTIONs.Where(x => x.SECTION_ID == sp).First();
+                var query = (from e1 in db.SECTIONs
+                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                            where e1.SECTION_ID != have.SECTION_ID && e1.SECTION_CLASSROOM == have.SECTION_CLASSROOM && e1.SECTION_DATE == have.SECTION_DATE && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                            select new Section_Subject
+                            {
+                                SECTION_ID = e1.SECTION_ID,
+                                SUBJECT_ID = e1.SUBJECT_ID,
+                                SUBJECT_NAME = e2.SUBJECT_NAME,
+                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                SECTION_NUMBER = e1.SECTION_NUMBER,
+                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                SECTION_DATE = e1.SECTION_DATE,
+                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                SECTION_TIME_START = e1.SECTION_TIME_START,
+                                SECTION_TIME_END = e1.SECTION_TIME_END,
+                                SEMESTER = e1.SEMESTER,
+                                YEAR = e1.YEAR
+                            }).OrderBy(x => x.SECTION_TIME_START).ToList();
 
+                    var model = query.Where(x => (x.SECTION_TIME_START <= have.SECTION_TIME_START && x.SECTION_TIME_START < have.SECTION_TIME_END && x.SECTION_TIME_END > have.SECTION_TIME_START) && x.SUBJECT_ID != have.SUBJECT_ID && x.SECTION_NUMBER != "");
+                    count = model.Count();
+                    if (count > 0)
+                    {
+                        var item = new TimeCrash();
+                        item.SECTION_ID_First = have.SECTION_ID;
+                        item.SUBJECT_ID_First = have.SUBJECT_ID;
+                        item.SECTION_NUMBER_First = have.SECTION_NUMBER;
+                        item.SECTION_DATE_First = have.SECTION_DATE;
+                        item.SECTION_TIME_START_First = have.SECTION_TIME_START;
+                        item.SECTION_TIME_END_First = have.SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_First = have.SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_First = have.SECTION_BRANCH_NAME;
+
+                        item.SECTION_ID_Last = model.LastOrDefault().SECTION_ID;
+                        item.SUBJECT_ID_Last = model.LastOrDefault().SUBJECT_ID;
+                        item.SECTION_NUMBER_Last = model.LastOrDefault().SECTION_NUMBER;
+                        item.SECTION_DATE_Last = model.LastOrDefault().SECTION_DATE;
+                        item.SECTION_TIME_START_Last = model.LastOrDefault().SECTION_TIME_START;
+                        item.SECTION_TIME_END_Last = model.LastOrDefault().SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Last = model.LastOrDefault().SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Last = model.LastOrDefault().SECTION_BRANCH_NAME;
+
+                        item.SEMESTER = semester;
+                        item.YEAR = year;
+                        _TimeCrash.Add(item);
+                    }
+            }
+            var TimeCrash = _TimeCrash.ToList();
+            return TimeCrash;
+        }
         public List<TimeCrash> SetNotification()
         {
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()

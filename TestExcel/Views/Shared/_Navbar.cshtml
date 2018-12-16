@@ -1,7 +1,12 @@
 ﻿<script src="~/Scripts/bootstrap.min.js"></script>
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 <link href="~/Content/EditStyle.css" rel="stylesheet" />
-
+@{ 
+    string SEMESTER = ViewBag.Semester;
+    string YEAR = ViewBag.Year;
+    string dataID = ViewBag.dataID;
+    string d = "";
+}
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -14,8 +19,8 @@
         </div>
         <div class="navbar-collapse collapse">
             @*@if (Session["Username"] != null)
-            {*@
-                <ul class="nav navbar-nav">
+                {*@
+            <ul class="nav navbar-nav">
                 <li><a href="@Url.Action("DSchedule","TimeSchedule")">ตารางเรียน</a></li>
                 <li><a href="@Url.Action("data","Report")">Import/Export Pdf/Excel</a></li>
                 <li><a href="@Url.Action("Section","Data")">แก้ไขข้อมูล</a></li>
@@ -29,16 +34,16 @@
                     <ul class="dropdown-menu" id="notiContent"></ul>
                 </li>
                 @*<li><a href="#" uk-icon="icon: sign-out"><i class="fa fa-user" aria-hidden="true"></i> @Session["Username"].ToString()</a></li>
-                <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>*@
+                    <li><a href="@Url.Action("Logout","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>*@
             </ul>
             @*}
-            else
-            {
+                else
+                {
 
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
-            </ul>
-            }*@
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action("Index","Login")" uk-icon="icon: sign-out"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+                </ul>
+                }*@
 
         </div>
     </div>
@@ -119,8 +124,7 @@
                         + value.YEAR + '&color=#ff0000">'
                         + value.SUBJECT_ID_First + " " + datethai[parseInt(tmp_datefirst)] + " ตอน "
                         + value.SECTION_NUMBER_First + " ห้อง " + value.SECTION_CLASSROOM_First + " เวลา " + value.SECTION_TIME_START_First + ".00-" + value.SECTION_TIME_END_First + ".00 " + value.SEMESTER + "/" + value.YEAR + "<br>"
-                        + value.SUBJECT_ID_Last + " "
-                        + datethai[parseInt(tmp_datelast)]
+                        + value.SUBJECT_ID_Last + " "+ datethai[parseInt(tmp_datelast)]
                         + " ตอน " + value.SECTION_NUMBER_Last + " ห้อง " + value.SECTION_CLASSROOM_Last + " เวลา " + value.SECTION_TIME_START_Last + ".00-" + value.SECTION_TIME_END_Last + ".00 " + value.SEMESTER + "/" + value.YEAR + '</a></li>'));
                 });
             },
@@ -128,8 +132,111 @@
                 console.log(error);
             }
         });
+
+        $("#ConfirmSaveAll").click(function () {
+                $("#PSaveAll").submit();
+            });
+            $("#ConfirmSave").click(function () {
+                $("#PSingleSave").submit();
+            });
+            var Arraydata = "@dataID";
+            $("#save_all").click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '/data/Warning',
+                    data: { 'data': Arraydata,'semester':'@SEMESTER' ,'year':'@YEAR'},
+                    success: function (response) {
+                        var count = response.length;
+                        if (count == 0) {
+                            $("#PSaveAll").submit();
+                        }
+                        else {
+                            $.each(response, function (index, value) {
+                                var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
+                                var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
+                                $("#res").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
+                                    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
+                                    + value.SEMESTER + '/' + value.YEAR + '</p>'
+                                    + '<p>' + value.SUBJECT_ID_Last + ' ' + datethai[parseInt(tmp_datelast)]
+                                    + ' ตอน ' + value.SECTION_NUMBER_Last + ' ห้อง ' + value.SECTION_CLASSROOM_Last + ' เวลา ' + value.SECTION_TIME_START_Last + '.00-' + value.SECTION_TIME_END_Last + '.00 ' + value.SEMESTER + '/' + value.YEAR + '</p><hr>'));
+                            });
+                            $("#SaveConfirmationAll").modal();
+                        }
+                    }
+                });
+        });
+        $("#save").click(function () {
+            if ($("#FIRST_SECTION_ID").val() != null || ("#FIRST_SECTION_ID").val() != "" ) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/data/Warning',
+                    data: { 'data': Arraydata,'semester':'@SEMESTER' ,'year':'@YEAR'},
+                    success: function (response) {
+                        var count = response.length;
+                        if (count == 0) {
+                            $("#PSingleSave").submit();
+                        }
+                        else {
+                            $.each(response, function (index, value) {
+                                var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
+                                var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
+                                $("#ress").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
+                                    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
+                                    + value.SEMESTER + '/' + value.YEAR + '</p>'
+                                    + '<p>' + value.SUBJECT_ID_Last + ' ' + datethai[parseInt(tmp_datelast)]
+                                    + ' ตอน ' + value.SECTION_NUMBER_Last + ' ห้อง ' + value.SECTION_CLASSROOM_Last + ' เวลา ' + value.SECTION_TIME_START_Last + '.00-' + value.SECTION_TIME_END_Last + '.00 ' + value.SEMESTER + '/' + value.YEAR + '</p><hr>'));
+                            });
+                            $("#SaveConfirmation").modal();
+                        }
+                    }
+                });
+
+            }
+        });
+
         $(".noti").click(function () {
             $("#notiContent").toggle();
         });
     });
 </script>
+
+<div class="modal fade" id="SaveConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>แจ้งเตือน:มีวิชาเรียนชน</h4>
+            </div>
+            <div class="modal-body">
+                <h4>คุณแน่ใจหรือไม่ว่าต้องการ Save ข้อมูล</h4>
+                <div id="ress" name="ress"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                    <input id="ConfirmSave" name="ConfirmSave" type="submit" value="SAVE" href="#" class="btn btn-danger">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SaveConfirmationAll">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>แจ้งเตือน:มีวิชาเรียนชน</h4>
+            </div>
+            <div class="modal-body">
+                <h4>คุณแน่ใจหรือไม่ว่าต้องการ Save ข้อมูลทั้งหมด</h4>
+                <div id="res" name="res"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                    <input id="ConfirmSaveAll" name="ConfirmSaveAll" type="submit" value="SAVE" href="#" class="btn btn-danger">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

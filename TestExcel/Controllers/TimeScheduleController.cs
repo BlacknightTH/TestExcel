@@ -127,7 +127,6 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
-
             ViewBag.BRANCH_NAME = select_branch;
             ViewBag.DDLSelected = select_branchid;
             ViewBag.DepartDDLSelected = select_Departmentid;
@@ -148,7 +147,12 @@ namespace TestExcel.Controllers
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "";
             }
-
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
             ViewBag.ddl_Department = new SelectList(db.COURSEs.ToList(), "COURSE_ID", "COURSE_NAME");
@@ -199,8 +203,12 @@ namespace TestExcel.Controllers
             ViewBag.DepartDDLSelected = Depart_id;
             ViewBag.Semester = ddl_Semester;
             ViewBag.Year = ddl_Year;
-
-
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
             ViewBag.ddl_Department = new SelectList(db.COURSEs.ToList(), "COURSE_ID", "COURSE_NAME");
@@ -254,6 +262,12 @@ namespace TestExcel.Controllers
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "";
             }
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             ViewBag.ddl_Professor = new SelectList(professor.Select(x => new { x.PROFESSOR_ID, x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "SECTION_PROFESSOR_SHORTNAME", "SECTION_PROFESSOR_SHORTNAME", query.First().SECTION_PROFESSOR_SHORTNAME);
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
@@ -290,7 +304,12 @@ namespace TestExcel.Controllers
             ViewBag.PROFESSOR_NAME = ddl_Professor;
             ViewBag.Semester = ddl_Semester;
             ViewBag.Year = ddl_Year;
-
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             ViewBag.ddl_Professor = new SelectList(professor.Select(x => new { x.PROFESSOR_ID, x.SECTION_PROFESSOR_SHORTNAME }).Distinct(), "SECTION_PROFESSOR_SHORTNAME", "SECTION_PROFESSOR_SHORTNAME", ddl_Professor);
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
@@ -473,6 +492,12 @@ namespace TestExcel.Controllers
             {
                 ViewBag.Number = "";
             }
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             int t = query.Count();
             ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
             ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
@@ -541,6 +566,12 @@ namespace TestExcel.Controllers
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
                                };
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
             ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
             ViewBag.SUBJECT = DDL_SUBJECT;
             ViewBag.Semester = ddl_Semester;
