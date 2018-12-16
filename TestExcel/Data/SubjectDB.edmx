@@ -11,7 +11,7 @@
           </Key>
           <Property Name="BRANCH_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BRANCH_NAME" Type="varchar" MaxLength="50" />
-          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="COURSE_NAME" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="BUILDING">
           <Key>
@@ -22,24 +22,31 @@
           <Property Name="CLASSROOM_NAME" Type="varchar" MaxLength="50" />
           <Property Name="NUMBER_SEATS" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="COURSE">
+          <Key>
+            <PropertyRef Name="COURSE_ID" />
+          </Key>
+          <Property Name="COURSE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="COURSE_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="COURSE_THAI_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
             <PropertyRef Name="DEPARTMENT_ID" />
           </Key>
           <Property Name="DEPARTMENT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
-          <Property Name="DEPARTMENT_THAI_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="PROFESSOR">
           <Key>
             <PropertyRef Name="PROFESSOR_ID" />
           </Key>
           <Property Name="PROFESSOR_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PROFESSOR_FIRSTNAME" Type="varchar" MaxLength="50" />
-          <Property Name="PROFESSOR_LASTNAME" Type="varchar" MaxLength="50" />
+          <Property Name="PROFESSOR_NAME" Type="varchar" MaxLength="100" />
           <Property Name="PROFESSOR_SHORTNAME" Type="varchar" MaxLength="20" />
           <Property Name="PROFESSOR_STATUS" Type="varchar" MaxLength="50" />
-          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="SECTION">
           <Key>
@@ -87,6 +94,7 @@
         <EntityContainer Name="TestExcelModelStoreContainer">
           <EntitySet Name="BRANCH" EntityType="Self.BRANCH" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BUILDING" EntityType="Self.BUILDING" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COURSE" EntityType="Self.COURSE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DEPARTMENT" EntityType="Self.DEPARTMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROFESSOR" EntityType="Self.PROFESSOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SECTION" EntityType="Self.SECTION" Schema="dbo" store:Type="Tables" />
@@ -99,12 +107,13 @@
       <Schema Namespace="TestExcelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="TestExcelEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="BRANCHes" EntityType="TestExcelModel.BRANCH" />
+          <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
+          <EntitySet Name="COURSEs" EntityType="TestExcelModel.COURSE" />
           <EntitySet Name="DEPARTMENTs" EntityType="TestExcelModel.DEPARTMENT" />
-          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
           <EntitySet Name="SECTIONs" EntityType="TestExcelModel.SECTION" />
           <EntitySet Name="SUBJECTs" EntityType="TestExcelModel.SUBJECT" />
           <EntitySet Name="USERs" EntityType="TestExcelModel.USER" />
-          <EntitySet Name="BUILDINGs" EntityType="TestExcelModel.BUILDING" />
+          <EntitySet Name="PROFESSORs" EntityType="TestExcelModel.PROFESSOR" />
         </EntityContainer>
         <EntityType Name="BRANCH">
           <Key>
@@ -112,26 +121,32 @@
           </Key>
           <Property Name="BRANCH_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BRANCH_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="COURSE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BUILDING">
+          <Key>
+            <PropertyRef Name="BUILDING_ID" />
+          </Key>
+          <Property Name="BUILDING_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BUILDING_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NUMBER_SEATS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="COURSE">
+          <Key>
+            <PropertyRef Name="COURSE_ID" />
+          </Key>
+          <Property Name="COURSE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="COURSE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="COURSE_THAI_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
             <PropertyRef Name="DEPARTMENT_ID" />
           </Key>
           <Property Name="DEPARTMENT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_THAI_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="PROFESSOR">
-          <Key>
-            <PropertyRef Name="PROFESSOR_ID" />
-          </Key>
-          <Property Name="PROFESSOR_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PROFESSOR_FIRSTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_LASTNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SECTION">
           <Key>
@@ -176,14 +191,15 @@
           <Property Name="USER_LASTNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="USER_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BUILDING">
+        <EntityType Name="PROFESSOR">
           <Key>
-            <PropertyRef Name="BUILDING_ID" />
+            <PropertyRef Name="PROFESSOR_ID" />
           </Key>
-          <Property Name="BUILDING_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BUILDING_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CLASSROOM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NUMBER_SEATS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PROFESSOR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_SHORTNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROFESSOR_STATUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -194,30 +210,37 @@
           <EntitySetMapping Name="BRANCHes">
             <EntityTypeMapping TypeName="TestExcelModel.BRANCH">
               <MappingFragment StoreEntitySet="BRANCH">
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
                 <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
                 <ScalarProperty Name="BRANCH_ID" ColumnName="BRANCH_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BUILDINGs">
+            <EntityTypeMapping TypeName="TestExcelModel.BUILDING">
+              <MappingFragment StoreEntitySet="BUILDING">
+                <ScalarProperty Name="NUMBER_SEATS" ColumnName="NUMBER_SEATS" />
+                <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
+                <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
+                <ScalarProperty Name="BUILDING_ID" ColumnName="BUILDING_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COURSEs">
+            <EntityTypeMapping TypeName="TestExcelModel.COURSE">
+              <MappingFragment StoreEntitySet="COURSE">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="COURSE_THAI_NAME" ColumnName="COURSE_THAI_NAME" />
+                <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
+                <ScalarProperty Name="COURSE_ID" ColumnName="COURSE_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DEPARTMENTs">
             <EntityTypeMapping TypeName="TestExcelModel.DEPARTMENT">
               <MappingFragment StoreEntitySet="DEPARTMENT">
-                <ScalarProperty Name="DEPARTMENT_THAI_NAME" ColumnName="DEPARTMENT_THAI_NAME" />
                 <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
                 <ScalarProperty Name="DEPARTMENT_ID" ColumnName="DEPARTMENT_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PROFESSORs">
-            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
-              <MappingFragment StoreEntitySet="PROFESSOR">
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
-                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
-                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
-                <ScalarProperty Name="PROFESSOR_LASTNAME" ColumnName="PROFESSOR_LASTNAME" />
-                <ScalarProperty Name="PROFESSOR_FIRSTNAME" ColumnName="PROFESSOR_FIRSTNAME" />
-                <ScalarProperty Name="PROFESSOR_ID" ColumnName="PROFESSOR_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -267,13 +290,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BUILDINGs">
-            <EntityTypeMapping TypeName="TestExcelModel.BUILDING">
-              <MappingFragment StoreEntitySet="BUILDING">
-                <ScalarProperty Name="NUMBER_SEATS" ColumnName="NUMBER_SEATS" />
-                <ScalarProperty Name="CLASSROOM_NAME" ColumnName="CLASSROOM_NAME" />
-                <ScalarProperty Name="BUILDING_NAME" ColumnName="BUILDING_NAME" />
-                <ScalarProperty Name="BUILDING_ID" ColumnName="BUILDING_ID" />
+          <EntitySetMapping Name="PROFESSORs">
+            <EntityTypeMapping TypeName="TestExcelModel.PROFESSOR">
+              <MappingFragment StoreEntitySet="PROFESSOR">
+                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="PROFESSOR_STATUS" ColumnName="PROFESSOR_STATUS" />
+                <ScalarProperty Name="PROFESSOR_SHORTNAME" ColumnName="PROFESSOR_SHORTNAME" />
+                <ScalarProperty Name="PROFESSOR_NAME" ColumnName="PROFESSOR_NAME" />
+                <ScalarProperty Name="PROFESSOR_ID" ColumnName="PROFESSOR_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

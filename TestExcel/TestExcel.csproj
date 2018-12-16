@@ -202,6 +202,9 @@
     <Compile Include="Data\BUILDING.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\COURSE.cs">
+      <DependentUpon>SubjectDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\DEPARTMENT.cs">
       <DependentUpon>SubjectDB.tt</DependentUpon>
     </Compile>
@@ -622,7 +625,7 @@
     <Content Include="Views\Data\Subject.cshtml" />
     <Content Include="Views\Data\Member.cshtml" />
     <Content Include="Views\Data\Professor.cshtml" />
-    <Content Include="Views\Data\Department.cshtml" />
+    <Content Include="Views\Data\Course.cshtml" />
     <Content Include="Views\Data\Building.cshtml" />
     <Content Include="Views\Data\Branch.cshtml" />
     <Content Include="Views\Report\data.cshtml" />

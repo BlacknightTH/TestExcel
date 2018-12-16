@@ -15,8 +15,7 @@ namespace TestExcel.Data
     public partial class PROFESSOR
     {
         public int PROFESSOR_ID { get; set; }
-        public string PROFESSOR_FIRSTNAME { get; set; }
-        public string PROFESSOR_LASTNAME { get; set; }
+        public string PROFESSOR_NAME { get; set; }
         public string PROFESSOR_SHORTNAME { get; set; }
         public string PROFESSOR_STATUS { get; set; }
         public string DEPARTMENT_NAME { get; set; }

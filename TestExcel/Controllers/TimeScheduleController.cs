@@ -105,13 +105,13 @@ namespace TestExcel.Controllers
                 BR_Year = t.YEAR;
                 select_branchid = 1;
                 select_branch = db.BRANCHes.First().BRANCH_NAME;
-                select_Department = db.DEPARTMENTs.First().DEPARTMENT_NAME;
+                select_Department = db.COURSEs.First().COURSE_NAME;
                 select_Departmentid = 1;
             }
             else
             {
-                select_Department = db.BRANCHes.Where(x => x.BRANCH_NAME == BR_NAME).First().DEPARTMENT_NAME;
-                select_Departmentid = db.DEPARTMENTs.Where(x => x.DEPARTMENT_NAME == select_Department).First().DEPARTMENT_ID;
+                select_Department = db.BRANCHes.Where(x => x.BRANCH_NAME == BR_NAME).First().COURSE_NAME;
+                select_Departmentid = db.COURSEs.Where(x => x.COURSE_NAME == select_Department).First().COURSE_ID;
                 select_branch = BR_NAME;
                 select_branchid = db.BRANCHes.Where(x => x.BRANCH_NAME == select_branch).First().BRANCH_ID;
             }
@@ -151,8 +151,8 @@ namespace TestExcel.Controllers
 
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", BR_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
-            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == select_Department).ToList(), "BRANCH_ID", "BRANCH_NAME");
+            ViewBag.ddl_Department = new SelectList(db.COURSEs.ToList(), "COURSE_ID", "COURSE_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.COURSE_NAME == select_Department).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         [HttpPost]
@@ -166,18 +166,18 @@ namespace TestExcel.Controllers
             string temp, contain, BRANCH_NAME;
             if (count == 1)
             {
-                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
-                BRANCH_NAME = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_NAME;
-                int BRANCH_ID = db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).First().BRANCH_ID;
-                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
+                temp = db.COURSEs.Where(x => x.COURSE_ID == Depart_id).First().COURSE_NAME;
+                BRANCH_NAME = db.BRANCHes.Where(x => x.COURSE_NAME == temp).First().BRANCH_NAME;
+                int BRANCH_ID = db.BRANCHes.Where(x => x.COURSE_NAME == temp).First().BRANCH_ID;
+                var COURSE_NAMEs = db.COURSEs.Select(x => x.COURSE_NAME).First();
                 contain = BRANCH_NAME;
                 Branch_id = BRANCH_ID;
             }
             else
             {
-                temp = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == Depart_id).First().DEPARTMENT_NAME;
+                temp = db.COURSEs.Where(x => x.COURSE_ID == Depart_id).First().COURSE_NAME;
                 BRANCH_NAME = db.BRANCHes.Where(x => x.BRANCH_ID == Branch_id).First().BRANCH_NAME;
-                var DEPART_NAMEs = db.DEPARTMENTs.Select(x => x.DEPARTMENT_NAME).First();
+                var COURSE_NAMEs = db.COURSEs.Select(x => x.COURSE_NAME).First();
                 string[] br = BRANCH_NAME.Split('\r');
                 contain = br[0];
             }
@@ -203,8 +203,8 @@ namespace TestExcel.Controllers
 
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", ddl_Year);
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_ID", "DEPARTMENT_NAME");
-            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.DEPARTMENT_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
+            ViewBag.ddl_Department = new SelectList(db.COURSEs.ToList(), "COURSE_ID", "COURSE_NAME");
+            ViewBag.ddl_Branch = new SelectList(db.BRANCHes.Where(x => x.COURSE_NAME == temp).ToList(), "BRANCH_ID", "BRANCH_NAME");
             return View(query);
         }
         public ActionResult PSchedule(string BR_Professor,string BR_Semester, string BR_Year, string Message)

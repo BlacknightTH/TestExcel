@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestExcel.Data.DEPARTMENT>
+﻿@model IEnumerable<TestExcel.Data.COURSE>
 
 @{
     ViewBag.Title = "Department";
@@ -9,6 +9,7 @@
     <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
     <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
     <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/Data/Course" style="color:blue;font-size:20px">หลักสูตร |</a>
     <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
     <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ </a>
     @*<a href="~/Data/Member" style="color:blue;font-size:20px">User</a>*@
@@ -21,7 +22,8 @@
         <thead>
             <tr class="w3-blue">
                 <th>ภาควิชา</th>
-                <th>ชื่อภาควิชา_ภาษาไทย</th>
+                <th>สาขาวิชา</th>
+                <th>สาขาวิชา_ภาษาไทย</th>
                 <th>แก้ไข</th>
                 <th>ลบ</th>
             </tr>
@@ -29,20 +31,23 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td id="TdepartName_@item.DEPARTMENT_ID">
-                        <p>@item.DEPARTMENT_NAME</p>
-                    </td>
-                    <td id="TdepartThaiName_@item.DEPARTMENT_ID">
-                        <p>@item.DEPARTMENT_THAI_NAME</p>
-                    </td>
-                    <td>
-                        <a href="#" onclick="EditRecord(@item.DEPARTMENT_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
-                    </td>
-                    <td>
-                        <a href="#" onclick="DeleteRecord(@item.DEPARTMENT_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
-                    </td>
-                </tr>
+            <tr>
+                <td id="TdepartName_@item.COURSE_ID">
+                    <p>@item.DEPARTMENT_NAME</p>
+                </td>
+                <td id="TcdepartName_@item.COURSE_ID">
+                    <p>@item.COURSE_NAME</p>
+                </td>
+                <td id="TdepartThaiName_@item.COURSE_ID">
+                    <p>@item.COURSE_THAI_NAME</p>
+                </td>
+                <td>
+                    <a href="#" onclick="EditRecord(@item.COURSE_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                </td>
+                <td>
+                    <a href="#" onclick="DeleteRecord(@item.COURSE_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -57,11 +62,13 @@
             </header>
             <div class="container form-horizontal">
                 <div class="w3-section">
-                    @Html.Hidden("DEPARTMENT_ID", 0)
+                    @Html.Hidden("COURSE_ID", 0)
                     <label>ภาควิชา</label>
                     @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ภาควิชา", @style = "max-width:570px" })
-                    <label>ภาควิชา(ภาษาไทย)</label>
-                    @Html.TextBox("DEPARTMENT_THAI_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ภาควิชา(ภาษาไทย)", @style = "max-width:570px" })
+                    <label>ภาควิชา</label>
+                    @Html.TextBox("COURSE_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "สาขาวิชา", @style = "max-width:570px" })
+                    <label>สาขาวิชา(ภาษาไทย)</label>
+                    @Html.TextBox("COURSE_THAI_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "สาขาวิชา(ภาษาไทย)", @style = "max-width:570px" })
                 </div>
 
             </div>
@@ -83,9 +90,9 @@
             <div class="modal-body">
                 <h4>Are You Sure? You Want To Delete This Record.</h4>
                 <div class="modal-footer">
-                    @using (Html.BeginForm("DeleteDepartment", "Data", FormMethod.Post))
+                    @using (Html.BeginForm("DeleteCourse", "Data", FormMethod.Post))
                     {
-                        @Html.Hidden("Del_DEPARTMENT_ID", "")
+                        @Html.Hidden("Del_COURSE_ID", "")
                         <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
                         <input type="submit" value="Delete" href="#" class="btn btn-danger">
                     }
@@ -98,22 +105,24 @@
 
 <script>
     //Show The Popup Modal
-    function AddNew(DEPARTMENT_ID) {
-        $("#DEPARTMENT_ID").val(0);
+    function AddNew(COURSE_ID) {
+        $("#COURSE_ID").val(0);
         $("#DEPARTMENT_NAME").val("");
-        $("#DEPARTMENT_THAI_NAME").val("");
+        $("#COURSE_NAME").val("");
+        $("#COURSE_THAI_NAME").val("");
         $("#ModalTitle").html("Add New Department");
         $("#MyModal").css('display', 'block');
     }
-    function EditRecord(DEPARTMENT_ID) {
-        $("#DEPARTMENT_ID").val(DEPARTMENT_ID);
-        $("#DEPARTMENT_NAME").val($("#TdepartName_" + DEPARTMENT_ID + " p").html().trim());
-        $("#DEPARTMENT_THAI_NAME").val($("#TdepartThaiName_" + DEPARTMENT_ID + " p").html().trim());
+    function EditRecord(COURSE_ID) {
+        $("#COURSE_ID").val(COURSE_ID);
+        $("#DEPARTMENT_NAME").val($("#TdepartName_" + COURSE_ID + " p").html().trim());
+        $("#COURSE_NAME").val($("#TcdepartName_" + COURSE_ID + " p").html().trim());
+        $("#DEPARTMENT_THAI_NAME").val($("#TdepartThaiName_" + COURSE_ID + " p").html().trim());
         $("#ModalTitle").html("Update Department Record");
         $("#MyModal").css('display', 'block');
     }
-    function DeleteRecord(DEPARTMENT_ID) {
-        $("#Del_DEPARTMENT_ID").val(DEPARTMENT_ID);
+    function DeleteRecord(COURSE_ID) {
+        $("#Del_COURSE_ID").val(COURSE_ID);
         $("#DeleteConfirmation").modal("show");
     }
     $(document).ready(function () {

@@ -74,12 +74,11 @@
                 <td colspan="5" style="padding-right:1em">
                     @Html.DropDownList("ddl_Semester", (SelectList)ViewBag.ddl_Semester, new { @class = "form-control", style = "width:70px" })
                 </td>
-                <td align="right"><b>ภาควิชา&nbsp;</b></td>
+                <td align="right"><b>สาขาวิชา&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
                     @Html.DropDownList("DDL_DEPARTMENT", (SelectList)ViewBag.ddl_Department, new { @class = "form-control", style = "" })
                     @Html.Hidden("Count", 0)
                 </td>
-                <td align="right"><b>สาขาวิชา&nbsp;</b></td>
                 <td colspan="5">@Html.DropDownList("DDL_BRANCH", (SelectList)ViewBag.ddl_Branch, new { @class = "form-control", style = "" })</td>
             </tr>
         </tbody>

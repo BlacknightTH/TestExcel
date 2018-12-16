@@ -255,8 +255,7 @@ namespace TestExcel.Controllers
         public ActionResult SaveProfessor(FormCollection collection)
         {
             int PROFESSOR_ID = int.Parse(collection["PROFESSOR_ID"]);
-            string PROFESSOR_FIRSTNAME = collection["PROFESSOR_FIRSTNAME"];
-            string PROFESSOR_LASTNAME = collection["PROFESSOR_LASTNAME"];
+            string PROFESSOR_NAME = collection["PROFESSOR_NAME"];
             string PROFESSOR_SHORTNAME = collection["PROFESSOR_SHORTNAME"];
             string PROFESSOR_STATUS = collection["PROFESSOR_STATUS"];
             string DEPARTMENT_NAME = collection["DEPARTMENT_NAME"];
@@ -268,8 +267,7 @@ namespace TestExcel.Controllers
                     var edit = db.PROFESSORs.Where(x => x.PROFESSOR_ID == PROFESSOR_ID).FirstOrDefault();
                     if (edit != null)
                     {
-                        edit.PROFESSOR_FIRSTNAME = PROFESSOR_FIRSTNAME;
-                        edit.PROFESSOR_LASTNAME = PROFESSOR_LASTNAME;
+                        edit.PROFESSOR_NAME = PROFESSOR_NAME;
                         edit.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
                         edit.PROFESSOR_STATUS = PROFESSOR_STATUS;
                         edit.DEPARTMENT_NAME = DEPARTMENT_NAME;
@@ -279,8 +277,7 @@ namespace TestExcel.Controllers
                 {
                     //Add
                     var item = new PROFESSOR();
-                    item.PROFESSOR_FIRSTNAME = PROFESSOR_FIRSTNAME;
-                    item.PROFESSOR_LASTNAME = PROFESSOR_LASTNAME;
+                    item.PROFESSOR_NAME = PROFESSOR_NAME;
                     item.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
                     item.PROFESSOR_STATUS = PROFESSOR_STATUS;
                     item.DEPARTMENT_NAME = DEPARTMENT_NAME;
@@ -308,58 +305,61 @@ namespace TestExcel.Controllers
             return RedirectToAction("Professor");
         }
         #endregion
-        #region Department
-        public ActionResult Department()
+        #region Course
+        public ActionResult Course()
         {
-            var model = db.DEPARTMENTs.ToList();
+            var model = db.COURSEs.ToList();
             return View(model);
         }
         [HttpPost]
-        public ActionResult SaveDepartment(FormCollection collection)
+        public ActionResult SaveCourse(FormCollection collection)
         {
-            int DEPARTMENT_ID = int.Parse(collection["DEPARTMENT_ID"]);
+            int COURSE_ID = int.Parse(collection["COURSE_ID"]);
+            string COURSE_NAME = collection["COURSE_NAME"];
             string DEPARTMENT_NAME = collection["DEPARTMENT_NAME"];
-            string DEPARTMENT_THAI_NAME = collection["DEPARTMENT_THAI_NAME"];
-            if (ModelState.IsValid && DEPARTMENT_NAME != "")
+            string COURSE_THAI_NAME = collection["COURSE_THAI_NAME"];
+            if (ModelState.IsValid && COURSE_NAME != "")
             {
-                if (DEPARTMENT_ID > 0)
+                if (COURSE_ID > 0)
                 {
                     //Edit
-                    var edit = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == DEPARTMENT_ID).FirstOrDefault();
+                    var edit = db.COURSEs.Where(x => x.COURSE_ID == COURSE_ID).FirstOrDefault();
                     if (edit != null)
                     {
                         edit.DEPARTMENT_NAME = DEPARTMENT_NAME;
-                        edit.DEPARTMENT_THAI_NAME = DEPARTMENT_THAI_NAME;
+                        edit.COURSE_NAME = COURSE_NAME;
+                        edit.COURSE_THAI_NAME = COURSE_THAI_NAME;
                     }
                 }
                 else
                 {
                     //Add
-                    var item = new DEPARTMENT();
+                    var item = new COURSE();
                     item.DEPARTMENT_NAME = DEPARTMENT_NAME;
-                    item.DEPARTMENT_THAI_NAME = DEPARTMENT_THAI_NAME;
-                    db.DEPARTMENTs.Add(item);
+                    item.COURSE_NAME = COURSE_NAME;
+                    item.COURSE_THAI_NAME = COURSE_THAI_NAME;
+                    db.COURSEs.Add(item);
                 }
                 db.SaveChanges();
 
             }
-            return RedirectToAction("Department");
+            return RedirectToAction("Course");
         }
         [HttpPost]
-        public ActionResult DeleteDepartment(FormCollection collection)
+        public ActionResult DeleteCourse(FormCollection collection)
         {
-            int DEPARTMENT_ID = int.Parse(collection["Del_DEPARTMENT_ID"]);
-            var del = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == DEPARTMENT_ID).FirstOrDefault();
+            int COURSE_ID = int.Parse(collection["Del_COURSE_ID"]);
+            var del = db.COURSEs.Where(x => x.COURSE_ID == COURSE_ID).FirstOrDefault();
             if (del != null)
             {
-                db.DEPARTMENTs.Remove(del);
+                db.COURSEs.Remove(del);
                 db.SaveChanges();
             }
             else
             {
                 return HttpNotFound();
             }
-            return RedirectToAction("Department");
+            return RedirectToAction("Course");
         }
         #endregion
         #region Building
@@ -431,8 +431,8 @@ namespace TestExcel.Controllers
         {
             int BranchId = int.Parse(collection["BRANCH_ID"]);
             string BranchName = collection["BRANCH_NAME"];
-            string DepartName = collection["DEPARTMENT_NAME"];
-            if (ModelState.IsValid && BranchName != "" && DepartName != "")
+            string CourseName = collection["DEPARTMENT_NAME"];
+            if (ModelState.IsValid && BranchName != "" && CourseName != "")
             {
                 if(BranchId > 0)
                 {
@@ -441,7 +441,7 @@ namespace TestExcel.Controllers
                     if (edit != null)
                     {
                         edit.BRANCH_NAME = BranchName;
-                        edit.DEPARTMENT_NAME = DepartName;
+                        edit.COURSE_NAME = CourseName;
                     }
                 }
                 else
@@ -449,7 +449,7 @@ namespace TestExcel.Controllers
                     //Add
                     var item = new BRANCH();
                     item.BRANCH_NAME = BranchName;
-                    item.DEPARTMENT_NAME = DepartName;
+                    item.COURSE_NAME = CourseName;
                     db.BRANCHes.Add(item);
                 }
                 db.SaveChanges();

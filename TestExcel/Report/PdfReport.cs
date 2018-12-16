@@ -33,6 +33,7 @@ namespace TestExcel.Report
         List<Section_Subject> _section_subject = new List<Section_Subject>();
         List<Building_Classroom> _building_classroom = new List<Building_Classroom>();
         List<Department_Branch> _department_branch = new List<Department_Branch>();
+        List<Section_Professor> _professor = new List<Section_Professor>();
         string Semester, Year, Branch_Name, department_name, day, BUILDING;
         #endregion
 
@@ -60,13 +61,13 @@ namespace TestExcel.Report
             section_subject = query.ToList();
             return section_subject;
         }
-        public List<Section_Subject> PGetData(string semester, string year)
+        public List<Section_Subject> PGetData(string professor,string semester, string year)
         {
             List<Section_Subject> section_subject = new List<Section_Subject>();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         join e3 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e3.PROFESSOR_SHORTNAME
-                        where e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                        where e1.SECTION_PROFESSOR_SHORTNAME.Contains(professor) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {
                             SECTION_ID = e1.SECTION_ID,
@@ -166,8 +167,14 @@ namespace TestExcel.Report
                         var TIME_END = int.Parse(tmp_TIME_END.ToString());
                         var TIME = TIME_END - TIME_START;
                         tmp = Tetemp(TIME);
+
+                        string SECTION_NUMBER = "";
+                        if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+                        {
+                            SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+                        }
                         //_pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
-                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                         _pdfPCell.Colspan = TIME;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -189,9 +196,14 @@ namespace TestExcel.Report
                         }
                         else if (tmpl_first == tmpl_last)
                         {
+                            string SECTION_NUMBER = "";
+                            if (first.SECTION_BRANCH_NAME != "")
+                            {
+                                SECTION_NUMBER = "/" + first.SECTION_NUMBER;
+                            }
                             var TIME = tmp_last - tmp_first;
                             tmp = Tetemp(TIME);
-                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/\n" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + SECTION_NUMBER + "/\n" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                             //_pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + tmp + second.SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -207,7 +219,12 @@ namespace TestExcel.Report
                             var TIME_END = int.Parse(tmp_TIME_END.ToString());
                             var TIME = TIME_END - TIME_START;
                             tmp = Tetemp(TIME);
-                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                            string SECTION_NUMBER = "";
+                            if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+                            {
+                                SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+                            }
+                            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                             //_pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
                             _pdfPCell.Colspan = TIME;
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -992,7 +1009,6 @@ namespace TestExcel.Report
         {
             Semester = semester;
             Year = year;
-
             #region T
             _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
             _document.SetPageSize(PageSize.A4.Rotate());
@@ -1006,20 +1022,36 @@ namespace TestExcel.Report
             _pdfTable3.SetWidths(new float[] { 15f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,20f, 20f, 20f, 20f, 20f, 20f,
                                                 22f, 30f, 32f, 38f, 20f});
             #endregion
-            _section_subject = PGetData(Semester, Year);
-            var professor = (from e1 in db.SECTIONs
-                             join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
-                             //where e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
-                             where e2.DEPARTMENT_NAME == department && e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
-                             select new Section_Professor
-                             {
-                                 PROFESSOR_ID = e2.PROFESSOR_ID,
-                                 SECTION_PROFESSOR_SHORTNAME = e2.PROFESSOR_SHORTNAME
-                             }).OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
+            if (department == "")
+            {
+                _professor = (from e1 in db.SECTIONs
+                              join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
+                              //where e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
+                              where (e2.DEPARTMENT_NAME == null || e2.DEPARTMENT_NAME == "") && e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
+                              select new Section_Professor
+                              {
+                                  PROFESSOR_ID = e2.PROFESSOR_ID,
+                                  SECTION_PROFESSOR_SHORTNAME = e2.PROFESSOR_SHORTNAME
+                              }).ToList();
+            }
+            else
+            {
+                _professor = (from e1 in db.SECTIONs
+                              join e2 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e2.PROFESSOR_SHORTNAME
+                              //where e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
+                              where e2.DEPARTMENT_NAME == department && e1.SEMESTER.Contains(Semester) && e1.YEAR.Contains(Year)
+                              select new Section_Professor
+                              {
+                                  PROFESSOR_ID = e2.PROFESSOR_ID,
+                                  SECTION_PROFESSOR_SHORTNAME = e2.PROFESSOR_SHORTNAME
+                              }).ToList();
+            }
+            var professor = _professor.OrderBy(x => x.SECTION_PROFESSOR_SHORTNAME);
 
             #region Query
             foreach (var item in professor.Select(x => new { x.PROFESSOR_ID, x.SECTION_PROFESSOR_SHORTNAME }).Distinct())
             {
+                _section_subject = PGetData(item.SECTION_PROFESSOR_SHORTNAME,Semester, Year);
                 #region Header
                 THSarabunfnt = new Font(bf, 18, 1);
                 _pdfPCell = new PdfPCell(new Phrase("\nภาระการสอน", THSarabunfnt));
@@ -1150,95 +1182,121 @@ namespace TestExcel.Report
 
                     for (int d = 8; d <= 20; d++)
                     {
-                        THSarabunfnt = new Font(bf, 12, 0);
-                        _pdfPCell = new PdfPCell(new Phrase(" ", THSarabunfnt));
-                        _pdfPCell.HorizontalAlignment = Element.ALIGN_MIDDLE;
-                        _pdfPCell.VerticalAlignment = Element.ALIGN_TOP;
-                        _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        _pdfTable3.AddCell(_pdfPCell);
-                        //var WhereTimeDate = _section_subject.Where(x => x.SECTION_TIME_START == d && x.SECTION_DATE == date[c] && x.SECTION_PROFESSOR_SHORTNAME.Contains(item.SECTION_PROFESSOR_SHORTNAME));
-                        //var check = WhereTimeDate.LastOrDefault();
-                        //var check1 = _section_subject.Where(x => x.SECTION_TIME_START <= d && x.SECTION_TIME_END > d && x.SECTION_DATE == date[c]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
-                        //if (check != null)
-                        //{
-                        //    var trigger = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[c]).Count();
-                        //    if (trigger == 1)
-                        //    {
-                        //        var tmp_TIME_START = check.SECTION_TIME_START;
-                        //        var tmp_TIME_END = check.SECTION_TIME_END;
-                        //        var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                        //        var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                        //        var TIME = TIME_END - TIME_START;
-                        //        tmp = temp(TIME);
+                        var WhereTimeDate = _section_subject.Where(x => x.SECTION_TIME_START == d && x.SECTION_DATE == date[c]);
+                        var check = WhereTimeDate.LastOrDefault();
+                        var check1 = _section_subject.Where(x => x.SECTION_TIME_START <= d && x.SECTION_TIME_END > d && x.SECTION_DATE == date[c]).OrderBy(x => x.SECTION_TIME_START).LastOrDefault();
+                        if (check != null)
+                        {
+                            var trigger = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[c]).Count();
+                            if (trigger == 1)
+                            {
+                                string SECTION_NUMBER = "";
+                                if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+                                {
+                                    SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+                                }
+                                var tmp_TIME_START = check.SECTION_TIME_START;
+                                var tmp_TIME_END = check.SECTION_TIME_END;
+                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME = TIME_END - TIME_START;
+                                tmp = temp(TIME);
 
-                        //        THSarabunfnt = new Font(bf, 12, 0);
-                        //        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
-                        //        _pdfPCell.Colspan = TIME;
-                        //        _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //        _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        //        _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        //        _pdfTable3.AddCell(_pdfPCell);
+                                if (TIME == 1)
+                                {
+                                    THSarabunfnt = new Font(bf, 10, 1);
+                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_BRANCH_NAME + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_CLASSROOM, THSarabunfnt));
+                                }
+                                else
+                                {
+                                    THSarabunfnt = new Font(bf, 12, 1);
+                                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_BRANCH_NAME + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_CLASSROOM, THSarabunfnt));
+                                }
+                                _pdfPCell.Colspan = TIME;
+                                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _pdfPCell.VerticalAlignment = Element.ALIGN_TOP;
+                                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                _pdfTable3.AddCell(_pdfPCell);
 
-                        //    }
-                        //    else if (trigger == 2)
-                        //    {
-                        //        var first = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_PROFESSOR_SHORTNAME.Contains(item.SECTION_PROFESSOR_SHORTNAME)).First();
-                        //        var second = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_PROFESSOR_SHORTNAME.Contains(item.SECTION_PROFESSOR_SHORTNAME)).Last();
-                        //        int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                        //        int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                            }
+                            else if (trigger >= 2)
+                            {
+                                var first = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
+                                var second = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
+                                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
+                                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
 
-                        //        int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                        //        int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
-                        //        if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
-                        //        {
+                                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
+                                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
 
-                        //        }
-                        //        else if (tmpl_first == tmpl_last)
-                        //        {
-                        //            var TIME = tmp_last - tmp_first;
-                        //            tmp = temp(TIME);
-                        //            THSarabunfnt = new Font(bf, 12, 0);
-                        //            _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/\n" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
-                        //            _pdfPCell.Colspan = TIME;
-                        //            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //            _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        //            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        //            _pdfTable3.AddCell(_pdfPCell);
-                        //        }
-                        //        else if (tmpl_first != tmpl_last)
-                        //        {
-                        //            var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                        //            var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                        //            var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                        //            var TIME_END = int.Parse(tmp_TIME_END.ToString());
-                        //            var TIME = TIME_END - TIME_START;
-                        //            tmp = temp(TIME);
+                                if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
+                                {
 
-                        //            THSarabunfnt = new Font(bf, 12, 0);
-                        //            _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
-                        //            _pdfPCell.Colspan = TIME;
-                        //            _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //            _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        //            _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        //            _pdfTable3.AddCell(_pdfPCell);
-                        //        }
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    if (check1 == null)
-                        //    {
-                        //        THSarabunfnt = new Font(bf, 12, 0);
-                        //        _pdfPCell = new PdfPCell(new Phrase("\n\n\n", THSarabunfnt));
-                        //        _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //        _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        //        _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        //        _pdfTable3.AddCell(_pdfPCell);
-                        //    }
-                        //    else
-                        //    {
-                        //    }
-                        //}
+                                }
+                                else if (tmpl_first == tmpl_last)
+                                {
+                                    string SECTION_NUMBER = "";
+                                    if (first.SECTION_BRANCH_NAME != "")
+                                    {
+                                        SECTION_NUMBER = "/" + first.SECTION_NUMBER;
+                                    }
+                                    var TIME = tmp_last - tmp_first;
+                                    tmp = temp(TIME);
+                                    THSarabunfnt = new Font(bf, 12, 1);
+                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + SECTION_NUMBER + "\n/" + first.SECTION_BRANCH_NAME + "/" + first.SECTION_CLASSROOM, THSarabunfnt));
+                                    _pdfPCell.Colspan = TIME;
+                                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _pdfPCell.VerticalAlignment = Element.ALIGN_TOP;
+                                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                    _pdfTable3.AddCell(_pdfPCell);
+                                }
+                                else if (tmpl_first != tmpl_last)
+                                {
+                                    var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
+                                    var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
+                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
+                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME = TIME_END - TIME_START;
+                                    tmp = temp(TIME);
+
+                                    string SECTION_NUMBER = "";
+                                    if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+                                    {
+                                        SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+                                    }
+                                    if (TIME == 1)
+                                    {
+                                        THSarabunfnt = new Font(bf, 10, 1);
+                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_BRANCH_NAME + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_CLASSROOM, THSarabunfnt));
+                                    }
+                                    else
+                                    {
+                                        THSarabunfnt = new Font(bf, 12, 1);
+                                        _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_BRANCH_NAME + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_CLASSROOM, THSarabunfnt));
+                                    }
+                                    _pdfPCell.Colspan = TIME;
+                                    _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _pdfPCell.VerticalAlignment = Element.ALIGN_TOP;
+                                    _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                    _pdfTable3.AddCell(_pdfPCell);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (check1 == null)
+                            {
+                                THSarabunfnt = new Font(bf, 12, 0);
+                                _pdfPCell = new PdfPCell(new Phrase("\n\n\n", THSarabunfnt));
+                                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                _pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                _pdfTable3.AddCell(_pdfPCell);
+                            }
+                            else
+                            {
+                            }
+                        }
                     }
                     if(c == 6)
                     {
@@ -1365,12 +1423,12 @@ namespace TestExcel.Report
             department_name = Department_name;
             //_db = db;
             var model = from e1 in db.BRANCHes
-                        join e2 in db.DEPARTMENTs on e1.DEPARTMENT_NAME equals e2.DEPARTMENT_NAME
+                        join e2 in db.COURSEs on e1.COURSE_NAME equals e2.COURSE_NAME
                         select new Department_Branch
                         {
                             BRANCH_NAME = e1.BRANCH_NAME,
-                            DEPARTMENT_NAME = e1.DEPARTMENT_NAME,
-                            DEPARTMENT_THAI_NAME = e2.DEPARTMENT_THAI_NAME
+                            COURSE_NAME = e1.COURSE_NAME,
+                            COURSE_THAI_NAME = e2.COURSE_THAI_NAME
                         };
             _department_branch = model.ToList();
 
@@ -1394,7 +1452,7 @@ namespace TestExcel.Report
                                                 20f, 20f, 20f, 20f, 20f, 20f, 20f});
             #endregion
 
-            foreach (var q in _department_branch.Where(x => x.DEPARTMENT_NAME == department_name).ToList())
+            foreach (var q in _department_branch.Where(x => x.COURSE_NAME == department_name).ToList())
             {
                 Branch_Name = q.BRANCH_NAME;
                 _section_subject = GetModel(Branch_Name, Semester, Year);
@@ -1454,7 +1512,7 @@ namespace TestExcel.Report
                     if (department_name == "MDET" || department_name == "EnET" || department_name == "TDET" || department_name == "InET" || department_name == "PnET")
                     {
                         THSarabunfnt = new Font(bf, 16, 0);
-                        _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME, THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.COURSE_THAI_NAME, THSarabunfnt));
                         _pdfPCell.Colspan = _totalColumn;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.Border = 0;
@@ -1463,7 +1521,7 @@ namespace TestExcel.Report
                         _pdfTable.AddCell(_pdfPCell);
                         _pdfTable.CompleteRow();
 
-                        if (q.DEPARTMENT_NAME == "MDET")
+                        if (q.COURSE_NAME == "MDET")
                         {
                             if (Branch_Name.Contains("(M)"))
                             {
@@ -1490,7 +1548,7 @@ namespace TestExcel.Report
                                 _pdfTable.CompleteRow();
                             }
                         }
-                        if (q.DEPARTMENT_NAME == "EnET")
+                        if (q.COURSE_NAME == "EnET")
                         {
                             if (Branch_Name.Contains("(T)"))
                             {
@@ -1541,7 +1599,7 @@ namespace TestExcel.Report
                                 _pdfTable.CompleteRow();
                             }
                         }
-                        if (q.DEPARTMENT_NAME == "TDET")
+                        if (q.COURSE_NAME == "TDET")
                         {
                             if (Branch_Name.Contains("(P)"))
                             {
@@ -1568,7 +1626,7 @@ namespace TestExcel.Report
                                 _pdfTable.CompleteRow();
                             }
                         }
-                        if (q.DEPARTMENT_NAME == "InET")
+                        if (q.COURSE_NAME == "InET")
                         {
                             if (Branch_Name.Contains("(M)"))
                             {
@@ -1595,7 +1653,7 @@ namespace TestExcel.Report
                                 _pdfTable.CompleteRow();
                             }
                         }
-                        if (q.DEPARTMENT_NAME == "PnET")
+                        if (q.COURSE_NAME == "PnET")
                         {
                             if (Branch_Name.Contains("(PE)"))
                             {
@@ -1626,7 +1684,7 @@ namespace TestExcel.Report
                     else
                     {
                         THSarabunfnt = new Font(bf, 16, 0);
-                        _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.DEPARTMENT_THAI_NAME + " " + Branch_Name, THSarabunfnt));
+                        _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.COURSE_THAI_NAME + " " + Branch_Name, THSarabunfnt));
                         _pdfPCell.Colspan = _totalColumn;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                         _pdfPCell.Border = 0;
@@ -2142,8 +2200,12 @@ namespace TestExcel.Report
                                 else if (tmpl_first == tmpl_last)
                                 {
                                     var TIME = tmp_last - tmp_first;
-
-                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + "/" + first.SECTION_NUMBER + "/" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                                    string SECTION_NUMBER = "";
+                                    if (first.SECTION_BRANCH_NAME != "")
+                                    {
+                                        SECTION_NUMBER = "/" + first.SECTION_NUMBER;
+                                    }
+                                    _pdfPCell = new PdfPCell(new Phrase(first.SUBJECT_ID + SECTION_NUMBER + "/" + first.SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                                     _pdfPCell.Colspan = TIME;
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -2194,10 +2256,15 @@ namespace TestExcel.Report
         }
         public void ClBody(int TIME, IEnumerable<Building_Classroom> WhereTimeDate)
         {
+            string SECTION_NUMBER = "";
+            if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+            {
+                SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+            }
             if (TIME == 1)
             {
                 THSarabunfnt = new Font(bf, 14, 0);
-                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                 _pdfPCell.Colspan = TIME;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -2206,7 +2273,12 @@ namespace TestExcel.Report
             }
             else if (TIME == 2)
             {
-                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/\n" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                string SECTION_NUMBER2 = "";
+                if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
+                {
+                    SECTION_NUMBER2 = "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
+                }
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + SECTION_NUMBER2 + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                 _pdfPCell.Colspan = TIME;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -2217,7 +2289,7 @@ namespace TestExcel.Report
             {
                 if (WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Length <= 3)
                 {
-                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                     _pdfPCell.Colspan = TIME;
                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -2226,7 +2298,7 @@ namespace TestExcel.Report
                 }
                 else
                 {
-                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/\n" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                    _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + SECTION_NUMBER + "/\n" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                     _pdfPCell.Colspan = TIME;
                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -2236,7 +2308,7 @@ namespace TestExcel.Report
             }
             else
             {
-                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + "/" + WhereTimeDate.First().SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
+                _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.First().SUBJECT_ID + SECTION_NUMBER + "/" + WhereTimeDate.First().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                 _pdfPCell.Colspan = TIME;
                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;

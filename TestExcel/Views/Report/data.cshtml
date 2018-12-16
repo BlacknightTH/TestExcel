@@ -160,8 +160,9 @@
                             <select class="w3-select w3-border" id="department" name="department">
                                 @foreach (var item in Model)
                                 {
-                                    <option value="@item.DEPARTMENT_NAME">@item.DEPARTMENT_NAME @item.DEPARTMENT_THAI_NAME</option>
+                                    <option value="@item.DEPARTMENT_ID">@item.DEPARTMENT_NAME</option>
                                 }
+                                <option value="0">อื่น ๆ</option>
                             </select>
                             <label class="w3-margin-top">ภาคการศึกษา</label>
                             <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
@@ -197,7 +198,7 @@
                             <div class="w3-container">
                                 <div class="w3-container">
                                     <label class="w3-margin-top">ภาควิชา</label>
-                                    @Html.DropDownList("department_name", (SelectList)ViewBag.ddl_Department, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
+                                    @Html.DropDownList("course_name", (SelectList)ViewBag.ddl_Course, new { @class = "w3-input w3-border w3-margin-bottom", style = "" })
                                     <label>ภาคการศึกษา</label>
                                     <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
                                         <option value="1">1</option>

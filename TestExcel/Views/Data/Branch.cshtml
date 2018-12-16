@@ -9,6 +9,7 @@
     <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
     <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
     <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/Data/Course" style="color:blue;font-size:20px">หลักสูตร |</a>
     <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
     <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ </a>
     @*<a href="~/Data/Member" style="color:blue;font-size:20px">User</a>*@
@@ -32,7 +33,7 @@
                 {
                     <tr>
                         <td id="TdepartName_@item.BRANCH_ID">
-                            <p>@item.DEPARTMENT_NAME</p>
+                            <p>@item.COURSE_NAME</p>
                         </td>
                         <td id="TbranchName_@item.BRANCH_ID">
                             <p>@item.BRANCH_NAME</p>
@@ -62,7 +63,7 @@
                 <div class="w3-section">
                     @Html.Hidden("BRANCH_ID", 0)
                     <label>ภาควิชา</label>
-                    @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
+                    @Html.TextBox("COURSE_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "DEPARTMENT_NAME", @style = "max-width:570px" })
                     <label>สาขาวิชา</label>
                     @Html.TextBox("BRANCH_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
@@ -104,14 +105,14 @@
         function AddNew(BranchId) {
             $("#BRANCH_ID").val(0);
             $("#BRANCH_NAME").val("");
-            $("#DEPARTMENT_NAME").val("");
+            $("#COURSE_NAME").val("");
             $("#ModalTitle").html("Add New Branch");
             $("#MyModal").css('display', 'block');
         }
         function EditRecord(BranchId) {
             $("#BRANCH_ID").val(BranchId);
             $("#BRANCH_NAME").val($("#TbranchName_" + BranchId + " p").html().trim());
-            $("#DEPARTMENT_NAME").val($("#TdepartName_" + BranchId + " p").html().trim());
+            $("#COURSE_NAME").val($("#TdepartName_" + BranchId + " p").html().trim());
             $("#ModalTitle").html("Update Branch Record");
             $("#MyModal").css('display', 'block');
         }

@@ -34,21 +34,21 @@ namespace TestExcel.Controllers
             string first_Year;
             first_Year = "2560";
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
-            ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
+            ViewBag.ddl_Course = new SelectList(db.COURSEs.ToList(), "COURSE_NAME", "COURSE_NAME");
             return View(model);
         }
         [HttpPost]
         public ActionResult Report(FormCollection collection)
         {
-            string department_name = collection["department_name"];
+            string course_name = collection["course_name"];
             string semester = collection["semester"];
             string year = collection["year"];
-            string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department_name + ".pdf";
+            string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + course_name + ".pdf";
             string FileName = Path.GetFileName(FilePath);
             PdfReport pdfReport = new PdfReport();
             try
             {
-                byte[] abytes = pdfReport.PrepareReport(department_name, semester, year);
+                byte[] abytes = pdfReport.PrepareReport(course_name, semester, year);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
@@ -58,14 +58,19 @@ namespace TestExcel.Controllers
         }
         public ActionResult PfReport(FormCollection collection)
         {
-            string department = collection["department"];
+            int department_id = int.Parse(collection["department"]);
             string semester = collection["semester"];
             string year = collection["year"];
-            string FilePath = @"C:\\ภาระการสอน_" + semester + "-" + year + ".pdf";
-            string FileName = Path.GetFileName(FilePath);
             PdfReport pdfReport = new PdfReport();
             try
             {
+                var department = "";
+                if (department_id != 0)
+                {
+                    department = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == department_id).First().DEPARTMENT_NAME.Trim();
+                }
+                string FilePath = @"C:\\ภาระการสอน_" + department + "_" + semester + "-" + year + ".pdf";
+                string FileName = Path.GetFileName(FilePath);
                 byte[] abytes = pdfReport.PfPrepareReport(department, semester, year);
                 //return File(abytes, "application/pdf");
                 return File(abytes, "application/pdf", FileName);
@@ -528,16 +533,6 @@ namespace TestExcel.Controllers
             }
             else
             {
-                //var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
-                //                   select new SemesterYear
-                //                   {
-                //                       SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
-                //                       SEMESTER = d1.SEMESTER,
-                //                       YEAR = d1.YEAR
-                //                   };
-                //var first_Year = "2560";
-                //ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
-                //ViewBag.ddl_Department = new SelectList(db.DEPARTMENTs.ToList(), "DEPARTMENT_NAME", "DEPARTMENT_NAME");
                 return RedirectToAction("data");
             }
         }

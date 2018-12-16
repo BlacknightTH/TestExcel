@@ -9,6 +9,7 @@
     <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
     <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
     <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
+    <a href="~/Data/Course" style="color:blue;font-size:20px">หลักสูตร |</a>
     <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
     <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ </a>
     @*<a href="~/Data/Member" style="color:blue;font-size:20px">User</a>*@
@@ -20,8 +21,7 @@
     <table class="w3-table-all" id="DataTable" name="DataTable">
         <thead>
             <tr class="w3-blue">
-                <th>ชื่อจริง</th>
-                <th>นามสกุล</th>
+                <th>ชื่อ</th>
                 <th>อักษรย่ออาจารย์</th>
                 <th>สถานะอาจารย์</th>
                 <th>ภาควิชา</th>
@@ -34,10 +34,7 @@
             {
                 <tr>
                     <td id="TprofessorFirstName_@item.PROFESSOR_ID">
-                        <p>@item.PROFESSOR_FIRSTNAME</p>
-                    </td>
-                    <td id="TprofessorLastName_@item.PROFESSOR_ID">
-                        <p>@item.PROFESSOR_LASTNAME</p>
+                        <p>@item.PROFESSOR_NAME</p>
                     </td>
                     <td id="TprofessorShortName_@item.PROFESSOR_ID">
                         <p>@item.PROFESSOR_SHORTNAME</p>
@@ -71,9 +68,7 @@
                 <div class="w3-section">
                     @Html.Hidden("PROFESSOR_ID", 0)
                     <label>ชื่อ</label>
-                    @Html.TextBox("PROFESSOR_FIRSTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ชื่อจริง", @style = "max-width:570px" })
-                    <label>นามสกุล</label>
-                    @Html.TextBox("PROFESSOR_LASTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "นามสกุล", @style = "max-width:570px" })
+                    @Html.TextBox("PROFESSOR_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ชื่อ", @style = "max-width:570px" })
                     <label>อักษรย่อ</label>
                     @Html.TextBox("PROFESSOR_SHORTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "", @style = "max-width:570px" })
                     <label>สถานะ</label>
@@ -128,8 +123,7 @@
     }
     function EditRecord(PROFESSOR_ID) {
         $("#DEPARTMENT_ID").val(PROFESSOR_ID);
-        $("#PROFESSOR_FIRSTNAME").val($("#TprofessorFirstName_" + PROFESSOR_ID + " p").html().trim());
-        $("#PROFESSOR_LASTNAME").val($("#TprofessorLastName_" + PROFESSOR_ID + " p").html().trim());
+        $("#PROFESSOR_NAME").val($("#TprofessorFirstName_" + PROFESSOR_ID + " p").html().trim());
         $("#PROFESSOR_SHORTNAME").val($("#TprofessorShortName_" + PROFESSOR_ID + " p").html().trim());
         $("#PROFESSOR_STATUS").val($("#TprofessorStatus_" + PROFESSOR_ID + " p").html().trim());
         $("#DEPARTMENT_NAME").val($("#TdepartName_" + PROFESSOR_ID + " p").html().trim());
