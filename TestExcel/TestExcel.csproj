@@ -500,8 +500,8 @@
     <Content Include="fonts\THSarabun Italic.ttf" />
     <Content Include="fonts\THSarabun.ttf" />
     <Content Include="fonts\angsa.ttf" />
-    <Content Include="Content\import\คู่มือการใช้งาน.pdf" />
     <Content Include="Content\import\fin\ขบวน2-2561.xlsx" />
+    <Content Include="Content\import\คู่มือการใช้งาน.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
