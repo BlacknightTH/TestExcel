@@ -386,8 +386,8 @@ namespace TestExcel.Controllers
         {
             SUBJECT SUBJECT = new SUBJECT();
             SECTION SECTION = new SECTION();
-            string first_subject = "";
-            string last_subject = "";
+            var tmp = "";
+            var tmp2 = "";
             IQueryable<Section_Subject> query;
             if (SUBJECTid == null && BR_Semester == null && BR_Year == null)
             {
@@ -396,13 +396,15 @@ namespace TestExcel.Controllers
                 BR_Year = g.YEAR;
                 SUBJECT = db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
                 SECTION = db.SECTIONs.Where(x => x.SUBJECT_ID == SUBJECT.SUBJECT_ID && x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
+                tmp = SUBJECT.SUBJECT_ID;
+                tmp2 = SECTION.SECTION_CLASSROOM;
             }
             else
             {
-                string[] splitsubject = SUBJECTid.Split('_');
-                SECTION = db.SECTIONs.Where(x => x.SECTION_CLASSROOM == classroom).First();
-                first_subject = splitsubject[0];
-                last_subject = splitsubject[1];
+                SUBJECT = db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.SUBJECT_ID == SUBJECTid && x.YEAR == BR_Year).First();
+                SECTION = db.SECTIONs.Where(x => x.SUBJECT_ID == SUBJECT.SUBJECT_ID && x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();
+                tmp = SUBJECTid;
+                tmp2 = classroom;
             }
             if (Message != null)
             {
@@ -423,45 +425,19 @@ namespace TestExcel.Controllers
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "";
             }
-            if (classroom != null)
-            {
-               query = from e1 in db.SECTIONs
-                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where e1.SECTION_CLASSROOM == classroom && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
-                            select new Section_Subject
-                            {
-                                SECTION_ID = e1.SECTION_ID,
-                                SUBJECT_ID = e1.SUBJECT_ID,
-                                SUBJECT_NAME = e2.SUBJECT_NAME,
-                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                                SECTION_NUMBER = e1.SECTION_NUMBER,
-                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                                SECTION_DATE = e1.SECTION_DATE,
-                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                                SECTION_TIME_START = e1.SECTION_TIME_START,
-                                SECTION_TIME_END = e1.SECTION_TIME_END,
-                                SEMESTER = e1.SEMESTER,
-                                YEAR = e1.YEAR,
-                                CRASH = e1.CRASH
-                            };
-                ViewBag.CLASSROOM = " ";
-            }
-            else
-            {
                 query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                        where e1.SUBJECT_ID.Contains(tmp) && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                         select new Section_Subject
                         {
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                         };
                 ViewBag.DDL_building = query.Select(x => x.SECTION_CLASSROOM).Distinct();
-                ViewBag.CLASSROOM = SECTION.SECTION_CLASSROOM;
+                ViewBag.CLASSROOM = tmp2;
 
                 query = from e1 in db.SECTIONs
                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SECTION_CLASSROOM == SECTION.SECTION_CLASSROOM && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                            where e1.SUBJECT_ID.Contains(tmp) && e1.SECTION_CLASSROOM == tmp2 && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
                             select new Section_Subject
                             {
                                 SECTION_ID = e1.SECTION_ID,
@@ -479,7 +455,6 @@ namespace TestExcel.Controllers
                                 YEAR = e1.YEAR,
                                 CRASH = e1.CRASH
                             };
-            }
             var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
@@ -503,7 +478,7 @@ namespace TestExcel.Controllers
             ViewBag.dataID = ID;
             int t = query.Count();
             ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
-            ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
+            ViewBag.SUBJECT = tmp;
             ViewBag.Semester = BR_Semester;
             ViewBag.Year = BR_Year;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
@@ -521,7 +496,6 @@ namespace TestExcel.Controllers
             var ddl_Semester = collection["ddl_Semester"];
             var ddl_Year = collection["ddl_Year"];
             var ddl_classroom = collection["ddl_classroom"];
-
             SUBJECT = db.SUBJECTs.Where(x => x.SUBJECT_ID == DDL_SUBJECT).First();
 
             var query = from e1 in db.SECTIONs
@@ -541,8 +515,20 @@ namespace TestExcel.Controllers
                         {
                             SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
                         };
+                ddl_classroom = query.FirstOrDefault().SECTION_CLASSROOM;
+            }
+            else
+            {
+                foreach (var i in query)
+                {
+                    if (i.SECTION_CLASSROOM == ddl_classroom)
+                    {
+                        ddl_classroom = i.SECTION_CLASSROOM;
+                    }
+                }
             }
             ViewBag.DDL_building = query.Select(x => x.SECTION_CLASSROOM).Distinct();
+            ViewBag.CLASSROOM = ddl_classroom;
             query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
                         where e1.SUBJECT_ID.Contains(SUBJECT.SUBJECT_ID) && e1.SECTION_CLASSROOM == ddl_classroom && e1.SEMESTER.Contains(ddl_Semester) && e2.SEMESTER.Contains(ddl_Semester) && e1.YEAR.Contains(ddl_Year) && e2.YEAR.Contains(ddl_Year)
@@ -580,11 +566,87 @@ namespace TestExcel.Controllers
             ViewBag.SUBJECT = DDL_SUBJECT;
             ViewBag.Semester = ddl_Semester;
             ViewBag.Year = ddl_Year;
-            ViewBag.CLASSROOM = ddl_classroom;
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
             ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == ddl_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", ddl_Semester);
             ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.Where(x => x.SEMESTER == ddl_Semester && x.YEAR == ddl_Year).ToList(), "SUBJECT_ID", "SUBJECT_ID", DDL_SUBJECT);
             ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", DDL_SUBJECT);
+            return View(query);
+        }
+        public ActionResult ReportSchedule(string id, string classroom, string SUBJECTid, string BR_Semester, string BR_Year, string Message)
+        {
+            SUBJECT SUBJECT = new SUBJECT();
+            SECTION SECTION = new SECTION();
+            IQueryable<Section_Subject> query;
+            if (Message != null)
+            {
+                CheckMessage = int.Parse(Message);
+            }
+            if (CheckMessage == 1)
+            {
+                ViewBag.Message = "Save Success";
+                ViewBag.ErrorMessage = "";
+            }
+            else if (CheckMessage == 2)
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "Error";
+            }
+            else
+            {
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "";
+            }
+                query = from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_CLASSROOM == classroom && e1.SEMESTER.Contains(BR_Semester) && e2.SEMESTER.Contains(BR_Semester) && e1.YEAR.Contains(BR_Year) && e2.YEAR.Contains(BR_Year)
+                        select new Section_Subject
+                        {
+                            SECTION_ID = e1.SECTION_ID,
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR,
+                            CRASH = e1.CRASH
+                        };
+                ViewBag.CLASSROOM = " ";
+            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+                               select new SemesterYear
+                               {
+                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                   SEMESTER = d1.SEMESTER,
+                                   YEAR = d1.YEAR
+                               };
+            if (id != "")
+            {
+                ViewBag.Number = id;
+            }
+            else
+            {
+                ViewBag.Number = "";
+            }
+            string ID = "";
+            foreach (var i in query)
+            {
+                ID += i.SECTION_ID.ToString() + ",";
+            }
+            ViewBag.dataID = ID;
+            int t = query.Count();
+            ViewBag.SUBJECT_NAME = SUBJECT.SUBJECT_NAME;
+            ViewBag.SUBJECT = SUBJECT.SUBJECT_ID;
+            ViewBag.Semester = BR_Semester;
+            ViewBag.Year = BR_Year;
+            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR");
+            ViewBag.ddl_Semester = new SelectList(semesteryear.Where(x => x.YEAR == BR_Year).OrderBy(x => x.YEAR).OrderBy(y => y.SEMESTER), "SEMESTER", "SEMESTER", BR_Semester);
+            ViewBag.ddl_Subject = new SelectList(db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).ToList(), "SUBJECT_ID", "SUBJECT_ID", SUBJECT.SUBJECT_ID);
+            ViewBag.ddl_Subject_Name = new SelectList(db.SUBJECTs.ToList(), "SUBJECT_ID", "SUBJECT_NAME", SUBJECT.SUBJECT_ID);
             return View(query);
         }
         [HttpPost]
@@ -673,7 +735,14 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                if (SUBJECTid.Contains("_"))
+                {
+                    return Redirect("/TimeSchedule/ReportSchedule/" + SEC_ID + "?classroom=" + CLASSROOM + "&SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                }
+                else
+                {
+                    return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "?classroom=" + CLASSROOM + "&SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                }
             }
         }
         [HttpPost]
@@ -755,7 +824,14 @@ namespace TestExcel.Controllers
             }
             else
             {
-                return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "/" + CLASSROOM + "?SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                if (SUBJECTid.Contains("_"))
+                {
+                    return Redirect("/TimeSchedule/ReportSchedule/" + SEC_ID + "?classroom=" + CLASSROOM + "&SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                }
+                else
+                {
+                    return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "?classroom=" + CLASSROOM + "&SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
+                }
             }
         }
     }

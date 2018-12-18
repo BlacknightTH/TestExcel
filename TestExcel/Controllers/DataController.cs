@@ -326,7 +326,7 @@ namespace TestExcel.Controllers
                     var edit = db.COURSEs.Where(x => x.COURSE_ID == COURSE_ID).FirstOrDefault();
                     if (edit != null)
                     {
-                        edit.DEPARTMENT_NAME = DEPARTMENT_NAME;
+                        edit.DEPARTMENT_NAME_ID = int.Parse(DEPARTMENT_NAME);
                         edit.COURSE_NAME = COURSE_NAME;
                         edit.COURSE_THAI_NAME = COURSE_THAI_NAME;
                     }
@@ -335,7 +335,7 @@ namespace TestExcel.Controllers
                 {
                     //Add
                     var item = new COURSE();
-                    item.DEPARTMENT_NAME = DEPARTMENT_NAME;
+                    item.DEPARTMENT_NAME_ID = int.Parse(DEPARTMENT_NAME);
                     item.COURSE_NAME = COURSE_NAME;
                     item.COURSE_THAI_NAME = COURSE_THAI_NAME;
                     db.COURSEs.Add(item);
@@ -487,9 +487,9 @@ namespace TestExcel.Controllers
         }
         public List<TimeCrash> GetWarning(string data,string semester,string year)
         {
+            var section = db.SECTIONs;
             List<Section_Subject> _Section_Subject = new List<Section_Subject>();
             var split = data.Split(',');
-            var count = 0;
             for (int i = 0; i < split.Length - 1; i++)
             {
                 int sp = int.Parse(split[i]);
@@ -515,32 +515,27 @@ namespace TestExcel.Controllers
                             }).OrderBy(x => x.SECTION_TIME_START).ToList();
 
                     var model = query.Where(x => (x.SECTION_TIME_START <= have.SECTION_TIME_START && x.SECTION_TIME_START < have.SECTION_TIME_END && x.SECTION_TIME_END > have.SECTION_TIME_START) && x.SUBJECT_ID != have.SUBJECT_ID && x.SECTION_NUMBER != "");
-                    count = model.Count();
-                    if (count > 0)
+                if (model.Count() > 0)
+                {
+                    foreach (var im in model)
                     {
+                        var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
+                        e.CRASH = "3";
                         var item = new TimeCrash();
-                        item.SECTION_ID_First = have.SECTION_ID;
-                        item.SUBJECT_ID_First = have.SUBJECT_ID;
-                        item.SECTION_NUMBER_First = have.SECTION_NUMBER;
-                        item.SECTION_DATE_First = have.SECTION_DATE;
-                        item.SECTION_TIME_START_First = have.SECTION_TIME_START;
-                        item.SECTION_TIME_END_First = have.SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_First = have.SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_First = have.SECTION_BRANCH_NAME;
-
-                        item.SECTION_ID_Last = model.LastOrDefault().SECTION_ID;
-                        item.SUBJECT_ID_Last = model.LastOrDefault().SUBJECT_ID;
-                        item.SECTION_NUMBER_Last = model.LastOrDefault().SECTION_NUMBER;
-                        item.SECTION_DATE_Last = model.LastOrDefault().SECTION_DATE;
-                        item.SECTION_TIME_START_Last = model.LastOrDefault().SECTION_TIME_START;
-                        item.SECTION_TIME_END_Last = model.LastOrDefault().SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_Last = model.LastOrDefault().SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_Last = model.LastOrDefault().SECTION_BRANCH_NAME;
-
+                        item.SECTION_ID_First = im.SECTION_ID;
+                        item.SUBJECT_ID_First = im.SUBJECT_ID;
+                        item.SUBJECT_NAME_First = im.SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = im.SECTION_NUMBER;
+                        item.SECTION_DATE_First = im.SECTION_DATE;
+                        item.SECTION_TIME_START_First = im.SECTION_TIME_START;
+                        item.SECTION_TIME_END_First = im.SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
                         item.SEMESTER = semester;
                         item.YEAR = year;
                         _TimeCrash.Add(item);
                     }
+                }
             }
             var TimeCrash = _TimeCrash.ToList();
             return TimeCrash;
@@ -581,50 +576,69 @@ namespace TestExcel.Controllers
                     //{
                     //    j.CRASH = "2";
                     //}
-                    var WhereTimeDate = _section_subject.Where(x => x.SECTION_DATE == j.SECTION_DATE && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START);
-                    if (WhereTimeDate.Count() > 1)
+                    var WhereTimeDate = _section_subject.Where(x => (x.SECTION_TIME_START <= j.SECTION_TIME_START && x.SECTION_TIME_START < j.SECTION_TIME_END && x.SECTION_TIME_END > j.SECTION_TIME_START) && x.SECTION_DATE == j.SECTION_DATE && x.SECTION_ID != j.SECTION_ID && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START).ToList();
+                    if (WhereTimeDate.Count() > 0)
                     {
-                        var Firsttimestart = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
-                        var Firsttimeend = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
-                        var Lasttimestart = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
-                        var Lasttimeend = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
-
-                        //if (Lasttimestart < Firsttimeend || Firsttimestart == Lasttimestart)
-                        if (Firsttimestart <= Lasttimestart && Firsttimestart < Lasttimeend && Firsttimeend > Lasttimestart)
+                        foreach (var im in WhereTimeDate)
                         {
+                            var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
+                                e.CRASH = "3";
                             var item = new TimeCrash();
-                            var sec1 = WhereTimeDate.First().SECTION_ID;
-                            var sec2 = WhereTimeDate.Last().SECTION_ID;
-                            var e = section.Where(x => x.SECTION_ID == sec1).First();
-                            var ee = section.Where(x => x.SECTION_ID == sec2).First();
-
-                            e.CRASH = "3";
-                            ee.CRASH = "3";
-
-                            item.SECTION_ID_First = WhereTimeDate.FirstOrDefault().SECTION_ID;
-                            item.SUBJECT_ID_First = WhereTimeDate.FirstOrDefault().SUBJECT_ID;
-                            item.SUBJECT_NAME_First = WhereTimeDate.FirstOrDefault().SUBJECT_NAME;
-                            item.SECTION_NUMBER_First = WhereTimeDate.FirstOrDefault().SECTION_NUMBER;
-                            item.SECTION_DATE_First = WhereTimeDate.FirstOrDefault().SECTION_DATE;
-                            item.SECTION_TIME_START_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
-                            item.SECTION_TIME_END_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_First = WhereTimeDate.FirstOrDefault().SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_First = WhereTimeDate.FirstOrDefault().SECTION_BRANCH_NAME;
-
-                            item.SECTION_ID_Last = WhereTimeDate.LastOrDefault().SECTION_ID;
-                            item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
-                            item.SUBJECT_NAME_Last = WhereTimeDate.LastOrDefault().SUBJECT_NAME;
-                            item.SECTION_NUMBER_Last = WhereTimeDate.LastOrDefault().SECTION_NUMBER;
-                            item.SECTION_DATE_Last = WhereTimeDate.LastOrDefault().SECTION_DATE;
-                            item.SECTION_TIME_START_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
-                            item.SECTION_TIME_END_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_Last = WhereTimeDate.LastOrDefault().SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_Last = WhereTimeDate.LastOrDefault().SECTION_BRANCH_NAME;
+                            item.SECTION_ID_First = im.SECTION_ID;
+                            item.SUBJECT_ID_First = im.SUBJECT_ID;
+                            item.SUBJECT_NAME_First = im.SUBJECT_NAME;
+                            item.SECTION_NUMBER_First = im.SECTION_NUMBER;
+                            item.SECTION_DATE_First = im.SECTION_DATE;
+                            item.SECTION_TIME_START_First = im.SECTION_TIME_START;
+                            item.SECTION_TIME_END_First = im.SECTION_TIME_END;
+                            item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
+                            item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
                             item.SEMESTER = i.SEMESTER;
                             item.YEAR = i.YEAR;
+                            item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
                             _TimeCrash.Add(item);
                         }
                     }
+                    //foreach(var im in WhereTimeDate)
+                    //{
+                    //    var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
+                    //    e.CRASH = "3";
+                    //}
+                    //if (WhereTimeDate.Count() > 1)
+                    //{
+                    //    var Firsttimestart = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
+                    //    var Firsttimeend = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
+                    //    var Lasttimestart = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
+                    //    var Lasttimeend = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
+
+                    //    //if (Firsttimestart <= Lasttimestart && Firsttimestart < Lasttimeend && Firsttimeend > Lasttimestart)
+                    //    if (Lasttimestart < Firsttimeend || Firsttimestart == Lasttimestart)
+                    //    {
+                    //        var item = new TimeCrash();
+                    //        item.SECTION_ID_First = WhereTimeDate.FirstOrDefault().SECTION_ID;
+                    //        item.SUBJECT_ID_First = WhereTimeDate.FirstOrDefault().SUBJECT_ID;
+                    //        item.SUBJECT_NAME_First = WhereTimeDate.FirstOrDefault().SUBJECT_NAME;
+                    //        item.SECTION_NUMBER_First = WhereTimeDate.FirstOrDefault().SECTION_NUMBER;
+                    //        item.SECTION_DATE_First = WhereTimeDate.FirstOrDefault().SECTION_DATE;
+                    //        item.SECTION_TIME_START_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
+                    //        item.SECTION_TIME_END_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
+                    //        item.SECTION_CLASSROOM_First = WhereTimeDate.FirstOrDefault().SECTION_CLASSROOM;
+                    //        item.SECTION_BRANCH_NAME_First = WhereTimeDate.FirstOrDefault().SECTION_BRANCH_NAME;
+
+                    //        item.SECTION_ID_Last = WhereTimeDate.LastOrDefault().SECTION_ID;
+                    //        item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
+                    //        item.SUBJECT_NAME_Last = WhereTimeDate.LastOrDefault().SUBJECT_NAME;
+                    //        item.SECTION_NUMBER_Last = WhereTimeDate.LastOrDefault().SECTION_NUMBER;
+                    //        item.SECTION_DATE_Last = WhereTimeDate.LastOrDefault().SECTION_DATE;
+                    //        item.SECTION_TIME_START_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
+                    //        item.SECTION_TIME_END_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
+                    //        item.SECTION_CLASSROOM_Last = WhereTimeDate.LastOrDefault().SECTION_CLASSROOM;
+                    //        item.SECTION_BRANCH_NAME_Last = WhereTimeDate.LastOrDefault().SECTION_BRANCH_NAME;
+                    //        item.SEMESTER = i.SEMESTER;
+                    //        item.YEAR = i.YEAR;
+                    //        _TimeCrash.Add(item);
+                    //    }
+                    //}
                 }
             }
             db.SaveChanges();
@@ -674,7 +688,7 @@ namespace TestExcel.Controllers
                     a = Section.Where(x => x.SECTION_ID == i.SECTION_ID).First();
                     a.CRASH = "1";
                 }
-                else if (i.SUBJECT_CREDIT.Contains("-0-") && (i.CRASH == "3" || i.CRASH == null))
+                else if (!i.SUBJECT_CREDIT.Contains("-0-") && (i.CRASH == "3" || i.CRASH == null))
                 {
                     a = Section.Where(x => x.SECTION_ID == i.SECTION_ID).First();
                     a.CRASH = "2";

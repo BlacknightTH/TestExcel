@@ -29,7 +29,7 @@
           <Property Name="COURSE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="COURSE_NAME" Type="varchar" MaxLength="50" />
           <Property Name="COURSE_THAI_NAME" Type="varchar" MaxLength="100" />
-          <Property Name="DEPARTMENT_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="DEPARTMENT_NAME_ID" Type="int" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
@@ -140,7 +140,7 @@
           <Property Name="COURSE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="COURSE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="COURSE_THAI_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DEPARTMENT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTMENT_NAME_ID" Type="Int32" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
@@ -231,7 +231,7 @@
           <EntitySetMapping Name="COURSEs">
             <EntityTypeMapping TypeName="TestExcelModel.COURSE">
               <MappingFragment StoreEntitySet="COURSE">
-                <ScalarProperty Name="DEPARTMENT_NAME" ColumnName="DEPARTMENT_NAME" />
+                <ScalarProperty Name="DEPARTMENT_NAME_ID" ColumnName="DEPARTMENT_NAME_ID" />
                 <ScalarProperty Name="COURSE_THAI_NAME" ColumnName="COURSE_THAI_NAME" />
                 <ScalarProperty Name="COURSE_NAME" ColumnName="COURSE_NAME" />
                 <ScalarProperty Name="COURSE_ID" ColumnName="COURSE_ID" />

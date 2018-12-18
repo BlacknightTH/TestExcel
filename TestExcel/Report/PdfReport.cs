@@ -1481,6 +1481,7 @@ namespace TestExcel.Report
                     _pdfTable.AddCell(_pdfPCell);
                     _pdfTable.CompleteRow();
 
+                    THSarabunfnt = new Font(bf, 16, 1);
                     _pdfPCell = new PdfPCell(new Phrase("รายการลงทะเบียนเรียน", THSarabunfnt));
                     _pdfPCell.Colspan = _totalColumn;
                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1490,7 +1491,7 @@ namespace TestExcel.Report
                     _pdfTable.AddCell(_pdfPCell);
                     _pdfTable.CompleteRow();
 
-                    THSarabunfnt = new Font(bf, 16, 0);
+
                     _pdfPCell = new PdfPCell(new Phrase("ภาคการศึกษาที่ " + Semester + "/" + Year, THSarabunfnt));
                     _pdfPCell.Colspan = _totalColumn;
                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1501,7 +1502,7 @@ namespace TestExcel.Report
                     _pdfTable.CompleteRow();
                     if (department_name == "MDET" || department_name == "EnET" || department_name == "TDET" || department_name == "InET" || department_name == "PnET")
                     {
-                        THSarabunfnt = new Font(bf, 16, 0);
+
                         _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.COURSE_THAI_NAME, THSarabunfnt));
                         _pdfPCell.Colspan = _totalColumn;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1515,7 +1516,7 @@ namespace TestExcel.Report
                         {
                             if (Branch_Name.Contains("(M)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาสร้างเครื่องจักรกล)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1527,7 +1528,7 @@ namespace TestExcel.Report
                             }
                             else
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาออกแบบผลิตภัณฑ์เครื่องกล)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1542,7 +1543,7 @@ namespace TestExcel.Report
                         {
                             if (Branch_Name.Contains("(T)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาโทรคมนาคม)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1554,7 +1555,7 @@ namespace TestExcel.Report
                             }
                             else if (Branch_Name.Contains("(I)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาเครื่องมือวัดและระบบอัตโนมัติ)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1566,7 +1567,7 @@ namespace TestExcel.Report
                             }
                             else if (Branch_Name.Contains("(C)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาคอมพิวเตอร์)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1578,7 +1579,7 @@ namespace TestExcel.Report
                             }
                             else
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชากระจายเสียงวิทยุและโทรทัศน์)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1593,7 +1594,7 @@ namespace TestExcel.Report
                         {
                             if (Branch_Name.Contains("(P)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาแม่พิมพ์พลาสติก)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1605,7 +1606,7 @@ namespace TestExcel.Report
                             }
                             else
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาแม่พิมพ์โลหะ)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1620,7 +1621,7 @@ namespace TestExcel.Report
                         {
                             if (Branch_Name.Contains("(M)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาการจัดการกระบวนการผลิต)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1632,7 +1633,7 @@ namespace TestExcel.Report
                             }
                             else
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชากระบวนการผลิตเครื่องเรือน)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1647,7 +1648,7 @@ namespace TestExcel.Report
                         {
                             if (Branch_Name.Contains("(PE)"))
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาวิศวกรรมอิเล็กทรอนิกส์กำลัง)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1659,7 +1660,7 @@ namespace TestExcel.Report
                             }
                             else
                             {
-                                THSarabunfnt = new Font(bf, 16, 0);
+
                                 _pdfPCell = new PdfPCell(new Phrase("(แขนงวิชาวิศวกรรมควบคุม)  " + Branch_Name, THSarabunfnt));
                                 _pdfPCell.Colspan = _totalColumn;
                                 _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1673,7 +1674,7 @@ namespace TestExcel.Report
                     }
                     else
                     {
-                        THSarabunfnt = new Font(bf, 16, 0);
+                        THSarabunfnt = new Font(bf, 16, 1);
                         _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.COURSE_THAI_NAME + " " + Branch_Name, THSarabunfnt));
                         _pdfPCell.Colspan = _totalColumn;
                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;

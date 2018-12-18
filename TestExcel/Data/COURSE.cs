@@ -17,6 +17,6 @@ namespace TestExcel.Data
         public int COURSE_ID { get; set; }
         public string COURSE_NAME { get; set; }
         public string COURSE_THAI_NAME { get; set; }
-        public string DEPARTMENT_NAME { get; set; }
+        public Nullable<int> DEPARTMENT_NAME_ID { get; set; }
     }
 }

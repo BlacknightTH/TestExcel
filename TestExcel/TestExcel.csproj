@@ -631,6 +631,7 @@
     <Content Include="Views\Data\Branch.cshtml" />
     <Content Include="Views\Report\data.cshtml" />
     <Content Include="Views\TimeSchedule\PSchedule.cshtml" />
+    <Content Include="Views\TimeSchedule\ReportSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

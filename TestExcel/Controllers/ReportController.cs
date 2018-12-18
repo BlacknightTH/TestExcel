@@ -34,7 +34,6 @@ namespace TestExcel.Controllers
             string first_Year;
             first_Year = "2560";
             ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
-            ViewBag.ddl_Course = new SelectList(db.COURSEs.ToList(), "COURSE_NAME", "COURSE_NAME");
             return View(model);
         }
         [HttpPost]
