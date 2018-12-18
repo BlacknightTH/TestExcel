@@ -161,10 +161,8 @@ namespace TestExcel.Report
                     var trigger = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).Count();
                     if (trigger == 1)
                     {
-                        var tmp_TIME_START = check.SECTION_TIME_START;
-                        var tmp_TIME_END = check.SECTION_TIME_END;
-                        var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                        var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                        var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
+                        var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
                         var TIME = TIME_END - TIME_START;
                         tmp = Tetemp(TIME);
 
@@ -186,11 +184,11 @@ namespace TestExcel.Report
                     {
                         var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).First();
                         var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == classroom).Last();
-                        int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                        int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                        int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                        int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                        int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                        int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                        int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                        int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
                         if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                         {
                         }
@@ -213,12 +211,9 @@ namespace TestExcel.Report
                         }
                         else if (tmpl_first != tmpl_last)
                         {
-                            var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                            var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                            var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                            var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                            var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                            var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                             var TIME = TIME_END - TIME_START;
-                            tmp = Tetemp(TIME);
                             string SECTION_NUMBER = "";
                             if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
                             {
@@ -226,7 +221,7 @@ namespace TestExcel.Report
                             }
                             _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "/\n" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
                             //_pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + tmp + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME, THSarabunfnt));
-                            _pdfPCell.Colspan = TIME;
+                            _pdfPCell.Colspan = int.Parse(TIME.ToString());
                             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                             _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                             _pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -1195,10 +1190,8 @@ namespace TestExcel.Report
                                 {
                                     SECTION_NUMBER = "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER;
                                 }
-                                var tmp_TIME_START = check.SECTION_TIME_START;
-                                var tmp_TIME_END = check.SECTION_TIME_END;
-                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
+                                var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
                                 var TIME = TIME_END - TIME_START;
                                 tmp = temp(TIME);
 
@@ -1223,11 +1216,11 @@ namespace TestExcel.Report
                             {
                                 var first = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
                                 var second = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
-                                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                                int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                                int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                                int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                                int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
 
                                 if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                                 {
@@ -1252,12 +1245,9 @@ namespace TestExcel.Report
                                 }
                                 else if (tmpl_first != tmpl_last)
                                 {
-                                    var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                                    var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                                    var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                     var TIME = TIME_END - TIME_START;
-                                    tmp = temp(TIME);
 
                                     string SECTION_NUMBER = "";
                                     if (WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER != "")
@@ -1274,7 +1264,7 @@ namespace TestExcel.Report
                                         THSarabunfnt = new Font(bf, 12, 1);
                                         _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_BRANCH_NAME + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_CLASSROOM, THSarabunfnt));
                                     }
-                                    _pdfPCell.Colspan = TIME;
+                                    _pdfPCell.Colspan = int.Parse(TIME.ToString());
                                     _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _pdfPCell.VerticalAlignment = Element.ALIGN_TOP;
                                     _pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -1979,10 +1969,8 @@ namespace TestExcel.Report
                                 var trigger = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_DATE == date[c]).Count();
                                 if (trigger == 1)
                                 {
-                                    var tmp_TIME_START = check.SECTION_TIME_START;
-                                    var tmp_TIME_END = check.SECTION_TIME_END;
-                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
+                                    var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
                                     var TIME = TIME_END - TIME_START;
                                     tmp = temp(TIME);
 
@@ -1997,13 +1985,13 @@ namespace TestExcel.Report
                                 }
                                 else if (trigger == 2)
                                 {
-                                    var first = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).First();
-                                    var second = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).Last();
-                                    int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                                    int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                                    var first = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).FirstOrDefault();
+                                    var second = _section_subject.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME).LastOrDefault();
+                                    int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                                int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                                    int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                                    int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                                int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                                int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
                                     if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                                     {
 
@@ -2022,16 +2010,13 @@ namespace TestExcel.Report
                                     }
                                     else if (tmpl_first != tmpl_last)
                                     {
-                                        var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                                        var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                                        var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                        var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                        var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                                        var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                         var TIME = TIME_END - TIME_START;
-                                        tmp = temp(TIME);
 
                                         THSarabunfnt = new Font(bf, 14, 0);
                                         _pdfPCell = new PdfPCell(new Phrase(WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SUBJECT_ID + "/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_NUMBER + "\n/" + WhereTimeDate.OrderBy(x => x.SECTION_TIME_START).FirstOrDefault().SECTION_PROFESSOR_SHORTNAME.Replace('/', ','), THSarabunfnt));
-                                        _pdfPCell.Colspan = TIME;
+                                        _pdfPCell.Colspan = int.Parse(TIME.ToString());
                                         _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                                         _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                                         _pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -2175,10 +2160,8 @@ namespace TestExcel.Report
                             if (trigger == 1)
                             {
 
-                                var tmp_TIME_START = check.SECTION_TIME_START;
-                                var tmp_TIME_END = check.SECTION_TIME_END;
-                                var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                var TIME_START = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_START.ToString())).ToString());
+                                var TIME_END = int.Parse(Math.Floor(decimal.Parse(check.SECTION_TIME_END.ToString())).ToString());
                                 var TIME = TIME_END - TIME_START;
 
                                 ClBody(TIME, WhereTimeDate);
@@ -2186,13 +2169,13 @@ namespace TestExcel.Report
                             }
                             else if (trigger == 2)
                             {
-                                var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).First();
-                                var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).Last();
-                                int tmp_first = int.Parse(first.SECTION_TIME_START.ToString());
-                                int tmp_last = int.Parse(second.SECTION_TIME_END.ToString());
+                                var first = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).FirstOrDefault();
+                                var second = _building_classroom.Where(x => x.SUBJECT_ID == check.SUBJECT_ID && x.SECTION_DATE == date[c] && x.SECTION_BRANCH_NAME == check.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == Item.CLASSROOM_NAME).LastOrDefault();
+                                int tmp_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_START.ToString())).ToString());
+                                int tmp_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_END.ToString())).ToString());
 
-                                int tmpl_first = int.Parse(first.SECTION_TIME_END.ToString());
-                                int tmpl_last = int.Parse(second.SECTION_TIME_START.ToString());
+                                int tmpl_first = int.Parse(Math.Floor(decimal.Parse(first.SECTION_TIME_END.ToString())).ToString());
+                                int tmpl_last = int.Parse(Math.Floor(decimal.Parse(second.SECTION_TIME_START.ToString())).ToString());
                                 if (tmpl_first == tmpl_last && check.SECTION_NUMBER == "")
                                 {
 
@@ -2214,13 +2197,11 @@ namespace TestExcel.Report
                                 }
                                 else if (tmpl_first != tmpl_last)
                                 {
-                                    var tmp_TIME_START = WhereTimeDate.Last().SECTION_TIME_START;
-                                    var tmp_TIME_END = WhereTimeDate.Last().SECTION_TIME_END;
-                                    var TIME_START = int.Parse(tmp_TIME_START.ToString());
-                                    var TIME_END = int.Parse(tmp_TIME_END.ToString());
+                                    var TIME_START = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_START.ToString()));
+                                    var TIME_END = Math.Floor(decimal.Parse(WhereTimeDate.Last().SECTION_TIME_END.ToString()));
                                     var TIME = TIME_END - TIME_START;
 
-                                    ClBody(TIME, WhereTimeDate);
+                                    ClBody(int.Parse(TIME.ToString()), WhereTimeDate);
                                 }
                             }
                         }
