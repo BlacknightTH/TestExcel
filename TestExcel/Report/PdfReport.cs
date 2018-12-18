@@ -1406,11 +1406,10 @@ namespace TestExcel.Report
             return _memoryStream.ToArray();
 
         }
-        public byte[] PrepareReport(string Department_name, string semester, string year)
+        public byte[] PrepareReport(int Department_name, string semester, string year)
         {
             Semester = semester;
             Year = year;
-            department_name = Department_name;
             //_db = db;
             var model = from e1 in db.BRANCHes
                         join e2 in db.COURSEs on e1.COURSE_NAME equals e2.COURSE_NAME
@@ -1421,7 +1420,6 @@ namespace TestExcel.Report
                             COURSE_THAI_NAME = e2.COURSE_THAI_NAME
                         };
             _department_branch = model.ToList();
-
 
             #region T1
             _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
@@ -1441,8 +1439,10 @@ namespace TestExcel.Report
             _pdfTable2.SetWidths(new float[] { 20f, 20f, 20f, 20f, 20f, 20f, 20f, 20f,
                                                 20f, 20f, 20f, 20f, 20f, 20f, 20f});
             #endregion
+            foreach (var y in db.COURSEs.Where(x => x.DEPARTMENT_NAME_ID == Department_name).OrderBy(x => x.DEPARTMENT_NAME_ID))
+            {
 
-            foreach (var q in _department_branch.Where(x => x.COURSE_NAME == department_name).ToList())
+            foreach (var q in _department_branch.Where(x => x.COURSE_NAME == y.COURSE_NAME).ToList())
             {
                 Branch_Name = q.BRANCH_NAME;
                 _section_subject = GetModel(Branch_Name, Semester, Year);
@@ -1500,7 +1500,7 @@ namespace TestExcel.Report
                     _pdfPCell.ExtraParagraphSpace = 0;
                     _pdfTable.AddCell(_pdfPCell);
                     _pdfTable.CompleteRow();
-                    if (department_name == "MDET" || department_name == "EnET" || department_name == "TDET" || department_name == "InET" || department_name == "PnET")
+                    if (q.COURSE_NAME == "MDET" || q.COURSE_NAME == "EnET" || q.COURSE_NAME == "TDET" || q.COURSE_NAME == "InET" || q.COURSE_NAME == "PnET")
                     {
 
                         _pdfPCell = new PdfPCell(new Phrase("นักศึกษาสาขาวิชา" + q.COURSE_THAI_NAME, THSarabunfnt));
@@ -2054,6 +2054,7 @@ namespace TestExcel.Report
                 }
             }
 
+            }
             _document.Close();
             return _memoryStream.ToArray();
 

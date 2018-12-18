@@ -39,15 +39,20 @@ namespace TestExcel.Controllers
         [HttpPost]
         public ActionResult Report(FormCollection collection)
         {
-            string course_name = collection["course_name"];
+            int department_id = int.Parse(collection["department"]);
             string semester = collection["semester"];
             string year = collection["year"];
-            string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + course_name + ".pdf";
+            var department = "";
+            if (department_id != 0)
+            {
+                department = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == department_id).First().DEPARTMENT_NAME.Trim();
+            }
+            string FilePath = @"C:\\รายการลงทะเบียนเรียน_" + semester + "-" + year + "_" + department + ".pdf";
             string FileName = Path.GetFileName(FilePath);
             PdfReport pdfReport = new PdfReport();
             try
             {
-                byte[] abytes = pdfReport.PrepareReport(course_name, semester, year);
+                byte[] abytes = pdfReport.PrepareReport(department_id, semester, year);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
