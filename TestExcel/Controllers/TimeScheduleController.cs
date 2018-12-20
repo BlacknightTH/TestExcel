@@ -47,7 +47,6 @@ namespace TestExcel.Controllers
             List<Section_Subject> section_subject = new List<Section_Subject>();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        join e3 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e3.PROFESSOR_SHORTNAME
                         where e1.SECTION_PROFESSOR_SHORTNAME.Contains(Professor) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {

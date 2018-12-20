@@ -34,7 +34,7 @@ namespace TestExcel.Report
         List<Building_Classroom> _building_classroom = new List<Building_Classroom>();
         List<Department_Branch> _department_branch = new List<Department_Branch>();
         List<Section_Professor> _professor = new List<Section_Professor>();
-        string Semester, Year, Branch_Name, department_name, day, BUILDING;
+        string Semester, Year, Branch_Name, day, BUILDING;
         #endregion
 
         public List<Section_Subject> GetModel(string Branch_Name, string semester, string year)
@@ -66,7 +66,6 @@ namespace TestExcel.Report
             List<Section_Subject> section_subject = new List<Section_Subject>();
             var query = from e1 in db.SECTIONs
                         join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                        join e3 in db.PROFESSORs on e1.SECTION_PROFESSOR_SHORTNAME equals e3.PROFESSOR_SHORTNAME
                         where e1.SECTION_PROFESSOR_SHORTNAME.Contains(professor) && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                         select new Section_Subject
                         {
@@ -269,6 +268,7 @@ namespace TestExcel.Report
             #region B_63
             _building_classroom = GetTEModel("63", Semester, Year, day);
             #region header B_63
+
             THSarabunfnt = new Font(bf, 18, 1);
             _pdfPCell = new PdfPCell(new Phrase("ตารางการใช้ห้องเรียน", THSarabunfnt));
             _pdfPCell.Colspan = _totalColumn2;
@@ -279,7 +279,7 @@ namespace TestExcel.Report
             _pdfTable2.AddCell(_pdfPCell);
             _pdfTable2.CompleteRow();
 
-
+            THSarabunfnt = new Font(bf, 18, 1);
             _pdfPCell = new PdfPCell(new Phrase("ภาคการศึกษาที่..............................ปีการศึกษา..............................", THSarabunfnt));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -305,6 +305,17 @@ namespace TestExcel.Report
             _pdfPCell = new PdfPCell(new Phrase(new Chunk(_chunk)));
             _pdfPCell.Colspan = _totalColumn2;
             _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            _pdfPCell.Border = 0;
+            _pdfPCell.BackgroundColor = BaseColor.WHITE;
+            _pdfPCell.ExtraParagraphSpace = 0;
+            _pdfTable2.AddCell(_pdfPCell);
+            _pdfTable2.CompleteRow();
+
+            THSarabunfnt = new Font(bf, 32, 1);
+            _pdfPCell = new PdfPCell(new Phrase(day, THSarabunfnt));
+            _pdfPCell.Colspan = _totalColumn2;
+            _pdfPCell.PaddingTop = -60f;
+            _pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
             _pdfPCell.Border = 0;
             _pdfPCell.BackgroundColor = BaseColor.WHITE;
             _pdfPCell.ExtraParagraphSpace = 0;

@@ -543,16 +543,16 @@ namespace TestExcel.Controllers
         public List<TimeCrash> SetNotification()
         {
             var section = db.SECTIONs;
-            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+            var semesteryear = (from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
                                    SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
-                               };
-            foreach (var i in semesteryear.ToList())
-            {
-                   _section_subject = GetModel(i.SEMESTER, i.YEAR);
+                               }).OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER).ToList();
+            var YEAR = semesteryear.First().YEAR;
+            var SEMESTER = semesteryear.First().SEMESTER;
+                   _section_subject = GetModel(semesteryear.First().SEMESTER, semesteryear.First().YEAR);
                 //foreach (var k in _section_subject)
                 //{
                 //    var model = db.SECTIONs.Where(x => x.SECTION_ID == k.SECTION_ID).First();
@@ -565,7 +565,7 @@ namespace TestExcel.Controllers
                 //        model.CRASH = "2";
                 //    }
                 //}
-                foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == i.SEMESTER && x.YEAR == i.YEAR).OrderBy(x => x.SECTION_TIME_START))
+                foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == SEMESTER && x.YEAR == YEAR).OrderBy(x => x.SECTION_TIME_START))
                 {
                     //T = _section_subject.Where(x => x.SECTION_ID == j.SECTION_ID).First();
                     //if (T.SUBJECT_CREDIT.Contains("-0-") && j.CRASH == "3")
@@ -593,8 +593,8 @@ namespace TestExcel.Controllers
                             item.SECTION_TIME_END_First = im.SECTION_TIME_END;
                             item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
                             item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
-                            item.SEMESTER = i.SEMESTER;
-                            item.YEAR = i.YEAR;
+                            item.SEMESTER = SEMESTER;
+                            item.YEAR = YEAR;
                             item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
                             _TimeCrash.Add(item);
                         }
@@ -640,7 +640,7 @@ namespace TestExcel.Controllers
                     //    }
                     //}
                 }
-            }
+
             db.SaveChanges();
             var TimeCrash = _TimeCrash.OrderByDescending(x => x.YEAR).OrderByDescending(y => y.SEMESTER).ToList();
             return TimeCrash;
