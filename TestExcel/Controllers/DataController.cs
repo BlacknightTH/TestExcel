@@ -553,29 +553,9 @@ namespace TestExcel.Controllers
             var YEAR = semesteryear.First().YEAR;
             var SEMESTER = semesteryear.First().SEMESTER;
                    _section_subject = GetModel(semesteryear.First().SEMESTER, semesteryear.First().YEAR);
-                //foreach (var k in _section_subject)
-                //{
-                //    var model = db.SECTIONs.Where(x => x.SECTION_ID == k.SECTION_ID).First();
-                //    if (k.SUBJECT_CREDIT.Contains("-0-"))
-                //    {
-                //        model.CRASH = "1";
-                //    }
-                //    else
-                //    {
-                //        model.CRASH = "2";
-                //    }
-                //}
+
                 foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == SEMESTER && x.YEAR == YEAR).OrderBy(x => x.SECTION_TIME_START))
                 {
-                    //T = _section_subject.Where(x => x.SECTION_ID == j.SECTION_ID).First();
-                    //if (T.SUBJECT_CREDIT.Contains("-0-") && j.CRASH == "3")
-                    //{
-                    //    j.CRASH = "1";
-                    //}
-                    //else if(!T.SUBJECT_CREDIT.Contains("-0-") && j.CRASH == "3")
-                    //{
-                    //    j.CRASH = "2";
-                    //}
                     var WhereTimeDate = _section_subject.Where(x => (x.SECTION_TIME_START <= j.SECTION_TIME_START && x.SECTION_TIME_START < j.SECTION_TIME_END && x.SECTION_TIME_END > j.SECTION_TIME_START) && x.SECTION_DATE == j.SECTION_DATE && x.SECTION_ID != j.SECTION_ID && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START).ToList();
                     if (WhereTimeDate.Count() > 0)
                     {
