@@ -426,7 +426,7 @@
                 $("#SECOND_SAVE_TIMEEND").val(second_timeend);
             }
             else{
-                $("#Second_Header").html("Second");
+                $("#Second_Header").html("ปฎิบัติ");
                 $("#SECOND_SECTION_ID").val("0");
                 $("#SECOND_SAVE_NUMBER").val("");
                 $("#SECOND_SAVE_DATE").val("M");
