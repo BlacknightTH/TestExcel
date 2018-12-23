@@ -56,7 +56,7 @@
         </tbody>
     </table>
 </div>
-@using (Html.BeginForm("SaveDepartment", "Data", FormMethod.Post))
+@using (Html.BeginForm("SaveProfessor", "Data", FormMethod.Post))
 {
     <div id="MyModal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
@@ -96,9 +96,9 @@
             <div class="modal-body">
                 <h4>Are You Sure? You Want To Delete This Record.</h4>
                 <div class="modal-footer">
-                    @using (Html.BeginForm("DeleteDepartment", "Data", FormMethod.Post))
+                    @using (Html.BeginForm("DeleteProfessor", "Data", FormMethod.Post))
                     {
-                        @Html.Hidden("Del_DEPARTMENT_ID", "")
+                        @Html.Hidden("Del_PROFESSOR_ID", "")
                         <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
                         <input type="submit" value="Delete" href="#" class="btn btn-danger">
                     }
@@ -112,7 +112,7 @@
 <script>
     //Show The Popup Modal
     function AddNew(PROFESSOR_ID) {
-        $("#DEPARTMENT_ID").val(0);
+        $("#PROFESSOR_ID").val(0);
         $("#PROFESSOR_FIRSTNAME").val("");
         $("#PROFESSOR_LASTNAME").val("");
         $("#PROFESSOR_SHORTNAME").val("");
@@ -122,7 +122,7 @@
         $("#MyModal").css('display', 'block');
     }
     function EditRecord(PROFESSOR_ID) {
-        $("#DEPARTMENT_ID").val(PROFESSOR_ID);
+        $("#PROFESSOR_ID").val(PROFESSOR_ID);
         $("#PROFESSOR_NAME").val($("#TprofessorFirstName_" + PROFESSOR_ID + " p").html().trim());
         $("#PROFESSOR_SHORTNAME").val($("#TprofessorShortName_" + PROFESSOR_ID + " p").html().trim());
         $("#PROFESSOR_STATUS").val($("#TprofessorStatus_" + PROFESSOR_ID + " p").html().trim());
@@ -131,7 +131,7 @@
         $("#MyModal").css('display', 'block');
     }
     function DeleteRecord(PROFESSOR_ID) {
-        $("#Del_DEPARTMENT_ID").val(PROFESSOR_ID);
+        $("#Del_PROFESSOR_ID").val(PROFESSOR_ID);
         $("#DeleteConfirmation").modal("show");
     }
     $(document).ready(function () {

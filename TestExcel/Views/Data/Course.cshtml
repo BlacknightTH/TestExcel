@@ -21,9 +21,9 @@
     <table class="w3-table-all" id="DataTable" name="DataTable">
         <thead>
             <tr class="w3-blue">
-                <th>ภาควิชา</th>
                 <th>สาขาวิชา</th>
                 <th>สาขาวิชา_ภาษาไทย</th>
+                <th>รหัสภาควิชา</th>
                 <th>แก้ไข</th>
                 <th>ลบ</th>
             </tr>
@@ -32,14 +32,14 @@
             @foreach (var item in Model)
             {
             <tr>
-                <td id="TdepartName_@item.COURSE_ID">
-                    <p>@item.DEPARTMENT_NAME</p>
-                </td>
                 <td id="TcdepartName_@item.COURSE_ID">
                     <p>@item.COURSE_NAME</p>
                 </td>
                 <td id="TdepartThaiName_@item.COURSE_ID">
                     <p>@item.COURSE_THAI_NAME</p>
+                </td>
+                <td id="TdepartName_@item.COURSE_ID">
+                    <p>@item.DEPARTMENT_NAME_ID</p>
                 </td>
                 <td>
                     <a href="#" onclick="EditRecord(@item.COURSE_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
@@ -52,7 +52,7 @@
         </tbody>
     </table>
 </div>
-@using (Html.BeginForm("SaveDepartment", "Data", FormMethod.Post))
+@using (Html.BeginForm("SaveCourse", "Data", FormMethod.Post))
 {
     <div id="MyModal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
@@ -63,12 +63,12 @@
             <div class="container form-horizontal">
                 <div class="w3-section">
                     @Html.Hidden("COURSE_ID", 0)
-                    <label>ภาควิชา</label>
-                    @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ภาควิชา", @style = "max-width:570px" })
-                    <label>ภาควิชา</label>
+                    <label>สาขาวิชา</label>
                     @Html.TextBox("COURSE_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "สาขาวิชา", @style = "max-width:570px" })
                     <label>สาขาวิชา(ภาษาไทย)</label>
                     @Html.TextBox("COURSE_THAI_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "สาขาวิชา(ภาษาไทย)", @style = "max-width:570px" })
+                    <label>ภาควิชา</label>
+                    @Html.TextBox("DEPARTMENT_NAME_ID", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ภาควิชา", @style = "max-width:570px" })
                 </div>
 
             </div>
@@ -107,18 +107,18 @@
     //Show The Popup Modal
     function AddNew(COURSE_ID) {
         $("#COURSE_ID").val(0);
-        $("#DEPARTMENT_NAME").val("");
+        $("#DEPARTMENT_NAME_ID").val("");
         $("#COURSE_NAME").val("");
         $("#COURSE_THAI_NAME").val("");
-        $("#ModalTitle").html("Add New Department");
+        $("#ModalTitle").html("Add New Course");
         $("#MyModal").css('display', 'block');
     }
     function EditRecord(COURSE_ID) {
         $("#COURSE_ID").val(COURSE_ID);
-        $("#DEPARTMENT_NAME").val($("#TdepartName_" + COURSE_ID + " p").html().trim());
+        $("#DEPARTMENT_NAME_ID").val($("#TdepartName_" + COURSE_ID + " p").html().trim());
         $("#COURSE_NAME").val($("#TcdepartName_" + COURSE_ID + " p").html().trim());
-        $("#DEPARTMENT_THAI_NAME").val($("#TdepartThaiName_" + COURSE_ID + " p").html().trim());
-        $("#ModalTitle").html("Update Department Record");
+        $("#COURSE_THAI_NAME").val($("#TdepartThaiName_" + COURSE_ID + " p").html().trim());
+        $("#ModalTitle").html("Update Course Record");
         $("#MyModal").css('display', 'block');
     }
     function DeleteRecord(COURSE_ID) {

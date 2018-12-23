@@ -233,7 +233,7 @@
     <script>
         //Show The Popup Modal
         function AddNew(SECTION_ID) {
-            $("#ID").val(0);
+            $("#SECTION_ID").val(0);
             $("#SUBJECT_ID").val("");
             $("#SECTION_NUMBER").val("");
             $("#SECTION_DATE").val("");
@@ -244,11 +244,11 @@
             $("#SECTION_BRANCH_NAME").val("");
             $("#SEMESTER").val("");
             $("#YEAR").val("");
-            $("#ModalTitle").html("Add New Subject");
+            $("#ModalTitle").html("Add New Section");
             $("#MyModal").css('display', 'block');
         }
         function EditRecord(SECTION_ID) {
-            $("#ID").val(SECTION_ID);
+            $("#SECTION_ID").val(SECTION_ID);
             $("#SUBJECT_ID").val($("#TsubjectId_" + SECTION_ID + " p").html().trim());
             $("#SECTION_NUMBER").val($("#TsectionNumber_" + SECTION_ID + " p").html().trim());
             $("#SECTION_DATE").val($("#TsectionDate_" + SECTION_ID + " p").html().trim());
@@ -258,7 +258,7 @@
             $("#SECTION_BRANCH_NAME").val($("#TbranchName_" + SECTION_ID + " p").html().trim());
             $("#SEMESTER").val($("#Tsemester_" + SECTION_ID + " p").html().trim());
             $("#YEAR").val($("#Tyear_" + SECTION_ID + " p").html().trim());
-            $("#ModalTitle").html("Update Subject Record");
+            $("#ModalTitle").html("Update Section Record");
             $("#MyModal").css('display', 'block');
             var TimeStart = $('#SECTION_TIME_START').val();
             var optionlisting = "";
