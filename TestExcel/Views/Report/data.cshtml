@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<TestExcel.Data.DEPARTMENT>
 @{
-    ViewBag.Title = "อัพโหลด/ดาวน์โหลด";
+    ViewBag.Title = "อัปโหลด/ดาวน์โหลด";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <style>
@@ -84,9 +84,9 @@
                         <h2 class="w3-center">Import Excel</h2>
                     </header>
                     <div class="w3-container">
-                        <h4 class="w3-center">อัพโหลดไฟล์ Excel</h4>
+                        <h4 class="w3-center">อัปโหลดไฟล์ Excel</h4>
                         <hr>
-                        <div><p>*หมายเหตุ:การอัพโหลดไฟล์ใช้เวลาประมาณ 1 นาที</p></div>
+                        <div><p>*หมายเหตุ:การอัปโหลดไฟล์ใช้เวลาประมาณ 1-2 นาที</p></div>
                         @using (Html.BeginForm("Import", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
                             @Html.Raw(ViewBag.Error)
