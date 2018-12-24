@@ -10,6 +10,7 @@ using TestExcel.Utility;
 
 namespace TestExcel.Controllers
 {
+    [adminauthen]
     public class TimeScheduleController : Controller
     {
         List<Department_Branch> _department_branch = new List<Department_Branch>();

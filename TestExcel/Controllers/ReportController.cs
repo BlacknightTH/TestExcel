@@ -15,7 +15,7 @@ using OfficeOpenXml;
 
 namespace TestExcel.Controllers
 {
-    //[adminauthen]
+    [adminauthen]
     public class ReportController : Controller
     {
         string[] date = { "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์" };

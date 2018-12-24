@@ -1,30 +1,33 @@
 ﻿@model IEnumerable<TestExcel.Models.Section_Professor>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Login";
 }
-<div class="w3-container center-block" style="width:400px;margin-top:100px">
+<div class="w3-container center-block" style="max-width:450px;margin-top:100px">
     <div class="panel panel-default">
         <div class="panel-heading w3-blue w3-center">
-            <h3 class="w3-blue">กรุณาเข้าสู่ระบบ</h3>
+            <h3 class="w3-blue">เข้าสู่ระบบ</h3>
         </div>
         <div class="panel-body">
+            <img src="~/Content/import/kmutnb-logo.png" class="center-block" height="100" width="100"/>
+            <br>
             @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 <div>
                     <label><b>Username</b></label>
                 </div>
                 <div>
-                    @Html.TextBox("Username", "", new { @class = "w3-input w3-border", @placeholder = "Username" })
+                    @Html.TextBox("Username", "", new { @class = "w3-input w3-border", @placeholder = "Username" , @style = "min-width:100%" })
                 </div>
+                <br>
                 <div>
                     <label><b>Password</b></label>
                 </div>
                 <div>
-                    @Html.Password("Password", "", new { @class = "w3-input w3-border", @placeholder = "Password" })
+                    @Html.Password("Password", "", new { @class = "w3-input w3-border", @placeholder = "Password" , @style = "min-width:100%" })
                 </div>
                 <hr>
                 <div>
-                    <input type="submit" value="เข้าสู่ระบบ" class="w3-btn w3-green w3-center registerbtn" />
+                    <input type="submit" value="เข้าสู่ระบบ" class="w3-btn w3-green center-block registerbtn" style="min-width:100%"/>
                 </div>
             }
         </div>
