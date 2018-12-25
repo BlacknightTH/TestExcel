@@ -1,7 +1,7 @@
-﻿@model IEnumerable<TestExcel.Data.PROFESSOR>
+﻿@model IEnumerable<TestExcel.Data.DEPARTMENT>
 
 @{
-    ViewBag.Title = "Professor";
+    ViewBag.Title = "Department";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
@@ -21,9 +21,7 @@
     <table class="w3-table-all" id="DataTable" name="DataTable">
         <thead>
             <tr class="w3-blue">
-                <th>ชื่อ</th>
-                <th>อักษรย่ออาจารย์</th>
-                <th>สถานะอาจารย์</th>
+                <th>ID</th>
                 <th>ภาควิชา</th>
                 <th>แก้ไข</th>
                 <th>ลบ</th>
@@ -33,30 +31,24 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td id="TprofessorFirstName_@item.PROFESSOR_ID">
-                        <p>@item.PROFESSOR_NAME</p>
+                    <td id="Tid_@item.DEPARTMENT_ID">
+                        <p>@item.DEPARTMENT_ID</p>
                     </td>
-                    <td id="TprofessorShortName_@item.PROFESSOR_ID">
-                        <p>@item.PROFESSOR_SHORTNAME</p>
-                    </td>
-                    <td id="TprofessorStatus_@item.PROFESSOR_ID">
-                        <p>@item.PROFESSOR_STATUS</p>
-                    </td>
-                    <td id="TdepartName_@item.PROFESSOR_ID">
+                    <td id="Tdepart_@item.DEPARTMENT_ID">
                         <p>@item.DEPARTMENT_NAME</p>
                     </td>
                     <td>
-                        <a href="#" onclick="EditRecord(@item.PROFESSOR_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
+                        <a href="#" onclick="EditRecord(@item.DEPARTMENT_ID)"><span class="btn btn-success fa fa-pencil"></span></a>
                     </td>
                     <td>
-                        <a href="#" onclick="DeleteRecord(@item.PROFESSOR_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
+                        <a href="#" onclick="DeleteRecord(@item.DEPARTMENT_ID)"><span class="btn btn-danger fa fa-trash-o"></span></a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-@using (Html.BeginForm("SaveProfessor", "Data", FormMethod.Post))
+@using (Html.BeginForm("SaveDepartment", "Data", FormMethod.Post))
 {
     <div id="MyModal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom w3-card-4" style="max-width:600px">
@@ -66,15 +58,10 @@
             </header>
             <div class="container form-horizontal">
                 <div class="w3-section">
-                    @Html.Hidden("PROFESSOR_ID", 0)
-                    <label>ชื่อ</label>
-                    @Html.TextBox("PROFESSOR_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ชื่อ", @style = "max-width:570px" })
-                    <label>อักษรย่อ</label>
-                    @Html.TextBox("PROFESSOR_SHORTNAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "", @style = "max-width:570px" })
-                    <label>สถานะ</label>
-                    @Html.TextBox("PROFESSOR_STATUS", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "", @style = "max-width:570px" })
+                    @Html.Hidden("DEPARTMENT_ID", 0)
                     <label>ภาควิชา</label>
-                    @Html.TextBox("DEPARTMENT_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "EnET", @style = "max-width:570px" })
+                    @Html.TextBox("DEPARTMENT", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "ภาควิชา", @style = "max-width:570px" })
+                    
                 </div>
 
             </div>
@@ -96,9 +83,9 @@
             <div class="modal-body">
                 <h4>Are You Sure? You Want To Delete This Record.</h4>
                 <div class="modal-footer">
-                    @using (Html.BeginForm("DeleteProfessor", "Data", FormMethod.Post))
+                    @using (Html.BeginForm("DeleteDepartment", "Data", FormMethod.Post))
                     {
-                        @Html.Hidden("Del_PROFESSOR_ID", "")
+                        @Html.Hidden("Del_ID", "")
                     <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
                         <input type="submit" value="Delete" href="#" class="btn btn-danger">
                     }
@@ -111,27 +98,20 @@
 
 <script>
     //Show The Popup Modal
-    function AddNew(PROFESSOR_ID) {
-        $("#PROFESSOR_ID").val(0);
-        $("#PROFESSOR_FIRSTNAME").val("");
-        $("#PROFESSOR_LASTNAME").val("");
-        $("#PROFESSOR_SHORTNAME").val("");
-        $("#PROFESSOR_STATUS").val("");
-        $("#DEPARTMENT_NAME").val("");
-        $("#ModalTitle").html("Add New Professor");
+    function AddNew(DEPARTMENT_ID) {
+        $("#DEPARTMENT_ID").val(0);
+        $("#DEPARTMENT").val("");
+        $("#ModalTitle").html("Add New Department");
         $("#MyModal").css('display', 'block');
     }
-    function EditRecord(PROFESSOR_ID) {
-        $("#PROFESSOR_ID").val(PROFESSOR_ID);
-        $("#PROFESSOR_NAME").val($("#TprofessorFirstName_" + PROFESSOR_ID + " p").html().trim());
-        $("#PROFESSOR_SHORTNAME").val($("#TprofessorShortName_" + PROFESSOR_ID + " p").html().trim());
-        $("#PROFESSOR_STATUS").val($("#TprofessorStatus_" + PROFESSOR_ID + " p").html().trim());
-        $("#DEPARTMENT_NAME").val($("#TdepartName_" + PROFESSOR_ID + " p").html().trim());
-        $("#ModalTitle").html("Update Professor Record");
+    function EditRecord(DEPARTMENT_ID) {
+        $("#DEPARTMENT_ID").val(DEPARTMENT_ID);
+        $("#DEPARTMENT").val($("#Tdepart_" + DEPARTMENT_ID + " p").html().trim());
+        $("#ModalTitle").html("Update Department Record");
         $("#MyModal").css('display', 'block');
     }
-    function DeleteRecord(PROFESSOR_ID) {
-        $("#Del_PROFESSOR_ID").val(PROFESSOR_ID);
+    function DeleteRecord(DEPARTMENT_ID) {
+        $("#Del_ID").val(DEPARTMENT_ID);
         $("#DeleteConfirmation").modal("show");
     }
     $(document).ready(function () {

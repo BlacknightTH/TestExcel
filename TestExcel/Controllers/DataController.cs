@@ -196,72 +196,123 @@ namespace TestExcel.Controllers
             return RedirectToAction("Subject");
         }
         #endregion
-        //#region Member
-        //public ActionResult Member()
-        //{
-        //    var model = db.USERs.ToList();
-        //    return View(model);
-        //}
-        //[HttpPost]
-        //public ActionResult SaveMember(FormCollection collection)
-        //{
-        //    int ID = int.Parse(collection["ID"]);
-        //    string USER_USERNAME = collection["USER_USERNAME"];
-        //    string USER_PASSWORD = collection["USER_PASSWORD"];
-        //    string USER_EMAIL = collection["USER_EMAIL"];
-        //    string USER_FIRSTNAME = collection["USER_FIRSTNAME"];
-        //    string USER_LASTNAME = collection["USER_LASTNAME"];
-        //    string USER_STATUS = collection["USER_STATUS"];
-        //    if (ModelState.IsValid && USER_USERNAME != "" && USER_PASSWORD != "")
-        //    {
-        //        if (ID > 0)
-        //        {
-        //            //Edit
-        //            var edit = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
-        //            if (edit != null)
-        //            {
-        //                edit.USER_USERNAME = USER_USERNAME;
-        //                edit.USER_PASSWORD = USER_PASSWORD;
-        //                edit.USER_EMAIL = USER_EMAIL;
-        //                edit.USER_FIRSTNAME = USER_FIRSTNAME;
-        //                edit.USER_LASTNAME = USER_LASTNAME;
-        //                edit.USER_STATUS = USER_STATUS;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            //Add
-        //            var item = new USER();
-        //            item.USER_USERNAME = USER_USERNAME;
-        //            item.USER_PASSWORD = USER_PASSWORD;
-        //            item.USER_EMAIL = USER_EMAIL;
-        //            item.USER_FIRSTNAME = USER_FIRSTNAME;
-        //            item.USER_LASTNAME = USER_LASTNAME;
-        //            item.USER_STATUS = USER_STATUS;
-        //            db.USERs.Add(item);
-        //        }
-        //        db.SaveChanges();
+        #region Member
+        public ActionResult Member()
+        {
+            var model = db.USERs.ToList();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult SaveMember(FormCollection collection)
+        {
+            int ID = int.Parse(collection["ID"]);
+            string USER_USERNAME = collection["USER_USERNAME"];
+            string USER_PASSWORD = collection["USER_PASSWORD"];
+            string USER_EMAIL = collection["USER_EMAIL"];
+            string USER_FIRSTNAME = collection["USER_FIRSTNAME"];
+            string USER_LASTNAME = collection["USER_LASTNAME"];
+            string USER_STATUS = collection["USER_STATUS"];
+            if (ModelState.IsValid && USER_USERNAME != "" && USER_PASSWORD != "")
+            {
+                if (ID > 0)
+                {
+                    //Edit
+                    var edit = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
+                    if (edit != null)
+                    {
+                        edit.USER_USERNAME = USER_USERNAME;
+                        edit.USER_PASSWORD = USER_PASSWORD;
+                        edit.USER_EMAIL = USER_EMAIL;
+                        edit.USER_FIRSTNAME = USER_FIRSTNAME;
+                        edit.USER_LASTNAME = USER_LASTNAME;
+                        edit.USER_STATUS = USER_STATUS;
+                    }
+                }
+                else
+                {
+                    //Add
+                    var item = new USER();
+                    item.USER_USERNAME = USER_USERNAME;
+                    item.USER_PASSWORD = USER_PASSWORD;
+                    item.USER_EMAIL = USER_EMAIL;
+                    item.USER_FIRSTNAME = USER_FIRSTNAME;
+                    item.USER_LASTNAME = USER_LASTNAME;
+                    item.USER_STATUS = USER_STATUS;
+                    db.USERs.Add(item);
+                }
+                db.SaveChanges();
 
-        //    }
-        //    return RedirectToAction("Member");
-        //}
-        //[HttpPost]
-        //public ActionResult DeleteMember(FormCollection collection)
-        //{
-        //    int ID = int.Parse(collection["Del_ID"]);
-        //    var del = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
-        //    if (del != null)
-        //    {
-        //        db.USERs.Remove(del);
-        //        db.SaveChanges();
-        //    }
-        //    else
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return RedirectToAction("Member");
-        //}
-        //#endregion
+            }
+            return RedirectToAction("Member");
+        }
+        [HttpPost]
+        public ActionResult DeleteMember(FormCollection collection)
+        {
+            int ID = int.Parse(collection["Del_ID"]);
+            var del = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
+            if (del != null)
+            {
+                db.USERs.Remove(del);
+                db.SaveChanges();
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+            return RedirectToAction("Member");
+        }
+        #endregion
+        #region Department
+        public ActionResult Department()
+        {
+            var model = db.DEPARTMENTs.ToList();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult SaveDepartment(FormCollection collection)
+        {
+            int DEPARTMENT_ID = int.Parse(collection["DEPARTMENT_ID"]);
+            string DEPARTMENT = collection["DEPARTMENT"];
+            if (ModelState.IsValid && DEPARTMENT != "")
+            {
+                if (DEPARTMENT_ID > 0)
+                {
+                    //Edit
+                    var edit = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == DEPARTMENT_ID).FirstOrDefault();
+                    if (edit != null)
+                    {
+                        edit.DEPARTMENT_NAME = DEPARTMENT;
+                    }
+                }
+                else
+                {
+                    //Add
+                    var item = new DEPARTMENT();
+                    item.DEPARTMENT_NAME = DEPARTMENT;
+                    db.DEPARTMENTs.Add(item);
+                }
+                db.SaveChanges();
+
+            }
+            return RedirectToAction("Department");
+        }
+        [HttpPost]
+        public ActionResult DeleteDepartment(FormCollection collection)
+        {
+            int ID = int.Parse(collection["Del_ID"]);
+            var del = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == ID).FirstOrDefault();
+            if (del != null)
+            {
+                db.DEPARTMENTs.Remove(del);
+                db.SaveChanges();
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+            return RedirectToAction("Department");
+        }
+        #endregion
         #region Professor
         public ActionResult Professor()
         {

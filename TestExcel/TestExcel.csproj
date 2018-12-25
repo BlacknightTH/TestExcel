@@ -605,7 +605,9 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Schedule.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -633,6 +635,7 @@
     <Content Include="Views\Report\data.cshtml" />
     <Content Include="Views\TimeSchedule\PSchedule.cshtml" />
     <Content Include="Views\TimeSchedule\ReportSchedule.cshtml" />
+    <Content Include="Views\Data\Department.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -21,8 +21,8 @@
         <table class="w3-table-all" id="DataTable" name="DataTable">
             <thead>
                 <tr class="w3-blue">
-                    <th>ชื่อภาควิชา</th>
-                    <th>ชื่อสาขาวิชา</th>
+                    <th>สาขาวิชา</th>
+                    <th>ห้อง</th>
                     <th>แก้ไข</th>
                     <th>ลบ</th>
                 </tr>
@@ -62,9 +62,9 @@
             <div class="container form-horizontal">
                 <div class="w3-section">
                     @Html.Hidden("BRANCH_ID", 0)
-                    <label>ภาควิชา</label>
-                    @Html.TextBox("COURSE_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "COURSE_NAME", @style = "max-width:570px" })
                     <label>สาขาวิชา</label>
+                    @Html.TextBox("COURSE_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "COURSE_NAME", @style = "max-width:570px" })
+                    <label>ห้อง</label>
                     @Html.TextBox("BRANCH_NAME", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "BRANCH_NAME", @style = "max-width:570px" })
                 </div>
 
@@ -90,7 +90,7 @@
                         @using (Html.BeginForm("DeleteBranch", "Data", FormMethod.Post))
                         {
                         @Html.Hidden("Del_BRANCH_ID", "")
-                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancle</a>
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
                         <input type="submit" value="Delete" href="#" class="btn btn-danger">
                         }
                     </div>
