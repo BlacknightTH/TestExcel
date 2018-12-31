@@ -137,6 +137,8 @@ namespace TestExcel.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase excelfile)
         {
+            if (Session["status"].ToString() == "admin")
+            {
             if (excelfile == null || excelfile.ContentLength == 0)
             {
                 ViewBag.Error = "Please select a excel file<br>";
@@ -343,7 +345,11 @@ namespace TestExcel.Controllers
                 }
             }
         }
-
+            else
+            {
+                return RedirectToAction("data");
+            }
+        }
         public void saveSubject(string subject_ID, string subject_NAME, string subject_CREDIT, string SUBJECT_MIDTERM_DATE,
                                 string SUBJECT_FINAL_DATE, string SUBJECT_MIDTERM_TIME, string SUBJECT_FINAL_TIME, string SEMESTER, string YEAR, TestExcelEntities db)
         {

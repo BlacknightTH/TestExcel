@@ -199,8 +199,15 @@ namespace TestExcel.Controllers
         #region Member
         public ActionResult Member()
         {
+            if(Session["status"].ToString() == "admin")
+            {
             var model = db.USERs.ToList();
             return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Section");
+            }
         }
         [HttpPost]
         public ActionResult SaveMember(FormCollection collection)

@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -14,11 +14,11 @@
         Html.RenderPartial("_Navbar");
     }
     <div class="container body-content w3-margin-top">
-        <div class="w3-row w3-center fontup">
+        @*<div class="w3-row w3-center fontup">
             <a href="@Url.Action("DSchedule","TimeSchedule")" style="color:blue;font-size:20px">ตารางเรียน</a> |
             <a href="@Url.Action("data","Report")" style="color:blue;font-size:20px">ดาวน์โหลด/อัปโหลด PDF/Excel</a> |
             <a href="@Url.Action("Section","Data")" style="color:blue;font-size:20px">ฐานข้อมูล</a> 
-        </div>
+        </div>*@
         @RenderBody()
         <hr />
     </div>

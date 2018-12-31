@@ -1,18 +1,21 @@
 ﻿@model IEnumerable<TestExcel.Data.SUBJECT>
 
 @{
-    ViewBag.Title = "Subject";
+    ViewBag.Title = "วิชาเรียน";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
     <a href="~/Data/Section" style="color:blue;font-size:20px">ตอนเรียน |</a>
     <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
-    <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
-    <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
-    <a href="~/Data/Course" style="color:blue;font-size:20px">หลักสูตร |</a>
+    <a href="~/Data/Branch" style="color:blue;font-size:20px">ห้องเรียน |</a>
+    <a href="~/Data/Building" style="color:blue;font-size:20px">อาคารเรียน |</a>
+    <a href="~/Data/Course" style="color:blue;font-size:20px">สาขาวิชา |</a>
     <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
-    <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ |</a>
-    <a href="~/Data/Member" style="color:blue;font-size:20px">ผู้ใช้งาน |</a>
+    <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ผู้สอน |</a>
+    @if (Session["status"].ToString() == "admin")
+    {
+        <a href="~/Data/Member" style="color:blue;font-size:20px">ผู้ใช้งาน |</a>
+    }
 </div>
 <br>
 <div class="container">
@@ -133,7 +136,11 @@
                     <div class="w3-row">
                         <div class="w3-half" style="max-width:230px">
                             <label>ภาคการศึกษา</label>
-                            @Html.TextBox("SEMESTER", "", new { @class = "w3-input w3-border w3-margin-bottom", @placeholder = "1" })
+                            <select class="w3-select w3-border w3-margin-bottom" id="SEMESTER" name="SEMESTER">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
                         </div>
                         <div class="w3-half" style="max-width:230px;margin-left:50px">
                             <label>ปีการศึกษา</label>

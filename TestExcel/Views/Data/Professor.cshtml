@@ -1,18 +1,21 @@
 ﻿@model IEnumerable<TestExcel.Data.PROFESSOR>
 
 @{
-    ViewBag.Title = "Professor";
+    ViewBag.Title = "อาจารย์ผู้สอน";
     Layout = "~/Views/Shared/_TimeScheduleLayout.cshtml";
 }
 <div class="w3-row w3-center fontup">
     <a href="~/Data/Section" style="color:blue;font-size:20px">ตอนเรียน |</a>
     <a href="~/Data/Subject" style="color:blue;font-size:20px">วิชาเรียน |</a>
-    <a href="~/Data/Branch" style="color:blue;font-size:20px">สาขาวิชา |</a>
-    <a href="~/Data/Building" style="color:blue;font-size:20px">อาคาร/ห้องเรียน |</a>
-    <a href="~/Data/Course" style="color:blue;font-size:20px">หลักสูตร |</a>
+    <a href="~/Data/Branch" style="color:blue;font-size:20px">ห้องเรียน |</a>
+    <a href="~/Data/Building" style="color:blue;font-size:20px">อาคารเรียน |</a>
+    <a href="~/Data/Course" style="color:blue;font-size:20px">สาขาวิชา |</a>
     <a href="~/Data/Department" style="color:blue;font-size:20px">ภาควิชา |</a>
-    <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ |</a>
-    <a href="~/Data/Member" style="color:blue;font-size:20px">ผู้ใช้งาน |</a>
+    <a href="~/Data/Professor" style="color:blue;font-size:20px">อาจารย์ผู้สอน |</a>
+    @if (Session["status"].ToString() == "admin")
+    {
+        <a href="~/Data/Member" style="color:blue;font-size:20px">ผู้ใช้งาน |</a>
+    }
 </div>
 <br>
 <div class="container">

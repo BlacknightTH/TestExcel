@@ -19,6 +19,9 @@
         cc = "@CLASSROOM";
         $("#ddl_Semester").val(@SEMESTER);
         $("#ddl_Year").val(@YEAR);
+        $("#refresh").click(function () {
+            $("#SUBJECT_FORM").submit();
+        });
         if (cc != " ") {
             $("#ddl_classroom").val(cc);
             }
@@ -64,41 +67,41 @@
 <div id="ErrorAlert" class="alert alert-danger collapse">
     <p>@ErrorMessage</p>
 </div>
-    <h3>@ViewBag.SUBJECT @ViewBag.SUBJECT_NAME</h3>
+<h3>@ViewBag.SUBJECT @ViewBag.SUBJECT_NAME</h3>
 
-    @using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = "SUBJECT_FORM", name = "SUBJECT_FORM" }))
-    {
-        <table border="0" align="left">
-            <tbody>
-                <tr>
-                    <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "width:80px" })</td>
-                    <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">
-                        @Html.DropDownList("ddl_Semester", (SelectList)ViewBag.ddl_Semester, new { @class = "form-control", style = "width:70px" })
-                    </td>
-                    <td align="right"><b>รหัสวิชา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">
-                        @Html.DropDownList("SUBJECT", (SelectList)ViewBag.ddl_Subject, new { @class = "form-control", style = "width:120px" })
-                    </td>
-                    <td align="right"><b>วิชา&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">
-                        @Html.DropDownList("SUBJECT_NAME", (SelectList)ViewBag.ddl_Subject_Name, new { @class = "form-control", style = "", disabled = "disabled" })
-                    </td>
-                    <td align="right"><b>ห้อง&nbsp;</b></td>
-                    <td colspan="5" style="padding-right:1em">
-                        <select class="form-control" id="ddl_classroom" name="ddl_classroom" style="width:120px">
-                            @foreach (var item in ViewBag.DDL_building)
-                            {
-                                <option value="@item">@item</option>
-                            }
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
-    }
+@using (Html.BeginForm("TeSchedule", "TimeSchedule", FormMethod.Post, new { id = "SUBJECT_FORM", name = "SUBJECT_FORM" }))
+{
+    <table border="0" align="left">
+        <tbody>
+            <tr>
+                <td align="right"><b>ปีการศึกษา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">@Html.DropDownList("ddl_Year", (SelectList)ViewBag.ddl_Year, new { @class = "form-control", style = "width:80px" })</td>
+                <td align="right"><b>ภาคการศึกษา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("ddl_Semester", (SelectList)ViewBag.ddl_Semester, new { @class = "form-control", style = "width:70px" })
+                </td>
+                <td align="right"><b>รหัสวิชา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("SUBJECT", (SelectList)ViewBag.ddl_Subject, new { @class = "form-control", style = "width:120px" })
+                </td>
+                <td align="right"><b>วิชา&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    @Html.DropDownList("SUBJECT_NAME", (SelectList)ViewBag.ddl_Subject_Name, new { @class = "form-control", style = "", disabled = "disabled" })
+                </td>
+                <td align="right"><b>ห้อง&nbsp;</b></td>
+                <td colspan="5" style="padding-right:1em">
+                    <select class="form-control" id="ddl_classroom" name="ddl_classroom" style="width:120px">
+                        @foreach (var item in ViewBag.DDL_building)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+}
 <br>
 <table class="table table-bordered" id="TableLocation">
     <thead>
@@ -391,6 +394,10 @@
     <br>
 }
 <input id="save" name="save" type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
+<br>
+<br>
+<br>
+<input id="refresh" name="refresh" type="submit" value="Refresh" class="w3-btn w3-red w3-center registerbtn pull-right" />
 <br>
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post, new { id = "PSaveAll", name = "PSaveAll" }))

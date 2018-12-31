@@ -18,7 +18,9 @@
             $("#ddl_Professor").val(cc);
             $("#ddl_Semester").val(@ViewBag.Semester);
             $("#ddl_Year").val(@ViewBag.Year);
-
+        $("#refresh").click(function () {
+            $("#PROFESSOR_FORM").submit();
+        });
             $("#ddl_Professor").change(function () {
                 $("#PROFESSOR_FORM").submit();
             });
@@ -397,7 +399,10 @@
 }
 <input id="save" name="save" type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
 <br>
-
+<br>
+<br>
+<input id="refresh" name="refresh" type="submit" value="Refresh" class="w3-btn w3-red w3-center registerbtn pull-right"/>
+<br>
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post, new { id = "PSaveAll", name = "PSaveAll" }))
 {

@@ -4,7 +4,7 @@
     int i = 0; var j = 0; int k = 0; int l = 0; int m = 0;
     string color;
     string textcreadit = "";
-    string[] date = { "M", "T", "W", "H", "F", "S" ,"SUN"};
+    string[] date = { "M", "T", "W", "H", "F", "S", "SUN" };
     string SEMESTER = ViewBag.Semester;
     string YEAR = ViewBag.Year;
     string BRANCH_NAME = ViewBag.BRANCH_NAME;
@@ -16,12 +16,14 @@
     $(document).ready(function () {
         var date = ["M", "T", "W", "H", "F", "S","SUN"];
         var datethai = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
-    
+
         $("#DDL_DEPARTMENT").val(@ViewBag.DepartDDLSelected);
         $("#DDL_BRANCH").val(@ViewBag.DDLSelected);
         $("#ddl_Semester").val(@ViewBag.Semester);
         $("#ddl_Year").val(@ViewBag.Year);
-
+        $("#refresh").click(function () {
+            $("#BRANCH_FORM").submit();
+        });
         $("#DDL_DEPARTMENT").change(function () {
             $("#Count").val(1);
             $("#BRANCH_FORM").submit();
@@ -405,6 +407,10 @@
     <br>
 }
 <input id="save" name="save" type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
+<br>
+<br>
+<br>
+<input id="refresh" name="refresh" type="submit" value="Refresh" class="w3-btn w3-red w3-center registerbtn pull-right" />
 <br>
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post, new { id = "PSaveAll", name = "PSaveAll" }))

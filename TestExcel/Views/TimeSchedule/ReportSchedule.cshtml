@@ -68,7 +68,7 @@
 {
     <h3>ห้อง @Model.FirstOrDefault().SECTION_CLASSROOM ภาคการศึกษาที่ @SEMESTER ปีการศึกษา @YEAR</h3>
 }
-else
+@*else
 {
     <h3>@ViewBag.SUBJECT @ViewBag.SUBJECT_NAME</h3>
 
@@ -105,7 +105,7 @@ else
         </table>
         <br>
     }
-}
+}*@
 <br>
 <table class="table table-bordered" id="TableLocation">
     <thead>
@@ -398,6 +398,10 @@ else
     <br>
 }
 <input id="save" name="save" type="submit" value="Save" class="w3-btn w3-green w3-center registerbtn pull-right" />
+<br>
+<br>
+<br>
+<a id="refresh" name="refresh" href="@Request.RawUrl" value="Refresh" class="w3-btn w3-red w3-center registerbtn pull-right">Refresh</a>
 <br>
 <br>
 @using (Html.BeginForm("updatedata", "TimeSchedule", FormMethod.Post, new { id = "PSaveAll", name = "PSaveAll" }))

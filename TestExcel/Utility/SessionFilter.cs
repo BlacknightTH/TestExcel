@@ -24,7 +24,8 @@ namespace TestExcel.Utility
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             HttpContext ctx = HttpContext.Current;
-            if (HttpContext.Current.Session["status"] == null || HttpContext.Current.Session["status"].ToString() != "admin")
+            //if (HttpContext.Current.Session["status"] == null || HttpContext.Current.Session["status"].ToString() != "admin")
+            if (HttpContext.Current.Session["status"] == null)
             {
                 filterContext.Result = new RedirectResult("~/Login/Index");
                 return;
