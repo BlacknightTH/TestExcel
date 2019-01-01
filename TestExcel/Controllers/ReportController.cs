@@ -20,22 +20,29 @@ namespace TestExcel.Controllers
     {
         string[] date = { "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์" };
         TestExcelEntities db = new TestExcelEntities();
+        List<DEPARTMENT> _DEPARTMENT = new List<DEPARTMENT>();
         // GET: PdfExport
-        public ActionResult data()
+        public void SetYear()
         {
             var semesteryear = (from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
-                               select new SemesterYear
-                               {
-                                   SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
-                                   SEMESTER = d1.SEMESTER,
-                                   YEAR = d1.YEAR
-                               }).OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER);
+                                select new SemesterYear
+                                {
+                                    SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
+                                    SEMESTER = d1.SEMESTER,
+                                    YEAR = d1.YEAR
+                                }).OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER);
             var model = db.DEPARTMENTs.ToList();
+            _DEPARTMENT = model;
             string first_Year;
             first_Year = semesteryear.FirstOrDefault().YEAR;
             ViewBag.Semester = semesteryear.FirstOrDefault().SEMESTER;
             ViewBag.ddl_Year = new SelectList(semesteryear, "YEAR", "YEAR", first_Year);
-            return View(model);
+        }
+        public ActionResult data(string ErrorMessage)
+        {
+            string m = ErrorMessage;
+            SetYear();
+            return View(_DEPARTMENT);
         }
         [HttpPost]
         public ActionResult Report(FormCollection collection)
@@ -58,7 +65,10 @@ namespace TestExcel.Controllers
             }
             catch
             {
-                return RedirectToAction("data");
+                SetYear();
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+                return View("data",_DEPARTMENT);
             }
         }
         public ActionResult PfReport(FormCollection collection)
@@ -82,7 +92,10 @@ namespace TestExcel.Controllers
             }
             catch
             {
-                return RedirectToAction("data");
+                SetYear();
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+                return View("data", _DEPARTMENT);
             }
         }
         [HttpPost]
@@ -101,7 +114,10 @@ namespace TestExcel.Controllers
             }
             catch
             {
-                return RedirectToAction("data");
+                SetYear();
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+                return View("data", _DEPARTMENT);
             }
         }
         [HttpPost]
@@ -132,7 +148,10 @@ namespace TestExcel.Controllers
             }
             catch
             {
-                return RedirectToAction("data");
+                SetYear();
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+                return View("data", _DEPARTMENT);
             }
         }
         [HttpPost]
@@ -341,9 +360,11 @@ namespace TestExcel.Controllers
                 }
                 else
                 {
-                    ViewBag.Error = "File type is incorrect<br>";
-                    return RedirectToAction("data");
-                }
+                        SetYear();
+                        ViewBag.Message = "";
+                        ViewBag.ErrorMessage = "ชนิดของไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ .xlsx";
+                        return View("data", _DEPARTMENT);
+                    }
             }
         }
             else
@@ -539,12 +560,18 @@ namespace TestExcel.Controllers
                 }
                 catch
                 {
-                    return RedirectToAction("data");
+                    SetYear();
+                    ViewBag.Message = "";
+                    ViewBag.ErrorMessage = "ขออภัยมีข้อผิดพลาดเกิดขึ้นกรุณาติดต่อ ADMIN";
+                    return View("data", _DEPARTMENT);
                 }
             }
             else
             {
-                return RedirectToAction("data");
+                SetYear();
+                ViewBag.Message = "";
+                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+                return View("data", _DEPARTMENT);
             }
         }
 
