@@ -103,7 +103,7 @@ namespace TestExcel.Controllers
             int select_branchid;
             if (BR_NAME == null && BR_Semester == null && BR_Year == null)
             {
-                var t = db.SUBJECTs.OrderBy(x => x.YEAR).First();
+                var t = db.SUBJECTs.OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER).First();
                 BR_Semester = t.SEMESTER;
                 BR_Year = t.YEAR;
                 select_branchid = 1;
@@ -222,7 +222,7 @@ namespace TestExcel.Controllers
         {
             if (BR_Professor == null && BR_Semester == null && BR_Year == null)
             {
-                var t = db.SUBJECTs.OrderBy(x => x.YEAR).First();
+                var t = db.SUBJECTs.OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER).First();
                 BR_Semester = t.SEMESTER;
                 BR_Year = t.YEAR;
                 BR_Professor = db.PROFESSORs.First().PROFESSOR_SHORTNAME;
@@ -391,7 +391,7 @@ namespace TestExcel.Controllers
             IQueryable<Section_Subject> query;
             if (SUBJECTid == null && BR_Semester == null && BR_Year == null)
             {
-                var g = db.SUBJECTs.OrderBy(x => x.YEAR).First();
+                var g = db.SUBJECTs.OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER).First();
                 BR_Semester = g.SEMESTER;
                 BR_Year = g.YEAR;
                 SUBJECT = db.SUBJECTs.Where(x => x.SEMESTER == BR_Semester && x.YEAR == BR_Year).First();

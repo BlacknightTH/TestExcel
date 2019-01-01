@@ -122,7 +122,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(x => x.SECTION_NUMBER))
         {
             if (item.SECTION_NUMBER != "")
             {

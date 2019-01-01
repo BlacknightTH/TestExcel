@@ -589,10 +589,10 @@ namespace TestExcel.Controllers
                                  YEAR = e1.YEAR
                              }).OrderBy(x => x.SECTION_TIME_START).ToList();
 
-                var model = query.Where(x => (x.SECTION_TIME_START <= have.SECTION_TIME_START && x.SECTION_TIME_START < have.SECTION_TIME_END && x.SECTION_TIME_END > have.SECTION_TIME_START) && x.SUBJECT_ID != have.SUBJECT_ID && x.SECTION_NUMBER != "");
+                var model = query.Where(x => (x.SECTION_TIME_START <= have.SECTION_TIME_START && x.SECTION_TIME_START < have.SECTION_TIME_END && x.SECTION_TIME_END > have.SECTION_TIME_START) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).ToList();
                 if (model.Count() > 0)
                 {
-                    foreach (var im in model)
+                    foreach (var im in model.OrderBy(x => x.SECTION_DATE))
                     {
                         var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
                         e.CRASH = "3";

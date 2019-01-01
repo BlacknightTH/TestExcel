@@ -33,6 +33,7 @@
     $(document).ready(function () {
         $("#year").val(@ViewBag.Year);
         $("#year_export").val(@ViewBag.Year);
+        $(".semester").val(@ViewBag.Semester);
     });
     $(document).on('click', '#close-preview', function () {
         $('.image-preview').popover('hide');
@@ -131,7 +132,7 @@
                         {
                             <div class="w3-container">
                                 <label>ภาคการศึกษา</label>
-                                <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                <select class="w3-select w3-border w3-margin-bottom semester" id="semester" name="semester">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -167,7 +168,7 @@
                                 <option value="0">อื่น ๆ</option>
                             </select>
                             <label class="w3-margin-top">ภาคการศึกษา</label>
-                            <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                            <select class="w3-select w3-border w3-margin-bottom semester" id="semester" name="semester">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -208,7 +209,7 @@
                                         <option value="0">อื่น ๆ</option>
                                     </select>
                                     <label>ภาคการศึกษา</label>
-                                    <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                    <select class="w3-select w3-border w3-margin-bottom semester" id="semester" name="semester">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -246,7 +247,7 @@
                                     <option value="5">วันเสาร์</option>
                                 </select>
                                 <label>ภาคการศึกษา</label>
-                                <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                <select class="w3-select w3-border w3-margin-bottom semester" id="semester" name="semester">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -285,7 +286,7 @@
                                     <option value="1">อื่น ๆ</option>
                                 </select>
                                 <label>ภาคการศึกษา</label>
-                                <select class="w3-select w3-border w3-margin-bottom" id="semester" name="semester">
+                                <select class="w3-select w3-border w3-margin-bottom semester" id="semester" name="semester">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>

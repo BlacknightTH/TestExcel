@@ -23,17 +23,18 @@ namespace TestExcel.Controllers
         // GET: PdfExport
         public ActionResult data()
         {
-            var semesteryear = from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
+            var semesteryear = (from d1 in db.SECTIONs.Select(x => new { x.SEMESTER, x.YEAR }).Distinct()
                                select new SemesterYear
                                {
                                    SEMESTER_YEAR = d1.SEMESTER + "/" + d1.YEAR,
                                    SEMESTER = d1.SEMESTER,
                                    YEAR = d1.YEAR
-                               };
+                               }).OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER);
             var model = db.DEPARTMENTs.ToList();
             string first_Year;
-            first_Year = "2560";
-            ViewBag.ddl_Year = new SelectList(semesteryear.OrderBy(x => x.YEAR), "YEAR", "YEAR", first_Year);
+            first_Year = semesteryear.FirstOrDefault().YEAR;
+            ViewBag.Semester = semesteryear.FirstOrDefault().SEMESTER;
+            ViewBag.ddl_Year = new SelectList(semesteryear, "YEAR", "YEAR", first_Year);
             return View(model);
         }
         [HttpPost]

@@ -359,6 +359,8 @@
             var optionlisting2 = "";
             var TimeStart, TimeEnd, tmp_id2, tmp12, first_classroom,first_id, first_subjectid, first_name, first_number, first_branch, first_professor, first_timestart, first_timeend, first_date;
             var second_id, second_classroom, second_subjectid, second_name, second_number, second_branch, second_professor, second_timestart, second_timeend, second_date;
+            $(".getdata").css("box-shadow", "0px 0px 0px");
+            $(this).css("box-shadow", "4px 4px 6px");
             check_id = $(this).find("#searchId").val();
             first_id = $(this).find("#First_" + "id_" + check_id).val();
             first_subjectid = $(this).find("#First_" + "subjectid_" + check_id).val();
