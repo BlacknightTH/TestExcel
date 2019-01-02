@@ -356,8 +356,11 @@ namespace TestExcel.Controllers
                     {
 
                     }
-                    return RedirectToAction("DSchedule", "TimeSchedule");
-                }
+                        SetYear();
+                        ViewBag.Message = "อัปโหลดไฟล์ " + excelfile.FileName + " เสร็จสิ้น";
+                        ViewBag.ErrorMessage = "";
+                        return View("data", _DEPARTMENT);
+                    }
                 else
                 {
                         SetYear();

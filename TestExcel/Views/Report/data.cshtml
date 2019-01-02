@@ -40,6 +40,7 @@
             $("#Alert").show("fade");
             setTimeout(function () {
                 $("#Alert").hide("fade");
+                window.location.href = "/Report/data";
             }, 5000);
         }
         if (ErrorMessage != "") {
@@ -47,6 +48,7 @@
             setTimeout(function () {
                 $("#ErrorAlert").hide("fade");
             }, 5000);
+
         }
 
         $("#year").val(@ViewBag.Year);
