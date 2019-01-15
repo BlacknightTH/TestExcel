@@ -32,6 +32,11 @@ namespace TestExcel.Controllers
             var asearch = db.PROFESSORs.Where(x => x.PROFESSOR_SHORTNAME.Contains(search)).ToList();
             return new JsonResult { Data = asearch, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+        public JsonResult GetSearchClassroom(string search)
+        {
+            var asearch = db.BUILDINGs.Where(x => x.CLASSROOM_NAME.Contains(search)).ToList();
+            return new JsonResult { Data = asearch, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
         public JsonResult GetSearchBranch(string search)
         {
             var asearch = db.BRANCHes.Where(x => x.COURSE_NAME.Contains(search)).ToList();

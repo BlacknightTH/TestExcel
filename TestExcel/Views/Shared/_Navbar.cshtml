@@ -4,7 +4,6 @@
 @{
     string SEMESTER = ViewBag.Semester;
     string YEAR = ViewBag.Year;
-    string dataID = ViewBag.dataID;
 }
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -93,12 +92,29 @@
 @if (Session["Username"] != null)
 {
     <script>
-    $(document).ready(function () {
-        $(document).click(function () {
-            if ($(".dropdown-menu").show()) {
-                $(".dropdown-menu").hide();
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = $("#myInput");
+            filter = input.val();
+            li = $("#notiContent li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
             }
-        });
+        }
+
+        $(document).ready(function () {
+            var form = $("#PSaveAll").serialize();
+        //$(document).click(function () {
+        //    if ($(".dropdown-menu").show()) {
+        //        $(".dropdown-menu").hide();
+        //    }
+        //});
         var date = ["M", "T", "W", "H", "F", "S"];
         var datethai = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
         $.ajax({
@@ -114,6 +130,7 @@
                     count = response.length;
                     $("#count").html(count);
                     $("#count").addClass("badge");
+                    $("#notiContent").append($('<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search" style="min-width: 500px;">'));
                 }
 
                 $.each(response, function (index, value) {
@@ -139,20 +156,53 @@
                 console.log(error);
             }
         });
-
+        $("#FIRST_SAVE_CLASSROOM").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetSearchClassroom","Search")',
+                        dataType: "json",
+                        data: { search: $("#FIRST_SAVE_CLASSROOM").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CLASSROOM_NAME, value: item.CLASSROOM_NAME };
+                            }));
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error");
+                        }
+                    });
+                }
+        });
+        $("#SECOND_SAVE_CLASSROOM").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetSearchClassroom","Search")',
+                        dataType: "json",
+                        data: { search: $("#SECOND_SAVE_CLASSROOM").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CLASSROOM_NAME, value: item.CLASSROOM_NAME };
+                            }));
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error");
+                        }
+                    });
+                }
+            });
         $("#ConfirmSaveAll").click(function () {
                 $("#PSaveAll").submit();
             });
             $("#ConfirmSave").click(function () {
                 $("#PSingleSave").submit();
             });
-            var Arraydata = "@dataID";
-        $("#save_all").click(function () {
+            $("#save_all").click(function () {
+                form = $("#PSaveAll").serialize();
             $("#res").html("");
                 $.ajax({
                     type: 'POST',
                     url: '/data/Warning',
-                    data: { 'data': Arraydata,'semester':'@SEMESTER' ,'year':'@YEAR'},
+                    data: form,
                     success: function (response) {
                         var count = response.length;
                         if (count == 0) {
@@ -178,13 +228,14 @@
                     }
                 });
         });
-        $("#save").click(function () {
+            $("#save").click(function () {
+                form = $("#PSaveAll").serialize();
             $("#ress").html("");
             if ($("#FIRST_SECTION_ID").val() != null || ("#FIRST_SECTION_ID").val() != "" ) {
                 $.ajax({
                     type: 'POST',
                     url: '/data/Warning',
-                    data: { 'data': Arraydata,'semester':'@SEMESTER' ,'year':'@YEAR'},
+                    data: form,
                     success: function (response) {
                         var count = response.length;
                         if (count == 0) {
@@ -212,7 +263,6 @@
 
             }
         });
-
         $(".noti").click(function () {
             $("#notiContent").toggle();
         });

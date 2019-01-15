@@ -471,7 +471,7 @@
                                     {
                                         if (WhereTimeDate.First().SUBJECT_CREDIT.Contains("-0-"))
                                         {
-                                            <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                            <div class="draggable getdata" style="background-color:@color;width:100%;min-height:50px">
                                                 <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                                 <p>
                                                     @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
@@ -490,7 +490,7 @@
                                         }
                                         else
                                         {
-                                            <div class="getdata" style="background-color:@color;width:100%;height:50px">
+                                            <div class="getdata" style="background-color:@color;width:100%;min-height:50px">
                                                 @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
                                                 <p>
                                                     @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
@@ -511,7 +511,7 @@
                                     }
                                     else
                                     {
-                                        <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                        <div class="draggable getdata" style="background-color:@color;width:100%;min-height:50px">
                                             <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                             <p>@WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER</p>
                                             @Html.Hidden("searchId", WhereTimeDate.First().SECTION_ID)
@@ -527,7 +527,7 @@
 
                                         </div>
                                         <br>
-                                        <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                        <div class="draggable getdata" style="background-color:@color;width:100%;min-height:50px">
                                             <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                             <p>@WhereTimeDate.Last().SUBJECT_ID @WhereTimeDate.Last().SUBJECT_NAME ตอน @WhereTimeDate.Last().SECTION_NUMBER</p>
                                             @Html.Hidden("searchId", WhereTimeDate.Last().SECTION_ID)
@@ -564,7 +564,7 @@
                                     <td id="@tid" colspan="@TIME" width="60px" class="droppable">
                                         @if (first.SUBJECT_CREDIT.Contains("-0-"))
                                         {
-                                            <div class="draggable getdata" style="background-color:@color;height:50px">
+                                            <div class="draggable getdata" style="background-color:@color;min-height:50px">
                                                 <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                                 <p>
                                                     @first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER
@@ -593,7 +593,7 @@
                                         }
                                         else
                                         {
-                                            <div class="getdata" style="background-color:@color;height:50px">
+                                            <div class="getdata" style="background-color:@color;min-height:50px">
                                                 @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
                                                 <p>
                                                     @first.SUBJECT_ID @first.SUBJECT_NAME ตอน @first.SECTION_NUMBER
@@ -630,7 +630,7 @@
                                     <td id="@tid" colspan="@TIME" width="60px" class="droppable">
                                         @if (WhereTimeDate.First().SUBJECT_CREDIT.Contains("-0-"))
                                         {
-                                            <div class="draggable getdata" style="background-color:@color;width:100%;height:50px">
+                                            <div class="draggable getdata" style="background-color:@color;width:100%;min-height:50px">
                                                 <div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>
                                                 <p>
                                                     @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER
@@ -649,7 +649,7 @@
                                         }
                                         else
                                         {
-                                            <div class="getdata" style="background-color:@color;width:100%;height:50px">
+                                            <div class="getdata" style="background-color:@color;width:100%;min-height:50px">
                                                 @*<div id="x_button" class="btn x_button btn-default pull-right text-center">&times;</div>*@
                                                 <p>
                                                     @WhereTimeDate.First().SUBJECT_ID @WhereTimeDate.First().SUBJECT_NAME ตอน @WhereTimeDate.First().SECTION_NUMBER

@@ -328,6 +328,23 @@
                     });
                 }
             });
+            $("#SECTION_CLASSROOM").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetSearchClassroom","Search")',
+                        dataType: "json",
+                        data: { search: $("#SECTION_CLASSROOM").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.CLASSROOM_NAME, value: item.CLASSROOM_NAME };
+                            }));
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error");
+                        }
+                    });
+                }
+            });
             //////////////////////////////////////
             $('#SECTION_TIME_START').on("change", function () {
                 var TimeStart = $('#SECTION_TIME_START').val();
