@@ -636,9 +636,13 @@ namespace TestExcel.Controllers
                         var item = new TimeCrash();
                         foreach (var im in WhereTimeDate)
                         {
-                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
+                            if (im.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME))
                             {
                                 item.TEACHER_CRASH = "1";
+                            }
+                            else
+                            {
+                                item.TEACHER_CRASH = "0";
                             }
                         }
                         item.SUBJECT_ID_First = Subject_id;

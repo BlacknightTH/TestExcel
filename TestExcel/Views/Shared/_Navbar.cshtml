@@ -217,7 +217,6 @@
                                 var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
                                 var tmp_datesecond = date.indexOf(value.SECTION_DATE_Second);
                                 var tmp_datethird = date.indexOf(value.SECTION_DATE_Third);
-
                                 var SECTION_TIME_START_First, SECTION_TIME_END_First;
                                 var First_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_First + "");
                                 var First_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_First + "");
@@ -267,38 +266,8 @@
                                 }
 
                                 var TIME_CRASH = value.TIME_CRASH;
-                                if (value.TEACHER_CRASH.length == 0) {
-                                    if (TIME_CRASH == "2") {
-                                        $("#res").append($('<br><p>'
-                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
-                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
-                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
-                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
-                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
-                                            + value.SEMESTER + '/' + value.YEAR
-                                            + '</p><br><hr>'));
-                                    }
-                                    else {
-                                        $("#res").append($('<br><p>'
-                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
-                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
-                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
-                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
-                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
-                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                            + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
-                                            + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
-                                            + SECTION_TIME_START_Third + SECTION_TIME_END_Third
-                                            + value.SEMESTER + '/' + value.YEAR
-                                            + '</p><br><hr>'));
-                                    }
-                                    $("#SaveConfirmation").modal();
-                                }
-                                else {
+                                var TEACHER_CRASH = value.TEACHER_CRASH;
+                                if (TEACHER_CRASH != null) {
                                     if (TIME_CRASH == "2") {
                                         $("#crash").append($('<br><p>'
                                             + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
@@ -329,6 +298,37 @@
                                     }
                                     $("#TEACHER_CRASH").modal();
                                 }
+                                else {
+                                    if (TIME_CRASH == "2") {
+                                        $("#res").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    else {
+                                        $("#res").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                            + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    $("#SaveConfirmationAll").modal();
+                                }
                             });
                         }
                     }
@@ -353,8 +353,6 @@
                                 var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
                                 var tmp_datesecond = date.indexOf(value.SECTION_DATE_Second);
                                 var tmp_datethird = date.indexOf(value.SECTION_DATE_Third);
-                                var TIME_CRASH = value.TIME_CRASH;
-
                                 var SECTION_TIME_START_First, SECTION_TIME_END_First;
                                 var First_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_First + "");
                                 var First_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_First + "");
@@ -402,39 +400,9 @@
                                 else if (Third_timeindex_end % 2 == 0) { //even
                                     SECTION_TIME_END_Third = value.SECTION_TIME_END_Third + '.00 '
                                 }
-
-                            if (value.TEACHER_CRASH.length == 0) {
-                                if (TIME_CRASH == "2") {
-                                    $("#ress").append($('<br><p>'
-                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
-                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
-                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
-                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
-                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
-                                        + value.SEMESTER + '/' + value.YEAR
-                                        + '</p><br><hr>'));
-                                }
-                                else {
-                                    $("#ress").append($('<br><p>'
-                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
-                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
-                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
-                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
-                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
-                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
-                                        + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
-                                        + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
-                                        + SECTION_TIME_START_Third + SECTION_TIME_END_Third
-                                        + value.SEMESTER + '/' + value.YEAR
-                                        + '</p><br><hr>'));
-                                }
-                                $("#SaveConfirmation").modal();
-                            }
-                            else {
+                                var TIME_CRASH = value.TIME_CRASH;
+                                var TEACHER_CRASH = value.TEACHER_CRASH;
+                                if (value.TEACHER_CRASH != null) {
                                 if (TIME_CRASH == "2") {
                                     $("#crash").append($('<br><p>'
                                         + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
@@ -464,6 +432,37 @@
                                         + '</p><br><hr>'));
                                 }
                                 $("#TEACHER_CRASH").modal();
+                            }
+                            else {
+                                if (TIME_CRASH == "2") {
+                                    $("#ress").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                else {
+                                    $("#ress").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                        + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                $("#SaveConfirmation").modal();
                                 }
                             });
                         }
