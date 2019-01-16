@@ -561,6 +561,13 @@ namespace TestExcel.Controllers
             //var list = GetWarning(data, semester, year);
             return new JsonResult { Data = list.ToList(), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+        [HttpPost]
+        public JsonResult Warning_single(FormCollection collection)
+        {
+            var list = GetWarning_single(collection);
+            //var list = GetWarning(data, semester, year);
+            return new JsonResult { Data = list.ToList(), JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
         public List<TimeCrash> GetWarning(FormCollection collection)
         {
             var semester = collection["Semester"];
@@ -582,9 +589,31 @@ namespace TestExcel.Controllers
                     var Classroom = collection["First_classroom_" + split[i]];
                     var Date = collection["First_date_" + split[i]];
                     var Subject_id = collection["First_subjectid_" + split[i]];
+                    var First_SUBJECT_NAME = collection["First_name_" + split[i]];
+                    var First_SECTION_NUMBER = collection["First_number_" + split[i]];
+                    var First_BRANCH_NAME = collection["First_branch_" + split[i]];
+                    var unit = (from e1 in db.SECTIONs
+                                join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                                where e1.SECTION_ID == FIRST_SECTION_ID
+                                select new Section_Subject
+                                {
+                                    SECTION_ID = e1.SECTION_ID,
+                                    SUBJECT_ID = e1.SUBJECT_ID,
+                                    SUBJECT_NAME = e2.SUBJECT_NAME,
+                                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                    SECTION_NUMBER = e1.SECTION_NUMBER,
+                                    SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                    SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                    SECTION_DATE = e1.SECTION_DATE,
+                                    SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                    SECTION_TIME_START = e1.SECTION_TIME_START,
+                                    SECTION_TIME_END = e1.SECTION_TIME_END,
+                                    SEMESTER = e1.SEMESTER,
+                                    YEAR = e1.YEAR
+                                }).OrderBy(x => x.SECTION_TIME_START).First();
                     var query = (from e1 in db.SECTIONs
                                  join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SUBJECT_ID != Subject_id && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                                  select new Section_Subject
                                  {
                                      SECTION_ID = e1.SECTION_ID,
@@ -601,27 +630,55 @@ namespace TestExcel.Controllers
                                      SEMESTER = e1.SEMESTER,
                                      YEAR = e1.YEAR
                                  }).OrderBy(x => x.SECTION_TIME_START).ToList();
-                    var model = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).ToList();
-                    if (model.Count() > 0)
+                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                    if (WhereTimeDate.Count() > 0)
                     {
-                        foreach (var im in model.OrderBy(x => x.SECTION_DATE))
+                        var item = new TimeCrash();
+                        foreach (var im in WhereTimeDate)
                         {
-                            var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
-                            e.CRASH = "3";
-                            var item = new TimeCrash();
-                            item.SECTION_ID_First = im.SECTION_ID;
-                            item.SUBJECT_ID_First = im.SUBJECT_ID;
-                            item.SUBJECT_NAME_First = im.SUBJECT_NAME;
-                            item.SECTION_NUMBER_First = im.SECTION_NUMBER;
-                            item.SECTION_DATE_First = im.SECTION_DATE;
-                            item.SECTION_TIME_START_First = im.SECTION_TIME_START;
-                            item.SECTION_TIME_END_First = im.SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
-                            item.SEMESTER = semester;
-                            item.YEAR = year;
-                            _TimeCrash.Add(item);
+                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
+                            {
+                                item.TEACHER_CRASH = "1";
+                            }
                         }
+                        item.SUBJECT_ID_First = Subject_id;
+                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                        item.SECTION_DATE_First = Date;
+                        item.SECTION_TIME_START_First = FirstTime;
+                        item.SECTION_TIME_END_First = LastTime;
+                        item.SECTION_CLASSROOM_First = Classroom;
+                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "2";
+                        if (WhereTimeDate.Count() == 2)
+                        {
+                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                            item.TIME_CRASH = "3";
+                        }
+                        item.SEMESTER = semester;
+                        item.YEAR = year;
+                        _TimeCrash.Add(item);
                     }
                 }
                 else if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID != null)
@@ -631,9 +688,31 @@ namespace TestExcel.Controllers
                     var Classroom = collection["First_classroom_" + split[i]];
                     var Date = collection["First_date_" + split[i]];
                     var Subject_id = collection["First_subjectid_" + split[i]];
+                    var First_SUBJECT_NAME = collection["First_name_" + split[i]];
+                    var First_SECTION_NUMBER = collection["First_number_" + split[i]];
+                    var First_BRANCH_NAME = collection["First_branch_" + split[i]];
+                    var unit = (from e1 in db.SECTIONs
+                                join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                                where e1.SECTION_ID == FIRST_SECTION_ID
+                                select new Section_Subject
+                                {
+                                    SECTION_ID = e1.SECTION_ID,
+                                    SUBJECT_ID = e1.SUBJECT_ID,
+                                    SUBJECT_NAME = e2.SUBJECT_NAME,
+                                    SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                    SECTION_NUMBER = e1.SECTION_NUMBER,
+                                    SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                    SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                    SECTION_DATE = e1.SECTION_DATE,
+                                    SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                    SECTION_TIME_START = e1.SECTION_TIME_START,
+                                    SECTION_TIME_END = e1.SECTION_TIME_END,
+                                    SEMESTER = e1.SEMESTER,
+                                    YEAR = e1.YEAR
+                                }).OrderBy(x => x.SECTION_TIME_START).First();
                     var query = (from e1 in db.SECTIONs
                                  join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SUBJECT_ID != Subject_id && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                                  select new Section_Subject
                                  {
                                      SECTION_ID = e1.SECTION_ID,
@@ -650,30 +729,252 @@ namespace TestExcel.Controllers
                                      SEMESTER = e1.SEMESTER,
                                      YEAR = e1.YEAR
                                  }).OrderBy(x => x.SECTION_TIME_START).ToList();
-                    var model = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).ToList();
-                    if (model.Count() > 0)
+                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                    if (WhereTimeDate.Count() > 0)
                     {
-                        foreach (var im in model.OrderBy(x => x.SECTION_DATE))
+                         var item = new TimeCrash();
+                        foreach (var im in WhereTimeDate)
                         {
-                            var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
-                            e.CRASH = "3";
-                            var item = new TimeCrash();
-                            item.SECTION_ID_First = im.SECTION_ID;
-                            item.SUBJECT_ID_First = im.SUBJECT_ID;
-                            item.SUBJECT_NAME_First = im.SUBJECT_NAME;
-                            item.SECTION_NUMBER_First = im.SECTION_NUMBER;
-                            item.SECTION_DATE_First = im.SECTION_DATE;
-                            item.SECTION_TIME_START_First = im.SECTION_TIME_START;
-                            item.SECTION_TIME_END_First = im.SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
-                            item.SEMESTER = semester;
-                            item.YEAR = year;
-                            _TimeCrash.Add(item);
+                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
+                            {
+                                item.TEACHER_CRASH = "1";
+                            }
                         }
+                        item.SUBJECT_ID_First = Subject_id;
+                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                        item.SECTION_DATE_First = Date;
+                        item.SECTION_TIME_START_First = FirstTime;
+                        item.SECTION_TIME_END_First = LastTime;
+                        item.SECTION_CLASSROOM_First = Classroom;
+                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "2";
+                        if (WhereTimeDate.Count() == 2)
+                        {
+                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                            item.TIME_CRASH = "3";
+                        }
+                        item.SEMESTER = semester;
+                        item.YEAR = year;
+                        _TimeCrash.Add(item);
                     }
                 }
             }
+            var TimeCrash = _TimeCrash.ToList();
+            return TimeCrash;
+        }
+        public List<TimeCrash> GetWarning_single(FormCollection collection)
+        {
+            var semester = collection["Semester"];
+            var year = collection["Year"];
+            var SUBJECTid = collection["SUBJECTid"];
+            var SearchId = collection["searchId"];
+            var section = db.SECTIONs;
+            List<Section_Subject> _Section_Subject = new List<Section_Subject>();
+                var FIRST_SECTION_ID = int.Parse(collection["FIRST_SECTION_ID"]);
+                var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
+                var unit = (from e1 in db.SECTIONs
+                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                            where e1.SECTION_ID == FIRST_SECTION_ID
+                            select new Section_Subject
+                            {
+                                SECTION_ID = e1.SECTION_ID,
+                                SUBJECT_ID = e1.SUBJECT_ID,
+                                SUBJECT_NAME = e2.SUBJECT_NAME,
+                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                SECTION_NUMBER = e1.SECTION_NUMBER,
+                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                SECTION_DATE = e1.SECTION_DATE,
+                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                SECTION_TIME_START = e1.SECTION_TIME_START,
+                                SECTION_TIME_END = e1.SECTION_TIME_END,
+                                SEMESTER = e1.SEMESTER,
+                                YEAR = e1.YEAR
+                            }).OrderBy(x => x.SECTION_TIME_START).First();
+            if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID == "0")
+                {
+                    var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                    var LastTime = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
+                    var Classroom = collection["FIRST_SAVE_CLASSROOM"];
+                    var Date = collection["FIRST_SAVE_DATE"];
+                    var Subject_id = unit.SUBJECT_ID;
+                    var First_SUBJECT_NAME = unit.SUBJECT_NAME;
+                    var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
+                    var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
+                    var query = (from e1 in db.SECTIONs
+                                 join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 select new Section_Subject
+                                 {
+                                     SECTION_ID = e1.SECTION_ID,
+                                     SUBJECT_ID = e1.SUBJECT_ID,
+                                     SUBJECT_NAME = e2.SUBJECT_NAME,
+                                     SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                     SECTION_NUMBER = e1.SECTION_NUMBER,
+                                     SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                     SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                     SECTION_DATE = e1.SECTION_DATE,
+                                     SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                     SECTION_TIME_START = e1.SECTION_TIME_START,
+                                     SECTION_TIME_END = e1.SECTION_TIME_END,
+                                     SEMESTER = e1.SEMESTER,
+                                     YEAR = e1.YEAR
+                                 }).OrderBy(x => x.SECTION_TIME_START).ToList();
+                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                    if (WhereTimeDate.Count() > 0)
+                    {
+                        var item = new TimeCrash();
+                        foreach (var im in WhereTimeDate)
+                        {
+                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
+                            {
+                                item.TEACHER_CRASH = "1";
+                            }
+                        }
+                        item.SUBJECT_ID_First = Subject_id;
+                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                        item.SECTION_DATE_First = Date;
+                        item.SECTION_TIME_START_First = FirstTime;
+                        item.SECTION_TIME_END_First = LastTime;
+                        item.SECTION_CLASSROOM_First = Classroom;
+                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "2";
+                        if (WhereTimeDate.Count() == 2)
+                        {
+                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                            item.TIME_CRASH = "3";
+                        }
+                        item.SEMESTER = semester;
+                        item.YEAR = year;
+                        _TimeCrash.Add(item);
+                    }
+                }
+                else if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID != "0")
+                {
+                    var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                    var LastTime = double.Parse(collection["SECOND_SAVE_TIMEEND"]);
+                    var Classroom = collection["FIRST_SAVE_CLASSROOM"];
+                    var Date = collection["FIRST_SAVE_DATE"];
+                    var Subject_id = unit.SUBJECT_ID;
+                    var First_SUBJECT_NAME = unit.SUBJECT_NAME;
+                    var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
+                    var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
+
+                var query = (from e1 in db.SECTIONs
+                                 join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 select new Section_Subject
+                                 {
+                                     SECTION_ID = e1.SECTION_ID,
+                                     SUBJECT_ID = e1.SUBJECT_ID,
+                                     SUBJECT_NAME = e2.SUBJECT_NAME,
+                                     SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                     SECTION_NUMBER = e1.SECTION_NUMBER,
+                                     SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                     SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                     SECTION_DATE = e1.SECTION_DATE,
+                                     SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                     SECTION_TIME_START = e1.SECTION_TIME_START,
+                                     SECTION_TIME_END = e1.SECTION_TIME_END,
+                                     SEMESTER = e1.SEMESTER,
+                                     YEAR = e1.YEAR
+                                 }).OrderBy(x => x.SECTION_TIME_START).ToList();
+                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                    if (WhereTimeDate.Count() > 0)
+                    {
+
+                        var item = new TimeCrash();
+                        foreach (var im in WhereTimeDate)
+                        {
+                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
+                            {
+                                item.TEACHER_CRASH = "1";
+                            }
+                        }
+                        item.SUBJECT_ID_First = Subject_id;
+                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                        item.SECTION_DATE_First = Date;
+                        item.SECTION_TIME_START_First = FirstTime;
+                        item.SECTION_TIME_END_First = LastTime;
+                        item.SECTION_CLASSROOM_First = Classroom;
+                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "2";
+                        if (WhereTimeDate.Count() == 2)
+                        {
+                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                            item.TIME_CRASH = "3";
+                        }
+                        item.SEMESTER = semester;
+                        item.YEAR = year;
+                        _TimeCrash.Add(item);
+                    }
+                }
             var TimeCrash = _TimeCrash.ToList();
             return TimeCrash;
         }
@@ -696,7 +997,6 @@ namespace TestExcel.Controllers
                 var WhereTimeDate = _section_subject.Where(x => (x.SECTION_TIME_START <= j.SECTION_TIME_START && x.SECTION_TIME_START < j.SECTION_TIME_END && x.SECTION_TIME_END > j.SECTION_TIME_START) && x.SECTION_ID != j.SECTION_ID && x.SECTION_DATE == j.SECTION_DATE && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START).ToList();
                 if (WhereTimeDate.Count() > 0)
                 {
-                    var eee = WhereTimeDate[0].SECTION_ID;
                     foreach (var im in WhereTimeDate)
                     {
                         var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();

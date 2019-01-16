@@ -3,6 +3,7 @@
     var section_id, subject_classroom, subject_id, subject_name, subject_credit, subject_number, subject_hour, subject_timestart, subject_timeend, subject_professor, subject_branch, subject_date;
     var check_id, last_section_id, last_subject_classroom, last_subject_id, last_subject_name, last_subject_credit, last_subject_number, last_subject_hour, last_subject_timestart, last_subject_timeend, last_subject_professor, last_subject_branch, last_subject_date;
     var date2 = ["M", "T", "W", "H", "F", "S"];
+    var Time = ["8", "8.3", "9", "9.3", "10", "10.3", "11", "11.3", "12", "12.3", "13", "13.3", "14", "14.3", "15", "15.3", "16", "16.3", "17", "17.3", "18", "18.3", "19", "19.3", "20", "20.3", "21"];
     var hour,hour1,hour2;
     function drag_drop() {
 
@@ -225,7 +226,7 @@
                     last_subject_date = "";
                     last_subject_classroom = "";
                 }
-                var s = subject_id + " " + subject_name + " ตอน " + subject_number;
+                var s = subject_id + " " + subject_name + " ตอน " + subject_number + " / " + subject_classroom;
                 for (i = 0; i < 6; i++) {
                     for (j = 8; j <= 21; j++) {
                         tablecellcheck = $("#" + date2[i] + "id_" + j).find("p:contains("+ s +")").text().trim();
@@ -326,12 +327,22 @@
         var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
         var optionlisting = "";
         $('#FIRST_SAVE_TIMEEND option').remove();
-        for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-            if (i < 10) {
-                optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+        for (i = Time.indexOf(TimeStart) + 1; i < Time.length; i++) {
+            if (Time[i] < 10) {
+                if (Time[i].length == 3) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                }
             }
             else {
-                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                if (Time[i].length == 4) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                }
             }
 
         }
@@ -341,12 +352,22 @@
         var TimeStart = $('#SECOND_SAVE_TIMESTART').val();
         var optionlisting = "";
         $('#SECOND_SAVE_TIMEEND option').remove();
-        for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-            if (i < 10) {
-                optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+        for (i = Time.indexOf(TimeStart) + 1; i < Time.length; i++) {
+            if (Time[i] < 10) {
+                if (Time[i].length == 3) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                }
             }
             else {
-                optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                if (Time[i].length == 4) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                }
             }
 
         }
@@ -381,12 +402,22 @@
             $("#FIRST_SAVE_BRANCH").val(first_branch);
             TimeStart = $('#FIRST_SAVE_TIMESTART').val();
             $('#FIRST_SAVE_TIMEEND option').remove();
-            for (i = parseInt(TimeStart) + 1; i <= 21; i++) {
-                if (i < 10) {
-                    optionlisting = optionlisting + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+            for (i = Time.indexOf(TimeStart) + 1; i < Time.length; i++) {
+                if (Time[i] < 10) {
+                    if (Time[i].length == 3) {
+                        optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                    }
+                    else {
+                        optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                    }
                 }
                 else {
-                    optionlisting = optionlisting + '<option value="' + i + '">' + i + ":00" + '</option>';
+                    if (Time[i].length == 4) {
+                        optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                    }
+                    else {
+                        optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                    }
                 }
 
             }
@@ -413,14 +444,23 @@
                 $("#SECOND_SAVE_CLASSROOM").val(second_classroom);
                 $("#SECOND_SAVE_BRANCH").val(second_branch);
                 TimeEnd = $('#SECOND_SAVE_TIMESTART').val();
-                $("#gate").val(TimeEnd);
                 $('#SECOND_SAVE_TIMEEND option').remove();
-                for (i = parseInt(TimeEnd) + 1; i <= 21; i++) {
-                    if (i < 10) {
-                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                for (i = Time.indexOf(TimeEnd) + 1; i < Time.length; i++) {
+                    if (Time[i] < 10) {
+                        if (Time[i].length == 3) {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                        }
+                        else {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                        }
                     }
                     else {
-                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + i + ":00" + '</option>';
+                        if (Time[i].length == 4) {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                        }
+                        else {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                        }
                     }
 
                 }
@@ -437,12 +477,22 @@
                 $("#SECOND_SAVE_BRANCH").val("");
                 TimeEnd = $('#SECOND_SAVE_TIMESTART').val();
                 $('#SECOND_SAVE_TIMEEND option').remove();
-                for (i = parseInt(TimeEnd) + 1; i <= 21; i++) {
-                    if (i < 10) {
-                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + "0" + i + ":00" + '</option>';
+                for (i = Time.indexOf(TimeEnd) + 1; i < Time.length; i++) {
+                    if (Time[i] < 10) {
+                        if (Time[i].length == 3) {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                        }
+                        else {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                        }
                     }
                     else {
-                        optionlisting2 = optionlisting2 + '<option value="' + i + '">' + i + ":00" + '</option>';
+                        if (Time[i].length == 4) {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                        }
+                        else {
+                            optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                        }
                     }
 
                 }

@@ -109,12 +109,8 @@
         }
 
         $(document).ready(function () {
+            var OnTime = ["8", "8.3", "9", "9.3", "10", "10.3", "11", "11.3", "12", "12.3", "13", "13.3", "14", "14.3", "15", "15.3", "16", "16.3", "17", "17.3", "18", "18.3", "19", "19.3", "20", "20.3", "21"];
             var form = $("#PSaveAll").serialize();
-        //$(document).click(function () {
-        //    if ($(".dropdown-menu").show()) {
-        //        $(".dropdown-menu").hide();
-        //    }
-        //});
         var date = ["M", "T", "W", "H", "F", "S"];
         var datethai = ["วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
         $.ajax({
@@ -219,30 +215,133 @@
                         else {
                             $.each(response, function (index, value) {
                                 var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
-                                var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
-                                //$("#res").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                //    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
-                                //    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
-                                //    + value.SEMESTER + '/' + value.YEAR + '</p>'
-                                //    + '<p>' + value.SUBJECT_ID_Last + ' ' + datethai[parseInt(tmp_datelast)]
-                                //    + ' ตอน ' + value.SECTION_NUMBER_Last + ' ห้อง ' + value.SECTION_CLASSROOM_Last + ' เวลา ' + value.SECTION_TIME_START_Last + '.00-' + value.SECTION_TIME_END_Last + '.00 ' + value.SEMESTER + '/' + value.YEAR + '</p><hr>'));
-                                $("#res").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
-                                    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
-                                    + value.SEMESTER + '/' + value.YEAR + '</p>'));
+                                var tmp_datesecond = date.indexOf(value.SECTION_DATE_Second);
+                                var tmp_datethird = date.indexOf(value.SECTION_DATE_Third);
+
+                                var SECTION_TIME_START_First, SECTION_TIME_END_First;
+                                var First_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_First + "");
+                                var First_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_First + "");
+                                if (First_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_First = value.SECTION_TIME_START_First + '.30-';
+                                }
+                                else if (First_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_First = value.SECTION_TIME_START_First + '.00-';
+                                }
+                                if (First_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_First = value.SECTION_TIME_END_First + '.30 '
+                                }
+                                else if (First_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_First = value.SECTION_TIME_END_First + '.00 '
+                                }
+
+                                var SECTION_TIME_START_Second, SECTION_TIME_END_Second;
+                                var Second_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_Second + "");
+                                var Second_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_Second + "");
+                                if (Second_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_Second = value.SECTION_TIME_START_Second + '.30-';
+                                }
+                                else if (Second_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_Second = value.SECTION_TIME_START_Second + '.00-';
+                                }
+                                if (Second_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_Second = value.SECTION_TIME_END_Second + '.30 '
+                                }
+                                else if (Second_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_Second = value.SECTION_TIME_END_Second + '.00 '
+                                }
+
+                                var SECTION_TIME_START_Third, SECTION_TIME_END_Third;
+                                var Third_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_Third + "");
+                                var Third_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_Third + "");
+                                if (Third_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_Third = value.SECTION_TIME_START_Third + '.30-';
+                                }
+                                else if (Third_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_Third = value.SECTION_TIME_START_Third + '.00-';
+                                }
+                                if (Third_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_Third = value.SECTION_TIME_END_Third + '.30 '
+                                }
+                                else if (Third_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_Third = value.SECTION_TIME_END_Third + '.00 '
+                                }
+
+                                var TIME_CRASH = value.TIME_CRASH;
+                                if (value.TEACHER_CRASH.length == 0) {
+                                    if (TIME_CRASH == "2") {
+                                        $("#res").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    else {
+                                        $("#res").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                            + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    $("#SaveConfirmation").modal();
+                                }
+                                else {
+                                    if (TIME_CRASH == "2") {
+                                        $("#crash").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    else {
+                                        $("#crash").append($('<br><p>'
+                                            + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                            + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                            + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                            + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                            + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                            + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                            + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                            + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                            + value.SEMESTER + '/' + value.YEAR
+                                            + '</p><br><hr>'));
+                                    }
+                                    $("#TEACHER_CRASH").modal();
+                                }
                             });
-                            $("#SaveConfirmationAll").modal();
                         }
                     }
                 });
         });
             $("#save").click(function () {
-                form = $("#PSaveAll").serialize();
-            $("#ress").html("");
+                form = $("#PSingleSave").serialize();
+                $("#ress").html("");
+                $("#crash").html("");
             if ($("#FIRST_SECTION_ID").val() != null || ("#FIRST_SECTION_ID").val() != "" ) {
                 $.ajax({
                     type: 'POST',
-                    url: '/data/Warning',
+                    url: '/data/Warning_single',
                     data: form,
                     success: function (response) {
                         var count = response.length;
@@ -252,19 +351,121 @@
                         else {
                             $.each(response, function (index, value) {
                                 var tmp_datefirst = date.indexOf(value.SECTION_DATE_First);
-                                var tmp_datelast = date.indexOf(value.SECTION_DATE_Last);
-                                //$("#ress").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                //    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
-                                //    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
-                                //    + value.SEMESTER + '/' + value.YEAR + '</p>'
-                                //    + '<p>' + value.SUBJECT_ID_Last + ' ' + datethai[parseInt(tmp_datelast)]
-                                //    + ' ตอน ' + value.SECTION_NUMBER_Last + ' ห้อง ' + value.SECTION_CLASSROOM_Last + ' เวลา ' + value.SECTION_TIME_START_Last + '.00-' + value.SECTION_TIME_END_Last + '.00 ' + value.SEMESTER + '/' + value.YEAR + '</p><hr>'));
-                                $("#ress").append($('<br><p>' + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
-                                    + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + ' เวลา '
-                                    + value.SECTION_TIME_START_First + '.00-' + value.SECTION_TIME_END_First + '.00 '
-                                    + value.SEMESTER + '/' + value.YEAR + '</p>'));
+                                var tmp_datesecond = date.indexOf(value.SECTION_DATE_Second);
+                                var tmp_datethird = date.indexOf(value.SECTION_DATE_Third);
+                                var TIME_CRASH = value.TIME_CRASH;
+
+                                var SECTION_TIME_START_First, SECTION_TIME_END_First;
+                                var First_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_First + "");
+                                var First_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_First + "");
+                                if (First_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_First = value.SECTION_TIME_START_First + '.30-';
+                                }
+                                else if (First_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_First = value.SECTION_TIME_START_First + '.00-';
+                                }
+                                if (First_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_First = value.SECTION_TIME_END_First + '.30 '
+                                }
+                                else if (First_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_First = value.SECTION_TIME_END_First + '.00 '
+                                }
+
+                                var SECTION_TIME_START_Second, SECTION_TIME_END_Second;
+                                var Second_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_Second + "");
+                                var Second_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_Second + "");
+                                if (Second_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_Second = value.SECTION_TIME_START_Second + '.30-';
+                                }
+                                else if (Second_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_Second = value.SECTION_TIME_START_Second + '.00-';
+                                }
+                                if (Second_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_Second = value.SECTION_TIME_END_Second + '.30 '
+                                }
+                                else if (Second_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_Second = value.SECTION_TIME_END_Second + '.00 '
+                                }
+
+                                var SECTION_TIME_START_Third, SECTION_TIME_END_Third;
+                                var Third_timeindex = OnTime.indexOf("" + value.SECTION_TIME_START_Third + "");
+                                var Third_timeindex_end = OnTime.indexOf("" + value.SECTION_TIME_END_Third + "");
+                                if (Third_timeindex % 2 == 1) { // odd
+                                    SECTION_TIME_START_Third = value.SECTION_TIME_START_Third + '.30-';
+                                }
+                                else if (Third_timeindex % 2 == 0) { //even
+                                    SECTION_TIME_START_Third = value.SECTION_TIME_START_Third + '.00-';
+                                }
+                                if (Third_timeindex_end % 2 == 1) { // odd
+                                    SECTION_TIME_END_Third = value.SECTION_TIME_END_Third + '.30 '
+                                }
+                                else if (Third_timeindex_end % 2 == 0) { //even
+                                    SECTION_TIME_END_Third = value.SECTION_TIME_END_Third + '.00 '
+                                }
+
+                            if (value.TEACHER_CRASH.length == 0) {
+                                if (TIME_CRASH == "2") {
+                                    $("#ress").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                else {
+                                    $("#ress").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                        + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                $("#SaveConfirmation").modal();
+                            }
+                            else {
+                                if (TIME_CRASH == "2") {
+                                    $("#crash").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                else {
+                                    $("#crash").append($('<br><p>'
+                                        + value.SUBJECT_ID_First + ' ' + datethai[parseInt(tmp_datefirst)] + ' ตอน '
+                                        + value.SECTION_NUMBER_First + ' ห้อง ' + value.SECTION_CLASSROOM_First + " / " + value.SECTION_PROFESSOR_First + ' เวลา '
+                                        + SECTION_TIME_START_First + SECTION_TIME_END_First
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Second + ' ' + datethai[parseInt(tmp_datesecond)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Second + ' ห้อง ' + value.SECTION_CLASSROOM_Second + " / " + value.SECTION_PROFESSOR_Second + ' เวลา '
+                                        + SECTION_TIME_START_Second + SECTION_TIME_END_Second
+                                        + value.SEMESTER + '/' + value.YEAR + '<br>'
+                                        + value.SUBJECT_ID_Third + ' ' + datethai[parseInt(tmp_datethird)] + ' ตอน '
+                                        + value.SECTION_NUMBER_Third + ' ห้อง ' + value.SECTION_CLASSROOM_Third + " / " + value.SECTION_PROFESSOR_Third + ' เวลา '
+                                        + SECTION_TIME_START_Third + SECTION_TIME_END_Third
+                                        + value.SEMESTER + '/' + value.YEAR
+                                        + '</p><br><hr>'));
+                                }
+                                $("#TEACHER_CRASH").modal();
+                                }
                             });
-                            $("#SaveConfirmation").modal();
                         }
                     }
                 });
@@ -292,6 +493,23 @@
                         <input id="ConfirmSave" name="ConfirmSave" type="submit" value="SAVE" href="#" class="btn btn-danger">
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="TEACHER_CRASH">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 class="text-center">แจ้งเตือน</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>ไม่สามารถทำการแก้ไขได้เนื่องจากอาจารย์ผู้สอนคนเดียวกันมีวิชาชนกัน</h4>
+                    <div id="crash" name="crash"></div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+                    </div>
                 </div>
             </div>
         </div>
