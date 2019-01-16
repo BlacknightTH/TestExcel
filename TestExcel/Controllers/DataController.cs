@@ -689,73 +689,57 @@ namespace TestExcel.Controllers
                                 }).OrderByDescending(x => x.YEAR).OrderByDescending(x => x.SEMESTER).ToList();
             var YEAR = semesteryear.First().YEAR;
             var SEMESTER = semesteryear.First().SEMESTER;
-            _section_subject = GetModel(semesteryear.First().SEMESTER, semesteryear.First().YEAR);
+            _section_subject = GetModel(semesteryear.First().SEMESTER, semesteryear.First().YEAR).ToList();
 
-            foreach (var j in db.SECTIONs.Where(x => x.SEMESTER == SEMESTER && x.YEAR == YEAR).OrderBy(x => x.SECTION_TIME_START))
+            foreach (var j in _section_subject.OrderBy(x => x.SECTION_TIME_START))
             {
-                var WhereTimeDate = _section_subject.Where(x => (x.SECTION_TIME_START <= j.SECTION_TIME_START && x.SECTION_TIME_START < j.SECTION_TIME_END && x.SECTION_TIME_END > j.SECTION_TIME_START) && x.SECTION_DATE == j.SECTION_DATE && x.SECTION_ID != j.SECTION_ID && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START).ToList();
+                var WhereTimeDate = _section_subject.Where(x => (x.SECTION_TIME_START <= j.SECTION_TIME_START && x.SECTION_TIME_START < j.SECTION_TIME_END && x.SECTION_TIME_END > j.SECTION_TIME_START) && x.SECTION_ID != j.SECTION_ID && x.SECTION_DATE == j.SECTION_DATE && x.SECTION_BRANCH_NAME != j.SECTION_BRANCH_NAME && x.SECTION_CLASSROOM == j.SECTION_CLASSROOM && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม") && x.SECTION_NUMBER != "").OrderBy(x => x.SECTION_TIME_START).ToList();
                 if (WhereTimeDate.Count() > 0)
                 {
+                    var eee = WhereTimeDate[0].SECTION_ID;
                     foreach (var im in WhereTimeDate)
                     {
                         var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
                         e.CRASH = "3";
+                    }
                         var item = new TimeCrash();
-                        item.SECTION_ID_First = im.SECTION_ID;
-                        item.SUBJECT_ID_First = im.SUBJECT_ID;
-                        item.SUBJECT_NAME_First = im.SUBJECT_NAME;
-                        item.SECTION_NUMBER_First = im.SECTION_NUMBER;
-                        item.SECTION_DATE_First = im.SECTION_DATE;
-                        item.SECTION_TIME_START_First = im.SECTION_TIME_START;
-                        item.SECTION_TIME_END_First = im.SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_First = im.SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_First = im.SECTION_BRANCH_NAME;
+                        item.SECTION_ID_First = j.SECTION_ID;
+                        item.SUBJECT_ID_First = j.SUBJECT_ID;
+                        item.SUBJECT_NAME_First = j.SUBJECT_NAME;
+                        item.SECTION_NUMBER_First = j.SECTION_NUMBER;
+                        item.SECTION_DATE_First = j.SECTION_DATE;
+                        item.SECTION_TIME_START_First = j.SECTION_TIME_START;
+                        item.SECTION_TIME_END_First = j.SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_First = j.SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_First = j.SECTION_BRANCH_NAME;
+                        
+                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                        item.TIME_CRASH = "2";
+                    if (WhereTimeDate.Count() == 2)
+                    {
+                        item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                        item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                        item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                        item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                        item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                        item.TIME_CRASH = "3";
+                    }
                         item.SEMESTER = SEMESTER;
                         item.YEAR = YEAR;
-                        item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
                         _TimeCrash.Add(item);
-                    }
                 }
-                //foreach(var im in WhereTimeDate)
-                //{
-                //    var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
-                //    e.CRASH = "3";
-                //}
-                //if (WhereTimeDate.Count() > 1)
-                //{
-                //    var Firsttimestart = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
-                //    var Firsttimeend = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
-                //    var Lasttimestart = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
-                //    var Lasttimeend = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
-
-                //    //if (Firsttimestart <= Lasttimestart && Firsttimestart < Lasttimeend && Firsttimeend > Lasttimestart)
-                //    if (Lasttimestart < Firsttimeend || Firsttimestart == Lasttimestart)
-                //    {
-                //        var item = new TimeCrash();
-                //        item.SECTION_ID_First = WhereTimeDate.FirstOrDefault().SECTION_ID;
-                //        item.SUBJECT_ID_First = WhereTimeDate.FirstOrDefault().SUBJECT_ID;
-                //        item.SUBJECT_NAME_First = WhereTimeDate.FirstOrDefault().SUBJECT_NAME;
-                //        item.SECTION_NUMBER_First = WhereTimeDate.FirstOrDefault().SECTION_NUMBER;
-                //        item.SECTION_DATE_First = WhereTimeDate.FirstOrDefault().SECTION_DATE;
-                //        item.SECTION_TIME_START_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_START;
-                //        item.SECTION_TIME_END_First = WhereTimeDate.FirstOrDefault().SECTION_TIME_END;
-                //        item.SECTION_CLASSROOM_First = WhereTimeDate.FirstOrDefault().SECTION_CLASSROOM;
-                //        item.SECTION_BRANCH_NAME_First = WhereTimeDate.FirstOrDefault().SECTION_BRANCH_NAME;
-
-                //        item.SECTION_ID_Last = WhereTimeDate.LastOrDefault().SECTION_ID;
-                //        item.SUBJECT_ID_Last = WhereTimeDate.LastOrDefault().SUBJECT_ID;
-                //        item.SUBJECT_NAME_Last = WhereTimeDate.LastOrDefault().SUBJECT_NAME;
-                //        item.SECTION_NUMBER_Last = WhereTimeDate.LastOrDefault().SECTION_NUMBER;
-                //        item.SECTION_DATE_Last = WhereTimeDate.LastOrDefault().SECTION_DATE;
-                //        item.SECTION_TIME_START_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_START;
-                //        item.SECTION_TIME_END_Last = WhereTimeDate.LastOrDefault().SECTION_TIME_END;
-                //        item.SECTION_CLASSROOM_Last = WhereTimeDate.LastOrDefault().SECTION_CLASSROOM;
-                //        item.SECTION_BRANCH_NAME_Last = WhereTimeDate.LastOrDefault().SECTION_BRANCH_NAME;
-                //        item.SEMESTER = i.SEMESTER;
-                //        item.YEAR = i.YEAR;
-                //        _TimeCrash.Add(item);
-                //    }
-                //}
             }
 
             db.SaveChanges();

@@ -17,17 +17,28 @@ namespace TestExcel.Models
         public Nullable<double> SECTION_TIME_END_First { get; set; }
         public string SECTION_CLASSROOM_First { get; set; }
 
-        public int SECTION_ID_Last { get; set; }
-        public string SUBJECT_ID_Last { get; set; }
-        public string SECTION_NUMBER_Last { get; set; }
-        public string SUBJECT_NAME_Last { get; set; }
-        public string SECTION_BRANCH_NAME_Last { get; set; }
-        public string SECTION_DATE_Last { get; set; }
-        public Nullable<double> SECTION_TIME_START_Last { get; set; }
-        public Nullable<double> SECTION_TIME_END_Last { get; set; }
-        public string SECTION_CLASSROOM_Last { get; set; }
+        public int SECTION_ID_Second { get; set; }
+        public string SUBJECT_ID_Second { get; set; }
+        public string SECTION_NUMBER_Second { get; set; }
+        public string SUBJECT_NAME_Second { get; set; }
+        public string SECTION_BRANCH_NAME_Second { get; set; }
+        public string SECTION_DATE_Second { get; set; }
+        public Nullable<double> SECTION_TIME_START_Second { get; set; }
+        public Nullable<double> SECTION_TIME_END_Second { get; set; }
+        public string SECTION_CLASSROOM_Second { get; set; }
+
+        public int SECTION_ID_Third { get; set; }
+        public string SUBJECT_ID_Third { get; set; }
+        public string SECTION_NUMBER_Third { get; set; }
+        public string SUBJECT_NAME_Third { get; set; }
+        public string SECTION_BRANCH_NAME_Third { get; set; }
+        public string SECTION_DATE_Third { get; set; }
+        public Nullable<double> SECTION_TIME_START_Third { get; set; }
+        public Nullable<double> SECTION_TIME_END_Third { get; set; }
+        public string SECTION_CLASSROOM_Third { get; set; }
 
         public string SEMESTER { get; set; }
         public string YEAR { get; set; }
+        public string TIME_CRASH { get; set; }
     }
 }
