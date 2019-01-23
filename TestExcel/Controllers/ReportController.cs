@@ -186,9 +186,11 @@ namespace TestExcel.Controllers
 
                         string tmp = "";
                         string tmp2 = "";
+                        string Semester_Year = worksheet.Cells[4, 1].Text;
+                        string[] split_semester_year = Semester_Year.Split(' ');
+                        string semester = split_semester_year[1];
+                        string year = split_semester_year[3];
 
-                        string semester = tmpstring[0];
-                        string year = tmpstring[1];
                         var check_subject_semester_year = db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year);
                         var check_section_semester_year = db.SECTIONs.Where(x => x.SEMESTER == semester && x.YEAR == year);
                         if (check_subject_semester_year.Any() == true)
@@ -210,7 +212,7 @@ namespace TestExcel.Controllers
                             db.SaveChanges();
                         }
 
-                        for (int row = 1; row < totalRows; row++)
+                        for (int row = 5; row < totalRows; row++)
                         {
                             string B = worksheet.Cells[row, 2].Text;
                             string C = worksheet.Cells[row, 3].Text;
