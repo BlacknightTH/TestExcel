@@ -326,6 +326,7 @@
     $('#FIRST_SAVE_TIMESTART').on("change", function () {
         var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
         var optionlisting = "";
+        var optionlisting2 = "";
         $('#FIRST_SAVE_TIMEEND option').remove();
         for (i = Time.indexOf(TimeStart) + 1; i < Time.length; i++) {
             if (Time[i] < 10) {
@@ -347,9 +348,35 @@
 
         }
         $('#FIRST_SAVE_TIMEEND').html(optionlisting);
+        var TimeEnd = $('#FIRST_SAVE_TIMEEND').val();
+        $('#SECOND_SAVE_TIMESTART').val(TimeEnd);
+
+        $('#SECOND_SAVE_TIMEEND option').remove();
+        for (i = Time.indexOf(TimeEnd) + 1; i < Time.length; i++) {
+            if (Time[i] < 10) {
+                if (Time[i].length == 3) {
+                    optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                }
+            }
+            else {
+                if (Time[i].length == 4) {
+                    optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting2 = optionlisting2 + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                }
+            }
+
+        }
+        $('#SECOND_SAVE_TIMEEND').html(optionlisting2);
     });
-    $('#SECOND_SAVE_TIMESTART').on("change", function () {
-        var TimeStart = $('#SECOND_SAVE_TIMESTART').val();
+
+    $('#FIRST_SAVE_TIMEEND').on("change", function () {
+        var TimeStart = $('#FIRST_SAVE_TIMEEND').val();
+        $('#SECOND_SAVE_TIMESTART').val(TimeStart);
         var optionlisting = "";
         $('#SECOND_SAVE_TIMEEND option').remove();
         for (i = Time.indexOf(TimeStart) + 1; i < Time.length; i++) {
@@ -372,6 +399,38 @@
 
         }
         $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+    });
+
+    $('#SECOND_SAVE_TIMESTART').on("change", function () {
+        var TimeStart = $('#FIRST_SAVE_TIMESTART').val();
+        var TimeEnd = $('#SECOND_SAVE_TIMESTART').val();
+        var optionlisting = "";
+        $('#SECOND_SAVE_TIMEEND option').remove();
+        for (i = Time.indexOf(TimeEnd) + 1; i < Time.length; i++) {
+            if (Time[i] < 10) {
+                if (Time[i].length == 3) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + "0" + Time[i] + ":00" + '</option>';
+                }
+            }
+            else {
+                if (Time[i].length == 4) {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i - 1] + ":30" + '</option>';
+                }
+                else {
+                    optionlisting = optionlisting + '<option value="' + Time[i] + '">' + Time[i] + ":00" + '</option>';
+                }
+            }
+
+        }
+        $('#SECOND_SAVE_TIMEEND').html(optionlisting);
+    });
+    $("#FIRST_SAVE_DATE").on("change", function () {
+        var first_date , second_date;
+        first_date = $("#FIRST_SAVE_DATE").val();
+        $("#SECOND_SAVE_DATE").val(first_date);
     });
 
     function replace() {
