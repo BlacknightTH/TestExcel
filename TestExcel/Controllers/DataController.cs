@@ -829,7 +829,7 @@ namespace TestExcel.Controllers
                     var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
                     var query = (from e1 in db.SECTIONs
                                  join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                                  select new Section_Subject
                                  {
                                      SECTION_ID = e1.SECTION_ID,
@@ -910,7 +910,7 @@ namespace TestExcel.Controllers
 
                 var query = (from e1 in db.SECTIONs
                                  join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_CLASSROOM == Classroom && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
                                  select new Section_Subject
                                  {
                                      SECTION_ID = e1.SECTION_ID,
