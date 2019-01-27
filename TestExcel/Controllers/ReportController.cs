@@ -12,6 +12,7 @@ using TestExcel.Report;
 using TestExcel.Models;
 using TestExcel.Utility;
 using OfficeOpenXml;
+using System.Text;
 
 namespace TestExcel.Controllers
 {
@@ -40,6 +41,7 @@ namespace TestExcel.Controllers
         }
         public ActionResult data(string ErrorMessage)
         {
+            LogFile("Hello World");
             string m = ErrorMessage;
             SetYear();
             return View(_DEPARTMENT);
@@ -188,10 +190,10 @@ namespace TestExcel.Controllers
                         string tmp2 = "";
                         string Semester_Year = worksheet.Cells[4, 1].Text;
                         string[] split_semester_year = Semester_Year.Split(' ');
-                            //string semester = split_semester_year[1];
-                            //string year = split_semester_year[3];
-                            string semester = tmpstring[0];
-                            string year = tmpstring[1];
+                            string semester = split_semester_year[1];
+                            string year = split_semester_year[3];
+                            //string semester = tmpstring[0];
+                            //string year = tmpstring[1];
                             var check_subject_semester_year = db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year);
                         var check_section_semester_year = db.SECTIONs.Where(x => x.SEMESTER == semester && x.YEAR == year);
                         if (check_subject_semester_year.Any() == true)
@@ -586,6 +588,60 @@ namespace TestExcel.Controllers
             string path = Server.MapPath("~/Content/import/" + id + ".pdf");
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
             return File(fileBytes, "application/pdf", id);
+        }
+        public void LogFile(string Data)
+        {
+            try
+            {
+                var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+                string FilePath = Server.MapPath("~/LogFile/Log " + datetime + ".txt");
+                string FileName = Path.GetFileName(FilePath);
+                string data = DateTime.Now.ToString();
+                string Username = Session["Username"].ToString();
+                string Name = db.USERs.Where(x => x.USER_USERNAME == Username).FirstOrDefault().USER_FIRSTNAME;
+                if (Name != null)
+                {
+                    data += " - " + Name + " - " + Data;
+                }
+                else
+                {
+                    data += " - " + Username + " - " + Data;
+                }
+
+                if (System.IO.File.Exists(FilePath))
+                {
+                    string read = "";
+
+                    StreamReader sr = System.IO.File.OpenText(FilePath);
+                    read = sr.ReadToEnd();
+                    sr.Close();
+                    System.IO.File.Delete(FilePath);
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(read + "\n" + data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray, 0, byteArray.Length);
+                    }
+
+                }
+                else
+                {
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray,0, byteArray.Length);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+        [HttpPost]
+        public ActionResult LogFile(FormCollection collection)
+        {
+            return View();
         }
     }
 }
