@@ -41,7 +41,6 @@ namespace TestExcel.Controllers
         }
         public ActionResult data(string ErrorMessage)
         {
-            LogFile("Hello World");
             string m = ErrorMessage;
             SetYear();
             return View(_DEPARTMENT);
@@ -62,6 +61,7 @@ namespace TestExcel.Controllers
             PdfReport pdfReport = new PdfReport();
             try
             {
+                LogFile("ดาวน์โหลดไฟล์ -> รายการลงทะเบียนเรียน");
                 byte[] abytes = pdfReport.PrepareReport(department_id, semester, year);
                 return File(abytes, "application/pdf", FileName);
             }
@@ -90,6 +90,7 @@ namespace TestExcel.Controllers
                 string FileName = Path.GetFileName(FilePath);
                 byte[] abytes = pdfReport.PfPrepareReport(department, semester, year);
                 //return File(abytes, "application/pdf");
+                LogFile("ดาวน์โหลดไฟล์ -> ภาระการสอน_" + department + "_" + semester + "-" + year);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
@@ -112,6 +113,7 @@ namespace TestExcel.Controllers
             try
             {
                 byte[] abytes = pdfReport.TePrepareReport(Date, semester, year);
+                LogFile("ดาวน์โหลดไฟล์ -> ตารางการใช้ห้องเรียน " + date[Date] + "_" + semester + "-" + year);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
@@ -146,6 +148,7 @@ namespace TestExcel.Controllers
                 }
                 string FilePath = @"C:\\" + "ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year + ".pdf";
                 string FileName = Path.GetFileName(FilePath);
+                LogFile("ดาวน์โหลดไฟล์ -> ตารางการใช้ห้องเรียน_" + BUILDING + "_" + semester + "-" + year);
                 return File(abytes, "application/pdf", FileName);
             }
             catch
@@ -364,6 +367,7 @@ namespace TestExcel.Controllers
                         SetYear();
                         ViewBag.Message = "อัปโหลดไฟล์ " + excelfile.FileName + " เสร็จสิ้น";
                         ViewBag.ErrorMessage = "";
+                        LogFile("อัปโหลดไฟล์ Excel " + excelfile.FileName);
                         return View("data", _DEPARTMENT);
                     }
                 else
@@ -564,6 +568,7 @@ namespace TestExcel.Controllers
                     //-------------------------------------------//
                     package.SaveAs(new FileInfo(FilePath));
                     byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+                    LogFile("ดาวน์โหลดไฟล์ Excel " + FileName);
                     return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", FileName);
                 }
                 catch
@@ -637,11 +642,6 @@ namespace TestExcel.Controllers
             catch
             {
             }
-        }
-        [HttpPost]
-        public ActionResult LogFile(FormCollection collection)
-        {
-            return View();
         }
     }
 }

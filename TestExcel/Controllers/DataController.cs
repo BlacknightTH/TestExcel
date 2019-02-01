@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using TestExcel.Data;
 using TestExcel.Report;
 using TestExcel.Models;
+using System.IO;
 
 namespace TestExcel.Controllers
 {
@@ -35,16 +36,16 @@ namespace TestExcel.Controllers
             try
             {
                 int SECTION_ID = int.Parse(collection["SECTION_ID"]);
-            string SUBJECT_ID = collection["SUBJECT_ID"];
-            string SECTION_NUMBER = collection["SECTION_NUMBER"];
-            string SECTION_DATE = collection["SECTION_DATE"];
-            double? SECTION_TIME_START = double.Parse(collection["SECTION_TIME_START"]);
-            double? SECTION_TIME_END = double.Parse(collection["SECTION_TIME_END"]);
-            string SECTION_PROFESSOR_SHORTNAME = collection["SECTION_PROFESSOR_SHORTNAME"];
-            string SECTION_CLASSROOM = collection["SECTION_CLASSROOM"];
-            string SECTION_BRANCH_NAME = collection["SECTION_BRANCH_NAME"];
-            string SEMESTER = collection["SEMESTER"];
-            string YEAR = collection["YEAR"];
+                string SUBJECT_ID = collection["SUBJECT_ID"];
+                string SECTION_NUMBER = collection["SECTION_NUMBER"];
+                string SECTION_DATE = collection["SECTION_DATE"];
+                double? SECTION_TIME_START = double.Parse(collection["SECTION_TIME_START"]);
+                double? SECTION_TIME_END = double.Parse(collection["SECTION_TIME_END"]);
+                string SECTION_PROFESSOR_SHORTNAME = collection["SECTION_PROFESSOR_SHORTNAME"];
+                string SECTION_CLASSROOM = collection["SECTION_CLASSROOM"];
+                string SECTION_BRANCH_NAME = collection["SECTION_BRANCH_NAME"];
+                string SEMESTER = collection["SEMESTER"];
+                string YEAR = collection["YEAR"];
                 if (ModelState.IsValid && SECTION_DATE != "" && SUBJECT_ID != "" && SECTION_CLASSROOM != "" && SECTION_BRANCH_NAME != "")
                 {
                     if (SECTION_ID > 0)
@@ -54,6 +55,12 @@ namespace TestExcel.Controllers
                         //var edit = db.SECTIONs.Where(x => x.SECTION_ID == SECTION_ID).FirstOrDefault();
                         if (edit != null)
                         {
+                            LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SECTION_NUMBER + " " + edit.SECTION_DATE + " "
+                                    + edit.SECTION_TIME_START + "-" + edit.SECTION_TIME_END + " " + edit.SECTION_PROFESSOR_SHORTNAME + " "
+                                    + edit.SECTION_CLASSROOM + " " + edit.SECTION_BRANCH_NAME + " " + edit.SEMESTER + " " + edit.YEAR + " เป็น "
+                                    + SUBJECT_ID + " " + SECTION_NUMBER + " " + SECTION_DATE + " " + SECTION_TIME_START + "-"
+                                    + SECTION_TIME_END + " " + SECTION_PROFESSOR_SHORTNAME + " " + SECTION_CLASSROOM + " " + SECTION_BRANCH_NAME + " "
+                                    + SEMESTER + " " + YEAR);
                             edit.SECTION_ID = SECTION_ID;
                             edit.SUBJECT_ID = SUBJECT_ID;
                             edit.SECTION_NUMBER = SECTION_NUMBER;
@@ -70,6 +77,9 @@ namespace TestExcel.Controllers
                     else
                     {
                         //Add
+                        LogFile("เพิ่มข้อมูล " + SUBJECT_ID + " " + SECTION_NUMBER + " " + SECTION_DATE + " "
+                                    + SECTION_TIME_START + "-" + SECTION_TIME_END + " " + SECTION_PROFESSOR_SHORTNAME + " "
+                                    + SECTION_CLASSROOM + " " + SECTION_BRANCH_NAME + " " + SEMESTER + " " + YEAR);
                         var item = new SECTION();
                         item.SECTION_ID = SECTION_ID;
                         item.SUBJECT_ID = SUBJECT_ID;
@@ -83,6 +93,9 @@ namespace TestExcel.Controllers
                         item.SEMESTER = SEMESTER;
                         item.YEAR = YEAR;
                         db.SECTIONs.Add(item);
+                        LogFile("เพิ่มข้อมูลในฐานข้อมูล SECTION " + SECTION_ID + " " + SUBJECT_ID + " " + SECTION_NUMBER + " "
+                            + SECTION_DATE + " " + SECTION_TIME_START + "-" + SECTION_TIME_END + " " + SECTION_PROFESSOR_SHORTNAME
+                            + " " + SECTION_CLASSROOM + " " + SECTION_BRANCH_NAME + " " + SEMESTER + " " + YEAR);
                     }
                     db.SaveChanges();
 
@@ -102,6 +115,9 @@ namespace TestExcel.Controllers
             var del = db.SECTIONs.Where(x => x.SECTION_ID == SECTION_ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.SUBJECT_ID + " " + del.SECTION_NUMBER + " " + del.SECTION_DATE + " "
+                                    + del.SECTION_TIME_START + "-" + del.SECTION_TIME_END + " " + del.SECTION_PROFESSOR_SHORTNAME + " "
+                                    + del.SECTION_CLASSROOM + " " + del.SECTION_BRANCH_NAME + " " + del.SEMESTER + " " + del.YEAR);
                 db.SECTIONs.Remove(del);
                 db.SaveChanges();
             }
@@ -135,43 +151,52 @@ namespace TestExcel.Controllers
             string YEAR = collection["YEAR"];
             try
             {
-            if (ModelState.IsValid && SUBJECT_NAME != "" && SUBJECT_ID != "" && SUBJECT_CREDIT != "")
-            {
-                if (ID > 0)
+                if (ModelState.IsValid && SUBJECT_NAME != "" && SUBJECT_ID != "" && SUBJECT_CREDIT != "")
                 {
-                    //Edit
-                    var edit = db.SUBJECTs.Find(ID);
-                    if (edit != null)
+                    if (ID > 0)
                     {
-                        edit.SUBJECT_ID = SUBJECT_ID;
-                        edit.SUBJECT_NAME = SUBJECT_NAME;
-                        edit.SUBJECT_CREDIT = SUBJECT_CREDIT;
-                        edit.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
-                        edit.SUBJECT_MIDTERM_DATE = SUBJECT_MIDTERM_DATE;
-                        edit.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
-                        edit.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
-                        edit.SEMESTER = SEMESTER;
-                        edit.YEAR = YEAR;
+                        //Edit
+                        var edit = db.SUBJECTs.Find(ID);
+                        if (edit != null)
+                        {
+                            LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SUBJECT_NAME + " " + edit.SUBJECT_CREDIT + " "
+                                        + edit.SUBJECT_MIDTERM_TIME + " " + edit.SUBJECT_MIDTERM_DATE + " " + edit.SUBJECT_FINAL_TIME + " "
+                                        + edit.SUBJECT_FINAL_DATE + " " + edit.SEMESTER + " " + edit.YEAR + " เป็น "
+                                        + SUBJECT_ID + " " + SUBJECT_NAME + " " + SUBJECT_CREDIT + " " + SUBJECT_MIDTERM_TIME + " "
+                                        + SUBJECT_MIDTERM_DATE + " " + SUBJECT_FINAL_TIME + " " + SUBJECT_FINAL_DATE + " "
+                                        + SEMESTER + " " + YEAR);
+                            edit.SUBJECT_ID = SUBJECT_ID;
+                            edit.SUBJECT_NAME = SUBJECT_NAME;
+                            edit.SUBJECT_CREDIT = SUBJECT_CREDIT;
+                            edit.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
+                            edit.SUBJECT_MIDTERM_DATE = SUBJECT_MIDTERM_DATE;
+                            edit.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
+                            edit.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
+                            edit.SEMESTER = SEMESTER;
+                            edit.YEAR = YEAR;
+                        }
                     }
-                }
-                else
-                {
-                    //Add
-                    var item = new SUBJECT();
-                    item.SUBJECT_ID = SUBJECT_ID;
-                    item.SUBJECT_NAME = SUBJECT_NAME;
-                    item.SUBJECT_CREDIT = SUBJECT_CREDIT;
-                    item.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
-                    item.SUBJECT_MIDTERM_DATE = SUBJECT_MIDTERM_DATE;
-                    item.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
-                    item.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
-                    item.SEMESTER = SEMESTER;
-                    item.YEAR = YEAR;
-                    db.SUBJECTs.Add(item);
-                }
-                db.SaveChanges();
+                    else
+                    {
+                        //Add
+                        LogFile("เพิ่มข้อมูล " + SUBJECT_ID + " " + SUBJECT_NAME + " " + SUBJECT_CREDIT + " " + SUBJECT_MIDTERM_TIME + " "
+                                            + SUBJECT_MIDTERM_DATE + " " + SUBJECT_FINAL_TIME + " " + SUBJECT_FINAL_DATE + " "
+                                            + SEMESTER + " " + YEAR);
+                        var item = new SUBJECT();
+                        item.SUBJECT_ID = SUBJECT_ID;
+                        item.SUBJECT_NAME = SUBJECT_NAME;
+                        item.SUBJECT_CREDIT = SUBJECT_CREDIT;
+                        item.SUBJECT_MIDTERM_TIME = SUBJECT_MIDTERM_TIME;
+                        item.SUBJECT_MIDTERM_DATE = SUBJECT_MIDTERM_DATE;
+                        item.SUBJECT_FINAL_TIME = SUBJECT_FINAL_TIME;
+                        item.SUBJECT_FINAL_DATE = SUBJECT_FINAL_DATE;
+                        item.SEMESTER = SEMESTER;
+                        item.YEAR = YEAR;
+                        db.SUBJECTs.Add(item);
+                    }
+                    db.SaveChanges();
 
-            }
+                }
                 return RedirectToAction("Subject");
             }
             catch
@@ -186,6 +211,9 @@ namespace TestExcel.Controllers
             var del = db.SUBJECTs.Where(x => x.ID == ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.SUBJECT_ID + " " + del.SUBJECT_NAME + " " + del.SUBJECT_CREDIT + " " + del.SUBJECT_MIDTERM_TIME + " "
+                                            + del.SUBJECT_MIDTERM_DATE + " " + del.SUBJECT_FINAL_TIME + " " + del.SUBJECT_FINAL_DATE + " "
+                                            + del.SEMESTER + " " + del.YEAR);
                 db.SUBJECTs.Remove(del);
                 db.SaveChanges();
             }
@@ -199,10 +227,10 @@ namespace TestExcel.Controllers
         #region Member
         public ActionResult Member()
         {
-            if(Session["status"].ToString() == "admin")
+            if (Session["status"].ToString() == "admin")
             {
-            var model = db.USERs.ToList();
-            return View(model);
+                var model = db.USERs.ToList();
+                return View(model);
             }
             else
             {
@@ -227,6 +255,10 @@ namespace TestExcel.Controllers
                     var edit = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.USER_USERNAME + " " + edit.USER_PASSWORD + " " + edit.USER_EMAIL + " "
+                                        + edit.USER_FIRSTNAME + " " + edit.USER_LASTNAME + " " + edit.USER_STATUS + " เป็น "
+                                        + USER_USERNAME + " " + USER_PASSWORD + " " + USER_EMAIL + " " + USER_FIRSTNAME + " "
+                                        + USER_LASTNAME + " " + USER_STATUS);
                         edit.USER_USERNAME = USER_USERNAME;
                         edit.USER_PASSWORD = USER_PASSWORD;
                         edit.USER_EMAIL = USER_EMAIL;
@@ -238,6 +270,8 @@ namespace TestExcel.Controllers
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + USER_USERNAME + " " + USER_PASSWORD + " " + USER_EMAIL + " " + USER_FIRSTNAME + " "
+                                        + USER_LASTNAME + " " + USER_STATUS);
                     var item = new USER();
                     item.USER_USERNAME = USER_USERNAME;
                     item.USER_PASSWORD = USER_PASSWORD;
@@ -259,6 +293,8 @@ namespace TestExcel.Controllers
             var del = db.USERs.Where(x => x.ID == ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.USER_USERNAME + " " + del.USER_PASSWORD + " " + del.USER_EMAIL + " " + del.USER_FIRSTNAME + " "
+                                           + del.USER_LASTNAME + " " + del.USER_STATUS);
                 db.USERs.Remove(del);
                 db.SaveChanges();
             }
@@ -288,12 +324,14 @@ namespace TestExcel.Controllers
                     var edit = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == DEPARTMENT_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.DEPARTMENT_NAME + " เป็น " + DEPARTMENT);
                         edit.DEPARTMENT_NAME = DEPARTMENT;
                     }
                 }
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + DEPARTMENT);
                     var item = new DEPARTMENT();
                     item.DEPARTMENT_NAME = DEPARTMENT;
                     db.DEPARTMENTs.Add(item);
@@ -310,6 +348,7 @@ namespace TestExcel.Controllers
             var del = db.DEPARTMENTs.Where(x => x.DEPARTMENT_ID == ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.DEPARTMENT_NAME);
                 db.DEPARTMENTs.Remove(del);
                 db.SaveChanges();
             }
@@ -342,6 +381,9 @@ namespace TestExcel.Controllers
                     var edit = db.PROFESSORs.Where(x => x.PROFESSOR_ID == PROFESSOR_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.PROFESSOR_NAME + " " + edit.PROFESSOR_SHORTNAME + " " + edit.PROFESSOR_STATUS + " "
+                                           + edit.DEPARTMENT_NAME + " เป็น "
+                                           + PROFESSOR_NAME + " " + PROFESSOR_SHORTNAME + " " + PROFESSOR_STATUS + " " + DEPARTMENT_NAME);
                         edit.PROFESSOR_NAME = PROFESSOR_NAME;
                         edit.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
                         edit.PROFESSOR_STATUS = PROFESSOR_STATUS;
@@ -351,6 +393,7 @@ namespace TestExcel.Controllers
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + PROFESSOR_NAME + " " + PROFESSOR_SHORTNAME + " " + PROFESSOR_STATUS + " " + DEPARTMENT_NAME);
                     var item = new PROFESSOR();
                     item.PROFESSOR_NAME = PROFESSOR_NAME;
                     item.PROFESSOR_SHORTNAME = PROFESSOR_SHORTNAME;
@@ -370,6 +413,7 @@ namespace TestExcel.Controllers
             var del = db.PROFESSORs.Where(x => x.PROFESSOR_ID == PROFESSOR_ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.PROFESSOR_NAME + " " + del.PROFESSOR_SHORTNAME + " " + del.PROFESSOR_STATUS + " " + del.DEPARTMENT_NAME);
                 db.PROFESSORs.Remove(del);
                 db.SaveChanges();
             }
@@ -401,6 +445,8 @@ namespace TestExcel.Controllers
                     var edit = db.COURSEs.Where(x => x.COURSE_ID == COURSE_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.DEPARTMENT_NAME_ID + " " + edit.COURSE_NAME + " " + edit.COURSE_THAI_NAME + " เป็น "
+                                              + DEPARTMENT_NAME_ID + " " + COURSE_NAME + " " + COURSE_THAI_NAME);
                         edit.DEPARTMENT_NAME_ID = int.Parse(DEPARTMENT_NAME_ID);
                         edit.COURSE_NAME = COURSE_NAME;
                         edit.COURSE_THAI_NAME = COURSE_THAI_NAME;
@@ -409,6 +455,7 @@ namespace TestExcel.Controllers
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + DEPARTMENT_NAME_ID + " " + COURSE_NAME + " " + COURSE_THAI_NAME);
                     var item = new COURSE();
                     item.DEPARTMENT_NAME_ID = int.Parse(DEPARTMENT_NAME_ID);
                     item.COURSE_NAME = COURSE_NAME;
@@ -427,6 +474,7 @@ namespace TestExcel.Controllers
             var del = db.COURSEs.Where(x => x.COURSE_ID == COURSE_ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.DEPARTMENT_NAME_ID + " " + del.COURSE_NAME + " " + del.COURSE_THAI_NAME);
                 db.COURSEs.Remove(del);
                 db.SaveChanges();
             }
@@ -461,6 +509,8 @@ namespace TestExcel.Controllers
                     var edit = db.BUILDINGs.Where(x => x.BUILDING_ID == BUILDING_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.BUILDING_NAME + " " + edit.CLASSROOM_NAME + " เป็น "
+                                                 + BUILDING_NAME + " " + CLASSROOM_NAME);
                         edit.BUILDING_NAME = BUILDING_NAME;
                         edit.CLASSROOM_NAME = CLASSROOM_NAME;
                     }
@@ -468,6 +518,7 @@ namespace TestExcel.Controllers
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + BUILDING_NAME + " " + CLASSROOM_NAME);
                     var item = new BUILDING();
                     item.BUILDING_NAME = BUILDING_NAME;
                     item.CLASSROOM_NAME = CLASSROOM_NAME;
@@ -485,6 +536,7 @@ namespace TestExcel.Controllers
             var del = db.BUILDINGs.Where(x => x.BUILDING_ID == BUILDING_ID).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.BUILDING_NAME + " " + del.CLASSROOM_NAME);
                 db.BUILDINGs.Remove(del);
                 db.SaveChanges();
             }
@@ -515,6 +567,8 @@ namespace TestExcel.Controllers
                     var edit = db.BRANCHes.Where(x => x.BRANCH_ID == BranchId).FirstOrDefault();
                     if (edit != null)
                     {
+                        LogFile("อัปเดตจาก " + edit.BRANCH_NAME + " " + edit.COURSE_NAME + " เป็น "
+                                                 + BranchName + " " + CourseName);
                         edit.BRANCH_NAME = BranchName;
                         edit.COURSE_NAME = CourseName;
                     }
@@ -522,6 +576,7 @@ namespace TestExcel.Controllers
                 else
                 {
                     //Add
+                    LogFile("เพิ่มข้อมูล " + BranchName + " " + CourseName);
                     var item = new BRANCH();
                     item.BRANCH_NAME = BranchName;
                     item.COURSE_NAME = CourseName;
@@ -539,6 +594,7 @@ namespace TestExcel.Controllers
             var del = db.BRANCHes.Where(x => x.BRANCH_ID == BranchId).FirstOrDefault();
             if (del != null)
             {
+                LogFile("ลบข้อมูล " + del.BRANCH_NAME + " " + del.COURSE_NAME);
                 db.BRANCHes.Remove(del);
                 db.SaveChanges();
             }
@@ -736,7 +792,7 @@ namespace TestExcel.Controllers
                     var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
                     if (WhereTimeDate.Count() > 0)
                     {
-                         var item = new TimeCrash();
+                        var item = new TimeCrash();
                         foreach (var im in WhereTimeDate)
                         {
                             if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
@@ -796,189 +852,189 @@ namespace TestExcel.Controllers
             var SearchId = collection["searchId"];
             var section = db.SECTIONs;
             List<Section_Subject> _Section_Subject = new List<Section_Subject>();
-                var FIRST_SECTION_ID = int.Parse(collection["FIRST_SECTION_ID"]);
-                var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
-                var unit = (from e1 in db.SECTIONs
-                            join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                            where e1.SECTION_ID == FIRST_SECTION_ID
-                            select new Section_Subject
-                            {
-                                SECTION_ID = e1.SECTION_ID,
-                                SUBJECT_ID = e1.SUBJECT_ID,
-                                SUBJECT_NAME = e2.SUBJECT_NAME,
-                                SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                                SECTION_NUMBER = e1.SECTION_NUMBER,
-                                SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                                SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                                SECTION_DATE = e1.SECTION_DATE,
-                                SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                                SECTION_TIME_START = e1.SECTION_TIME_START,
-                                SECTION_TIME_END = e1.SECTION_TIME_END,
-                                SEMESTER = e1.SEMESTER,
-                                YEAR = e1.YEAR
-                            }).OrderBy(x => x.SECTION_TIME_START).First();
+            var FIRST_SECTION_ID = int.Parse(collection["FIRST_SECTION_ID"]);
+            var SECOND_SECTION_ID = collection["SECOND_SECTION_ID"];
+            var unit = (from e1 in db.SECTIONs
+                        join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                        where e1.SECTION_ID == FIRST_SECTION_ID
+                        select new Section_Subject
+                        {
+                            SECTION_ID = e1.SECTION_ID,
+                            SUBJECT_ID = e1.SUBJECT_ID,
+                            SUBJECT_NAME = e2.SUBJECT_NAME,
+                            SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                            SECTION_NUMBER = e1.SECTION_NUMBER,
+                            SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                            SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                            SECTION_DATE = e1.SECTION_DATE,
+                            SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                            SECTION_TIME_START = e1.SECTION_TIME_START,
+                            SECTION_TIME_END = e1.SECTION_TIME_END,
+                            SEMESTER = e1.SEMESTER,
+                            YEAR = e1.YEAR
+                        }).OrderBy(x => x.SECTION_TIME_START).First();
             if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID == "0")
+            {
+                var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                var LastTime = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
+                var Classroom = collection["FIRST_SAVE_CLASSROOM"];
+                var Date = collection["FIRST_SAVE_DATE"];
+                var Subject_id = unit.SUBJECT_ID;
+                var First_SUBJECT_NAME = unit.SUBJECT_NAME;
+                var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
+                var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
+                var query = (from e1 in db.SECTIONs
+                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                             where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                             select new Section_Subject
+                             {
+                                 SECTION_ID = e1.SECTION_ID,
+                                 SUBJECT_ID = e1.SUBJECT_ID,
+                                 SUBJECT_NAME = e2.SUBJECT_NAME,
+                                 SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                 SECTION_NUMBER = e1.SECTION_NUMBER,
+                                 SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                 SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                 SECTION_DATE = e1.SECTION_DATE,
+                                 SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                 SECTION_TIME_START = e1.SECTION_TIME_START,
+                                 SECTION_TIME_END = e1.SECTION_TIME_END,
+                                 SEMESTER = e1.SEMESTER,
+                                 YEAR = e1.YEAR
+                             }).OrderBy(x => x.SECTION_TIME_START).ToList();
+                var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                if (WhereTimeDate.Count() > 0)
                 {
-                    var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
-                    var LastTime = double.Parse(collection["FIRST_SAVE_TIMEEND"]);
-                    var Classroom = collection["FIRST_SAVE_CLASSROOM"];
-                    var Date = collection["FIRST_SAVE_DATE"];
-                    var Subject_id = unit.SUBJECT_ID;
-                    var First_SUBJECT_NAME = unit.SUBJECT_NAME;
-                    var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
-                    var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
-                    var query = (from e1 in db.SECTIONs
-                                 join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
-                                 select new Section_Subject
-                                 {
-                                     SECTION_ID = e1.SECTION_ID,
-                                     SUBJECT_ID = e1.SUBJECT_ID,
-                                     SUBJECT_NAME = e2.SUBJECT_NAME,
-                                     SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                                     SECTION_NUMBER = e1.SECTION_NUMBER,
-                                     SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                                     SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                                     SECTION_DATE = e1.SECTION_DATE,
-                                     SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                                     SECTION_TIME_START = e1.SECTION_TIME_START,
-                                     SECTION_TIME_END = e1.SECTION_TIME_END,
-                                     SEMESTER = e1.SEMESTER,
-                                     YEAR = e1.YEAR
-                                 }).OrderBy(x => x.SECTION_TIME_START).ToList();
-                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
-                    if (WhereTimeDate.Count() > 0)
+                    var item = new TimeCrash();
+                    foreach (var im in WhereTimeDate)
                     {
-                        var item = new TimeCrash();
-                        foreach (var im in WhereTimeDate)
+                        if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
                         {
-                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
-                            {
-                                item.TEACHER_CRASH = "1";
-                            }
+                            item.TEACHER_CRASH = "1";
                         }
-                        item.SUBJECT_ID_First = Subject_id;
-                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
-                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
-                        item.SECTION_DATE_First = Date;
-                        item.SECTION_TIME_START_First = FirstTime;
-                        item.SECTION_TIME_END_First = LastTime;
-                        item.SECTION_CLASSROOM_First = Classroom;
-                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
-                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
-
-                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
-                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
-                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
-                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
-                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
-                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
-                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
-                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
-                        item.TIME_CRASH = "2";
-                        if (WhereTimeDate.Count() == 2)
-                        {
-                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
-                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
-                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
-                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
-                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
-                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
-                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
-                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
-                            item.TIME_CRASH = "3";
-                        }
-                        item.SEMESTER = semester;
-                        item.YEAR = year;
-                        _TimeCrash.Add(item);
                     }
+                    item.SUBJECT_ID_First = Subject_id;
+                    item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                    item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                    item.SECTION_DATE_First = Date;
+                    item.SECTION_TIME_START_First = FirstTime;
+                    item.SECTION_TIME_END_First = LastTime;
+                    item.SECTION_CLASSROOM_First = Classroom;
+                    item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                    item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                    item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                    item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                    item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                    item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                    item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                    item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                    item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                    item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                    item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                    item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                    item.TIME_CRASH = "2";
+                    if (WhereTimeDate.Count() == 2)
+                    {
+                        item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                        item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                        item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                        item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                        item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "3";
+                    }
+                    item.SEMESTER = semester;
+                    item.YEAR = year;
+                    _TimeCrash.Add(item);
                 }
-                else if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID != "0")
-                {
-                    var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
-                    var LastTime = double.Parse(collection["SECOND_SAVE_TIMEEND"]);
-                    var Classroom = collection["FIRST_SAVE_CLASSROOM"];
-                    var Date = collection["FIRST_SAVE_DATE"];
-                    var Subject_id = unit.SUBJECT_ID;
-                    var First_SUBJECT_NAME = unit.SUBJECT_NAME;
-                    var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
-                    var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
+            }
+            else if (ModelState.IsValid && FIRST_SECTION_ID != 0 && SECOND_SECTION_ID != "0")
+            {
+                var FirstTime = double.Parse(collection["FIRST_SAVE_TIMESTART"]);
+                var LastTime = double.Parse(collection["SECOND_SAVE_TIMEEND"]);
+                var Classroom = collection["FIRST_SAVE_CLASSROOM"];
+                var Date = collection["FIRST_SAVE_DATE"];
+                var Subject_id = unit.SUBJECT_ID;
+                var First_SUBJECT_NAME = unit.SUBJECT_NAME;
+                var First_SECTION_NUMBER = collection["FIRST_SAVE_NUMBER"];
+                var First_BRANCH_NAME = collection["FIRST_SAVE_BRANCH"];
 
                 var query = (from e1 in db.SECTIONs
-                                 join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
-                                 where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
-                                 select new Section_Subject
-                                 {
-                                     SECTION_ID = e1.SECTION_ID,
-                                     SUBJECT_ID = e1.SUBJECT_ID,
-                                     SUBJECT_NAME = e2.SUBJECT_NAME,
-                                     SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
-                                     SECTION_NUMBER = e1.SECTION_NUMBER,
-                                     SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
-                                     SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
-                                     SECTION_DATE = e1.SECTION_DATE,
-                                     SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
-                                     SECTION_TIME_START = e1.SECTION_TIME_START,
-                                     SECTION_TIME_END = e1.SECTION_TIME_END,
-                                     SEMESTER = e1.SEMESTER,
-                                     YEAR = e1.YEAR
-                                 }).OrderBy(x => x.SECTION_TIME_START).ToList();
-                    var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
-                    if (WhereTimeDate.Count() > 0)
+                             join e2 in db.SUBJECTs on e1.SUBJECT_ID equals e2.SUBJECT_ID
+                             where e1.SECTION_ID != FIRST_SECTION_ID && e1.SECTION_PROFESSOR_SHORTNAME.Contains(unit.SECTION_PROFESSOR_SHORTNAME) && e1.SECTION_DATE == Date && e1.SEMESTER.Contains(semester) && e2.SEMESTER.Contains(semester) && e1.YEAR.Contains(year) && e2.YEAR.Contains(year)
+                             select new Section_Subject
+                             {
+                                 SECTION_ID = e1.SECTION_ID,
+                                 SUBJECT_ID = e1.SUBJECT_ID,
+                                 SUBJECT_NAME = e2.SUBJECT_NAME,
+                                 SUBJECT_CREDIT = e2.SUBJECT_CREDIT,
+                                 SECTION_NUMBER = e1.SECTION_NUMBER,
+                                 SECTION_BRANCH_NAME = e1.SECTION_BRANCH_NAME,
+                                 SECTION_CLASSROOM = e1.SECTION_CLASSROOM,
+                                 SECTION_DATE = e1.SECTION_DATE,
+                                 SECTION_PROFESSOR_SHORTNAME = e1.SECTION_PROFESSOR_SHORTNAME,
+                                 SECTION_TIME_START = e1.SECTION_TIME_START,
+                                 SECTION_TIME_END = e1.SECTION_TIME_END,
+                                 SEMESTER = e1.SEMESTER,
+                                 YEAR = e1.YEAR
+                             }).OrderBy(x => x.SECTION_TIME_START).ToList();
+                var WhereTimeDate = query.Where(x => (x.SECTION_TIME_START <= FirstTime && x.SECTION_TIME_START < LastTime && x.SECTION_TIME_END > FirstTime) && !x.SECTION_CLASSROOM.Contains("SHOP") && !x.SECTION_CLASSROOM.Contains("LAB") && !x.SECTION_CLASSROOM.Contains("สนาม")).OrderBy(x => x.SECTION_DATE).ToList();
+                if (WhereTimeDate.Count() > 0)
+                {
+
+                    var item = new TimeCrash();
+                    foreach (var im in WhereTimeDate)
                     {
-
-                        var item = new TimeCrash();
-                        foreach (var im in WhereTimeDate)
+                        if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
                         {
-                            if (unit.SECTION_PROFESSOR_SHORTNAME == im.SECTION_PROFESSOR_SHORTNAME)
-                            {
-                                item.TEACHER_CRASH = "1";
-                            }
+                            item.TEACHER_CRASH = "1";
                         }
-                        item.SUBJECT_ID_First = Subject_id;
-                        item.SUBJECT_NAME_First = First_SUBJECT_NAME;
-                        item.SECTION_NUMBER_First = First_SECTION_NUMBER;
-                        item.SECTION_DATE_First = Date;
-                        item.SECTION_TIME_START_First = FirstTime;
-                        item.SECTION_TIME_END_First = LastTime;
-                        item.SECTION_CLASSROOM_First = Classroom;
-                        item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
-                        item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
-
-                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
-                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
-                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
-                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
-                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
-                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
-                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
-                        item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
-                        item.TIME_CRASH = "2";
-                        if (WhereTimeDate.Count() == 2)
-                        {
-                            item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
-                            item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
-                            item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
-                            item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
-                            item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
-                            item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
-                            item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
-                            item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
-                            item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
-                            item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
-                            item.TIME_CRASH = "3";
-                        }
-                        item.SEMESTER = semester;
-                        item.YEAR = year;
-                        _TimeCrash.Add(item);
                     }
+                    item.SUBJECT_ID_First = Subject_id;
+                    item.SUBJECT_NAME_First = First_SUBJECT_NAME;
+                    item.SECTION_NUMBER_First = First_SECTION_NUMBER;
+                    item.SECTION_DATE_First = Date;
+                    item.SECTION_TIME_START_First = FirstTime;
+                    item.SECTION_TIME_END_First = LastTime;
+                    item.SECTION_CLASSROOM_First = Classroom;
+                    item.SECTION_BRANCH_NAME_First = First_BRANCH_NAME;
+                    item.SECTION_PROFESSOR_First = unit.SECTION_PROFESSOR_SHORTNAME;
+
+                    item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                    item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                    item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                    item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                    item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                    item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                    item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                    item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                    item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                    item.SECTION_PROFESSOR_Second = WhereTimeDate[0].SECTION_PROFESSOR_SHORTNAME;
+                    item.TIME_CRASH = "2";
+                    if (WhereTimeDate.Count() == 2)
+                    {
+                        item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
+                        item.SUBJECT_ID_Third = WhereTimeDate[1].SUBJECT_ID;
+                        item.SUBJECT_NAME_Third = WhereTimeDate[1].SUBJECT_NAME;
+                        item.SECTION_NUMBER_Third = WhereTimeDate[1].SECTION_NUMBER;
+                        item.SECTION_DATE_Third = WhereTimeDate[1].SECTION_DATE;
+                        item.SECTION_TIME_START_Third = WhereTimeDate[1].SECTION_TIME_START;
+                        item.SECTION_TIME_END_Third = WhereTimeDate[1].SECTION_TIME_END;
+                        item.SECTION_CLASSROOM_Third = WhereTimeDate[1].SECTION_CLASSROOM;
+                        item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
+                        item.SECTION_PROFESSOR_Third = WhereTimeDate[1].SECTION_PROFESSOR_SHORTNAME;
+                        item.TIME_CRASH = "3";
+                    }
+                    item.SEMESTER = semester;
+                    item.YEAR = year;
+                    _TimeCrash.Add(item);
                 }
+            }
             var TimeCrash = _TimeCrash.ToList();
             return TimeCrash;
         }
@@ -1006,27 +1062,27 @@ namespace TestExcel.Controllers
                         var e = section.Where(x => x.SECTION_ID == im.SECTION_ID).First();
                         e.CRASH = "3";
                     }
-                        var item = new TimeCrash();
-                        item.SECTION_ID_First = j.SECTION_ID;
-                        item.SUBJECT_ID_First = j.SUBJECT_ID;
-                        item.SUBJECT_NAME_First = j.SUBJECT_NAME;
-                        item.SECTION_NUMBER_First = j.SECTION_NUMBER;
-                        item.SECTION_DATE_First = j.SECTION_DATE;
-                        item.SECTION_TIME_START_First = j.SECTION_TIME_START;
-                        item.SECTION_TIME_END_First = j.SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_First = j.SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_First = j.SECTION_BRANCH_NAME;
-                        
-                        item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
-                        item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
-                        item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
-                        item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
-                        item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
-                        item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
-                        item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
-                        item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
-                        item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
-                        item.TIME_CRASH = "2";
+                    var item = new TimeCrash();
+                    item.SECTION_ID_First = j.SECTION_ID;
+                    item.SUBJECT_ID_First = j.SUBJECT_ID;
+                    item.SUBJECT_NAME_First = j.SUBJECT_NAME;
+                    item.SECTION_NUMBER_First = j.SECTION_NUMBER;
+                    item.SECTION_DATE_First = j.SECTION_DATE;
+                    item.SECTION_TIME_START_First = j.SECTION_TIME_START;
+                    item.SECTION_TIME_END_First = j.SECTION_TIME_END;
+                    item.SECTION_CLASSROOM_First = j.SECTION_CLASSROOM;
+                    item.SECTION_BRANCH_NAME_First = j.SECTION_BRANCH_NAME;
+
+                    item.SECTION_ID_Second = WhereTimeDate[0].SECTION_ID;
+                    item.SUBJECT_ID_Second = WhereTimeDate[0].SUBJECT_ID;
+                    item.SUBJECT_NAME_Second = WhereTimeDate[0].SUBJECT_NAME;
+                    item.SECTION_NUMBER_Second = WhereTimeDate[0].SECTION_NUMBER;
+                    item.SECTION_DATE_Second = WhereTimeDate[0].SECTION_DATE;
+                    item.SECTION_TIME_START_Second = WhereTimeDate[0].SECTION_TIME_START;
+                    item.SECTION_TIME_END_Second = WhereTimeDate[0].SECTION_TIME_END;
+                    item.SECTION_CLASSROOM_Second = WhereTimeDate[0].SECTION_CLASSROOM;
+                    item.SECTION_BRANCH_NAME_Second = WhereTimeDate[0].SECTION_BRANCH_NAME;
+                    item.TIME_CRASH = "2";
                     if (WhereTimeDate.Count() == 2)
                     {
                         item.SECTION_ID_Third = WhereTimeDate[1].SECTION_ID;
@@ -1040,9 +1096,9 @@ namespace TestExcel.Controllers
                         item.SECTION_BRANCH_NAME_Third = WhereTimeDate[1].SECTION_BRANCH_NAME;
                         item.TIME_CRASH = "3";
                     }
-                        item.SEMESTER = SEMESTER;
-                        item.YEAR = YEAR;
-                        _TimeCrash.Add(item);
+                    item.SEMESTER = SEMESTER;
+                    item.YEAR = YEAR;
+                    _TimeCrash.Add(item);
                 }
             }
 
@@ -1101,6 +1157,55 @@ namespace TestExcel.Controllers
             }
             section_subject = query.OrderBy(x => x.SECTION_ID).ToList();
             return section_subject;
+        }
+        public void LogFile(string Data)
+        {
+            try
+            {
+                var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+                string FilePath = Server.MapPath("~/LogFile/Log " + datetime + ".txt");
+                string FileName = Path.GetFileName(FilePath);
+                string data = DateTime.Now.ToString();
+                string Username = Session["Username"].ToString();
+                string Name = db.USERs.Where(x => x.USER_USERNAME == Username).FirstOrDefault().USER_FIRSTNAME;
+                if (Name != null)
+                {
+                    data += " - " + Name + " - " + Data;
+                }
+                else
+                {
+                    data += " - " + Username + " - " + Data;
+                }
+
+                if (System.IO.File.Exists(FilePath))
+                {
+                    string read = "";
+
+                    StreamReader sr = System.IO.File.OpenText(FilePath);
+                    read = sr.ReadToEnd();
+                    sr.Close();
+                    System.IO.File.Delete(FilePath);
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(read + "\n" + data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray, 0, byteArray.Length);
+                    }
+
+                }
+                else
+                {
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray, 0, byteArray.Length);
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
     }
 }

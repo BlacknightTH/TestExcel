@@ -7,6 +7,7 @@ using TestExcel.Data;
 using TestExcel.Models;
 using System.Text;
 using TestExcel.Utility;
+using System.IO;
 
 namespace TestExcel.Controllers
 {
@@ -634,6 +635,13 @@ namespace TestExcel.Controllers
                 var edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_FIRST_SECTION_ID).FirstOrDefault();
                 if(edit != null)
                 {
+                    if (edit.SECTION_NUMBER != FIRST_SAVE_NUMBER || edit.SECTION_DATE != FIRST_SAVE_DATE || edit.SECTION_CLASSROOM != FIRST_SAVE_CLASSROOM || edit.SECTION_TIME_START != FIRST_SAVE_TIMESTART || edit.SECTION_TIME_END != FIRST_SAVE_TIMEEND)
+                    {
+                        LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SECTION_NUMBER + " " + edit.SECTION_DATE + " " 
+                            + edit.SECTION_CLASSROOM + " " + edit.SECTION_TIME_START + "-" + edit.SECTION_TIME_END + " เป็น " 
+                            + edit.SUBJECT_ID + " " + FIRST_SAVE_NUMBER + " " + FIRST_SAVE_DATE + " " 
+                            + FIRST_SAVE_CLASSROOM + " " + FIRST_SAVE_TIMESTART + "-" + FIRST_SAVE_TIMEEND);
+                    }
                     edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
                     edit.SECTION_DATE = FIRST_SAVE_DATE;
                     edit.SECTION_CLASSROOM = FIRST_SAVE_CLASSROOM;
@@ -654,6 +662,13 @@ namespace TestExcel.Controllers
                 var edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_FIRST_SECTION_ID).FirstOrDefault();
                 if (edit != null)
                 {
+                    if (edit.SECTION_NUMBER != FIRST_SAVE_NUMBER || edit.SECTION_DATE != FIRST_SAVE_DATE || edit.SECTION_CLASSROOM != FIRST_SAVE_CLASSROOM || edit.SECTION_TIME_START != FIRST_SAVE_TIMESTART || edit.SECTION_TIME_END != FIRST_SAVE_TIMEEND)
+                    {
+                        LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SECTION_NUMBER + " " + edit.SECTION_DATE + " "
+                            + edit.SECTION_CLASSROOM + " " + edit.SECTION_TIME_START + "-" + edit.SECTION_TIME_END + " เป็น "
+                            + edit.SUBJECT_ID + " " + FIRST_SAVE_NUMBER + " " + FIRST_SAVE_DATE + " "
+                            + FIRST_SAVE_CLASSROOM + " " + FIRST_SAVE_TIMESTART + "-" + FIRST_SAVE_TIMEEND);
+                    }
                     edit.SECTION_NUMBER = FIRST_SAVE_NUMBER;
                     edit.SECTION_DATE = FIRST_SAVE_DATE;
                     edit.SECTION_CLASSROOM = FIRST_SAVE_CLASSROOM;
@@ -671,6 +686,13 @@ namespace TestExcel.Controllers
                 var second_edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_SECOND_SECTION_ID).FirstOrDefault();
                 if (second_edit != null)
                 {
+                    if (edit.SECTION_NUMBER != SECOND_SAVE_NUMBER || edit.SECTION_DATE != SECOND_SAVE_DATE || edit.SECTION_CLASSROOM != SECOND_SAVE_CLASSROOM || edit.SECTION_TIME_START != SECOND_SAVE_TIMESTART || edit.SECTION_TIME_END != SECOND_SAVE_TIMEEND)
+                    {
+                        LogFile("อัปเดตจาก " + second_edit.SUBJECT_ID + " " + second_edit.SECTION_NUMBER + " " + second_edit.SECTION_DATE + " "
+                            + second_edit.SECTION_CLASSROOM + " " + second_edit.SECTION_TIME_START + "-" + second_edit.SECTION_TIME_END + " เป็น "
+                            + second_edit.SUBJECT_ID + " " + SECOND_SAVE_NUMBER + " " + SECOND_SAVE_DATE + " "
+                            + SECOND_SAVE_CLASSROOM + " " + SECOND_SAVE_TIMESTART + "-" + SECOND_SAVE_TIMEEND);
+                    }
                     second_edit.SECTION_NUMBER = SECOND_SAVE_NUMBER;
                     second_edit.SECTION_DATE = SECOND_SAVE_DATE;
                     edit.SECTION_CLASSROOM = SECOND_SAVE_CLASSROOM;
@@ -732,6 +754,13 @@ namespace TestExcel.Controllers
                     var edit = db.SECTIONs.Where(x => x.SECTION_ID == FIRST_SECTION_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        if (edit.SECTION_DATE != FIRST_SAVE_DATE || edit.SECTION_TIME_START != FIRST_SAVE_TIMESTART || edit.SECTION_TIME_END != FIRST_SAVE_TIMEEND)
+                        {
+                            LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SECTION_DATE + " "
+                                + edit.SECTION_TIME_START + "-" + edit.SECTION_TIME_END + " เป็น "
+                                + edit.SUBJECT_ID + " " + FIRST_SAVE_DATE + " "
+                                + FIRST_SAVE_TIMESTART + "-" + FIRST_SAVE_TIMEEND);
+                        }
                         edit.SECTION_DATE = FIRST_SAVE_DATE;
                         edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
                         edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
@@ -749,6 +778,13 @@ namespace TestExcel.Controllers
                     var edit = db.SECTIONs.Where(x => x.SECTION_ID == FIRST_SECTION_ID).FirstOrDefault();
                     if (edit != null)
                     {
+                        if (edit.SECTION_DATE != FIRST_SAVE_DATE || edit.SECTION_TIME_START != FIRST_SAVE_TIMESTART || edit.SECTION_TIME_END != FIRST_SAVE_TIMEEND)
+                        {
+                            LogFile("อัปเดตจาก " + edit.SUBJECT_ID + " " + edit.SECTION_DATE + " "
+                                + edit.SECTION_TIME_START + "-" + edit.SECTION_TIME_END + " เป็น "
+                                + edit.SUBJECT_ID + " " + FIRST_SAVE_DATE + " "
+                                + FIRST_SAVE_TIMESTART + "-" + FIRST_SAVE_TIMEEND);
+                        }
                         edit.SECTION_DATE = FIRST_SAVE_DATE;
                         edit.SECTION_TIME_START = FIRST_SAVE_TIMESTART;
                         edit.SECTION_TIME_END = FIRST_SAVE_TIMEEND;
@@ -761,6 +797,13 @@ namespace TestExcel.Controllers
                     var second_edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_SECOND_SECTION_ID).FirstOrDefault();
                     if (second_edit != null)
                     {
+                        if (edit.SECTION_DATE != SECOND_SAVE_DATE || edit.SECTION_TIME_START != SECOND_SAVE_TIMESTART || edit.SECTION_TIME_END != SECOND_SAVE_TIMEEND)
+                        {
+                            LogFile("อัปเดตจาก " + second_edit.SUBJECT_ID + " " + second_edit.SECTION_DATE + " "
+                                + second_edit.SECTION_TIME_START + "-" + second_edit.SECTION_TIME_END + " เป็น "
+                                + edit.SUBJECT_ID + " " + SECOND_SAVE_DATE + " "
+                                + SECOND_SAVE_TIMESTART + "-" + SECOND_SAVE_TIMEEND);
+                        }
                         second_edit.SECTION_DATE = SECOND_SAVE_DATE;
                         second_edit.SECTION_TIME_START = SECOND_SAVE_TIMESTART;
                         second_edit.SECTION_TIME_END = SECOND_SAVE_TIMEEND;
@@ -791,6 +834,55 @@ namespace TestExcel.Controllers
                 {
                     return Redirect("/TimeSchedule/TeSchedule/" + SEC_ID + "?classroom=" + CLASSROOM + "&SUBJECTid=" + SUBJECTid + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
                 }
+            }
+        }
+        public void LogFile(string Data)
+        {
+            try
+            {
+                var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+                string FilePath = Server.MapPath("~/LogFile/Log " + datetime + ".txt");
+                string FileName = Path.GetFileName(FilePath);
+                string data = DateTime.Now.ToString();
+                string Username = Session["Username"].ToString();
+                string Name = db.USERs.Where(x => x.USER_USERNAME == Username).FirstOrDefault().USER_FIRSTNAME;
+                if (Name != null)
+                {
+                    data += " - " + Name + " - " + Data;
+                }
+                else
+                {
+                    data += " - " + Username + " - " + Data;
+                }
+
+                if (System.IO.File.Exists(FilePath))
+                {
+                    string read = "";
+
+                    StreamReader sr = System.IO.File.OpenText(FilePath);
+                    read = sr.ReadToEnd();
+                    sr.Close();
+                    System.IO.File.Delete(FilePath);
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(read + "\n" + data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray, 0, byteArray.Length);
+                    }
+
+                }
+                else
+                {
+                    using (FileStream fs = System.IO.File.Create(FilePath))
+                    {
+                        var byteArray = Encoding.UTF8.GetBytes(data);
+                        var stream = new MemoryStream(byteArray);
+                        fs.Write(byteArray, 0, byteArray.Length);
+                    }
+                }
+            }
+            catch
+            {
             }
         }
     }
