@@ -173,7 +173,7 @@ namespace TestExcel.Controllers
             {
                 if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")))
                 {
-                    string path = Server.MapPath("~/Content/import/" + excelfile.FileName);
+                    string path = Server.MapPath("~/Content/import/Upload/" + excelfile.FileName);
                     if (System.IO.File.Exists(path))
                         System.IO.File.Delete(path);
                     excelfile.SaveAs(path);
@@ -642,6 +642,99 @@ namespace TestExcel.Controllers
             catch
             {
             }
+        }
+        public ActionResult Log()
+        {
+            List<DATE> DATE = new List<DATE>();
+            string line;
+            try
+            {
+                string FilePath = Server.MapPath("~/LogFile/");
+                foreach (string f in Directory.GetFiles(FilePath))
+                {
+                    string FileName = Path.GetFileNameWithoutExtension(f);
+                    var split = FileName.Split(' ','-');
+                    var item = new DATE();
+                    item.DAY = split[1];
+                    item.MONTH = split[2];
+                    item.YEAR = split[3];
+                    DATE.Add(item);
+                }
+
+                string Year = DATE.Select(x => x.YEAR).Distinct().OrderByDescending(x => x).First();
+                string Month = DATE.OrderByDescending(x => x.MONTH).First().MONTH;
+                string Day = DATE.Where(x => x.MONTH == Month).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First();
+                ViewBag.Year = Year;
+                ViewBag.Month = Month;
+                ViewBag.Day = Day;
+
+                string read = "";
+                StreamReader sr = System.IO.File.OpenText(FilePath + "Log " + Day + "-" + Month + "-" + Year + ".txt");
+                while ((line = sr.ReadLine()) != null)
+                {
+                    read = read + "\n" + line;
+                }
+                sr.Close();
+
+                ViewBag.READ = read;
+            }
+            catch
+            {
+
+            }
+            return View(DATE);
+        }
+        [HttpPost]
+        public ActionResult Log(FormCollection collection)
+        {
+            List<DATE> DATE = new List<DATE>();
+            string DAY = collection["ddl_Day"];
+            string MONTH = collection["ddl_Month"];
+            string YEAR = collection["ddl_Year"];
+            int Count = int.Parse(collection["Count"]);
+            string line;
+            try
+            {
+                string FilePath = Server.MapPath("~/LogFile/");
+                foreach (string f in Directory.GetFiles(FilePath))
+                {
+                    string FileName = Path.GetFileNameWithoutExtension(f);
+                    var split = FileName.Split(' ', '-');
+                    var item = new DATE();
+                    item.DAY = split[1];
+                    item.MONTH = split[2];
+                    item.YEAR = split[3];
+                    DATE.Add(item);
+                }
+
+                if (Count == 1)
+                {
+                    ViewBag.Year = YEAR;
+                    ViewBag.Month = MONTH;
+                    ViewBag.Day = DATE.Where(x => x.MONTH == MONTH).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First();
+                }
+                else
+                {
+                    ViewBag.Year = YEAR;
+                    ViewBag.Month = MONTH;
+                    ViewBag.Day = DAY;
+                }
+
+                string read = "";
+                StreamReader sr = System.IO.File.OpenText(FilePath + "Log " + ViewBag.Day + "-" + ViewBag.Month + "-" + ViewBag.Year + ".txt");
+                while ((line = sr.ReadLine()) != null)
+                {
+                    read = read + "\n" + line;
+                }
+                sr.Close();
+
+                ViewBag.READ = read;
+            }
+            catch
+            {
+
+            }
+            return View(DATE);
         }
     }
 }

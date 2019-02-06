@@ -797,7 +797,7 @@ namespace TestExcel.Controllers
                     var second_edit = db.SECTIONs.Where(x => x.SECTION_ID == tmp_SECOND_SECTION_ID).FirstOrDefault();
                     if (second_edit != null)
                     {
-                        if (edit.SECTION_DATE != SECOND_SAVE_DATE || edit.SECTION_TIME_START != SECOND_SAVE_TIMESTART || edit.SECTION_TIME_END != SECOND_SAVE_TIMEEND)
+                        if (second_edit.SECTION_DATE != SECOND_SAVE_DATE || second_edit.SECTION_TIME_START != SECOND_SAVE_TIMESTART || second_edit.SECTION_TIME_END != SECOND_SAVE_TIMEEND)
                         {
                             LogFile("อัปเดตจาก " + second_edit.SUBJECT_ID + " " + second_edit.SECTION_DATE + " "
                                 + second_edit.SECTION_TIME_START + "-" + second_edit.SECTION_TIME_END + " เป็น "

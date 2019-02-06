@@ -126,8 +126,9 @@
 
                 for (int a = 0; a < 6; a++)
                 {
-                    var trigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(item.SECTION_BRANCH_NAME) && x.SECTION_DATE == date[a]).Count();
-                    if (trigger == 1)
+                    var checktrigger = Model.Where(x => x.SUBJECT_ID == item.SUBJECT_ID && x.SECTION_BRANCH_NAME.Contains(item.SECTION_BRANCH_NAME) && x.SECTION_DATE == date[a]);
+                    var trigger = checktrigger.Count();
+                    if (trigger == 1 && checktrigger.First().SECTION_NUMBER != "")
                     {
                         <tr>
                             <td>

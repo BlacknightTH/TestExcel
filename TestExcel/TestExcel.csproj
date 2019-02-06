@@ -240,6 +240,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Building_Classroom.cs" />
+    <Compile Include="Models\DATE.cs" />
     <Compile Include="Models\Department_Branch.cs" />
     <Compile Include="Models\DistinctBuilding.cs" />
     <Compile Include="Models\Section_Professor.cs" />
@@ -637,9 +638,11 @@
     <Content Include="Views\TimeSchedule\PSchedule.cshtml" />
     <Content Include="Views\TimeSchedule\ReportSchedule.cshtml" />
     <Content Include="Views\Data\Department.cshtml" />
+    <Content Include="Views\Report\Log.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\import\Upload\" />
     <Folder Include="LogFile\" />
     <Folder Include="Views\Search\" />
   </ItemGroup>

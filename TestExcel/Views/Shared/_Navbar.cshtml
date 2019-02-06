@@ -18,12 +18,13 @@
         <div class="navbar-collapse collapse">
             @if (Session["Username"] != null)
             {
-                <ul class="nav navbar-nav">
-                    <li><a href="@Url.Action("DSchedule","TimeSchedule")">ตารางเรียน</a></li>
-                    <li><a href="@Url.Action("data","Report")">Import/Export Pdf/Excel</a></li>
-                    <li><a href="@Url.Action("Section","Data")">แก้ไขข้อมูล</a></li>
-                    <li><a href="@Url.Action("Download","Report",new { id="คู่มือการใช้งาน" })">คู่มือการใช้งาน</a></li>
-                </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="@Url.Action("DSchedule","TimeSchedule")">ตารางเรียน</a></li>
+                <li><a href="@Url.Action("data","Report")">Import/Export Pdf/Excel</a></li>
+                <li><a href="@Url.Action("Section","Data")">แก้ไขข้อมูล</a></li>
+                <li><a href="@Url.Action("Log","Report")">LogFile</a></li>
+                <li><a href="@Url.Action("Download","Report",new { id="คู่มือการใช้งาน" })">คู่มือการใช้งาน</a></li>
+            </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle noti" data-toggle="dropdown" href="#">
