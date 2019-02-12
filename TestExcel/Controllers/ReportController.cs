@@ -43,6 +43,24 @@ namespace TestExcel.Controllers
         {
             string m = ErrorMessage;
             SetYear();
+
+            List<DATE> DATE = new List<DATE>();
+            string line;
+
+            string FilePath = Server.MapPath("~/Content/import/fin/");
+            foreach (string f in Directory.GetFiles(FilePath))
+            {
+                string FileName = Path.GetFileNameWithoutExtension(f);
+                var split = FileName.Split(' ', '-');
+                var item = new DATE();
+                item.DAY = split[2];
+                item.MONTH = split[3];
+                item.YEAR = split[4];
+                item.EXCEL_DATE = FileName;
+                DATE.Add(item);
+            }
+            ViewBag.DATE = DATE.OrderByDescending(x => x.YEAR).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.DAY).ToList();
+
             return View(_DEPARTMENT);
         }
         [HttpPost]
@@ -70,7 +88,7 @@ namespace TestExcel.Controllers
                 SetYear();
                 ViewBag.Message = "";
                 ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
-                return View("data",_DEPARTMENT);
+                return View("data", _DEPARTMENT);
             }
         }
         public ActionResult PfReport(FormCollection collection)
@@ -164,221 +182,222 @@ namespace TestExcel.Controllers
         {
             if (Session["status"].ToString() == "admin")
             {
-            if (excelfile == null || excelfile.ContentLength == 0)
-            {
-                ViewBag.Error = "Please select a excel file<br>";
-                return RedirectToAction("data");
-            }
-            else
-            {
-                if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")))
+                if (excelfile == null || excelfile.ContentLength == 0)
                 {
-                    string path = Server.MapPath("~/Content/import/Upload/" + excelfile.FileName);
-                    if (System.IO.File.Exists(path))
-                        System.IO.File.Delete(path);
-                    excelfile.SaveAs(path);
-                    try
+                    ViewBag.Error = "Please select a excel file<br>";
+                    return RedirectToAction("data");
+                }
+                else
+                {
+                    if ((excelfile.FileName.EndsWith("xls") || excelfile.FileName.EndsWith("xlsx")))
                     {
-                        int FilenameLength = excelfile.FileName.Length;
-                        FilenameLength = FilenameLength - 11;
-                        string FileName = excelfile.FileName.Substring(FilenameLength);
-                        string[] tmpstring = FileName.Split('.', '-');
+                        string path = Server.MapPath("~/Content/import/Upload/" + excelfile.FileName);
+                        if (System.IO.File.Exists(path))
+                            System.IO.File.Delete(path);
+                        excelfile.SaveAs(path);
+                        try
+                        {
+                            int FilenameLength = excelfile.FileName.Length;
+                            FilenameLength = FilenameLength - 11;
+                            string FileName = excelfile.FileName.Substring(FilenameLength);
+                            string[] tmpstring = FileName.Split('.', '-');
 
-                        var package = new ExcelPackage(new FileInfo(path));
-                        var workbook = package.Workbook;
-                        var worksheet = workbook.Worksheets[1]; //read sheet 1
-                        int totalRows = worksheet.Dimension.End.Row;
+                            var package = new ExcelPackage(new FileInfo(path));
+                            var workbook = package.Workbook;
+                            var worksheet = workbook.Worksheets[1]; //read sheet 1
+                            int totalRows = worksheet.Dimension.End.Row;
 
-                        string tmp = "";
-                        string tmp2 = "";
-                        string Semester_Year = worksheet.Cells[4, 1].Text;
-                        string[] split_semester_year = Semester_Year.Split(' ');
+                            string tmp = "";
+                            string tmp2 = "";
+                            string Semester_Year = worksheet.Cells[4, 1].Text;
+                            string[] split_semester_year = Semester_Year.Split(' ');
                             string semester = split_semester_year[1];
                             string year = split_semester_year[3];
                             //string semester = tmpstring[0];
                             //string year = tmpstring[1];
                             var check_subject_semester_year = db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year);
-                        var check_section_semester_year = db.SECTIONs.Where(x => x.SEMESTER == semester && x.YEAR == year);
-                        if (check_subject_semester_year.Any() == true)
-                        {
-                            for (int g = check_subject_semester_year.ToList().FirstOrDefault().ID; g <= check_subject_semester_year.ToList().Last().ID; g++)
+                            var check_section_semester_year = db.SECTIONs.Where(x => x.SEMESTER == semester && x.YEAR == year);
+                            if (check_subject_semester_year.Any() == true)
                             {
-                                var record = db.SUBJECTs.Find(g);
-                                db.SUBJECTs.Remove(record);
-                            }
-                            db.SaveChanges();
-                        }
-                        if (check_section_semester_year.Any() == true)
-                        {
-                            for (int g = check_section_semester_year.ToList().FirstOrDefault().SECTION_ID; g <= check_section_semester_year.ToList().LastOrDefault().SECTION_ID; g++)
-                            {
-                                var record = db.SECTIONs.Where(x => x.SECTION_ID == g).First();
-                                db.SECTIONs.Remove(record);
-                            }
-                            db.SaveChanges();
-                        }
-
-                        for (int row = 5; row < totalRows; row++)
-                        {
-                            string B = worksheet.Cells[row, 2].Text;
-                            string C = worksheet.Cells[row, 3].Text;
-                            string D = worksheet.Cells[row, 4].Text;
-                            string E = worksheet.Cells[row, 5].Text;
-                            string F = worksheet.Cells[row, 6].Text;
-                            string G = worksheet.Cells[row, 7].Text;
-                            string H = worksheet.Cells[row, 8].Text;
-                            string L = worksheet.Cells[row, 12].Text;
-
-                            if (B.Length > 4 && B.Length < 12)
-                            {
-                                tmp = B;
-                                var CheckSubject = db.SUBJECTs.Where(x => x.SUBJECT_ID == B && x.SEMESTER == semester && x.YEAR == year).Any();
-                                if (CheckSubject != true)
+                                for (int g = check_subject_semester_year.ToList().FirstOrDefault().ID; g <= check_subject_semester_year.ToList().Last().ID; g++)
                                 {
-                                    if (G.Length != 0)
-                                    {
-                                        if (L.Length == 0)
-                                        {
-                                            string Subject_ID = B;
-                                            string subject_NAME = C;
-                                            string subject_CREDIT = G;
-                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                    var record = db.SUBJECTs.Find(g);
+                                    db.SUBJECTs.Remove(record);
+                                }
+                                db.SaveChanges();
+                            }
+                            if (check_section_semester_year.Any() == true)
+                            {
+                                for (int g = check_section_semester_year.ToList().FirstOrDefault().SECTION_ID; g <= check_section_semester_year.ToList().LastOrDefault().SECTION_ID; g++)
+                                {
+                                    var record = db.SECTIONs.Where(x => x.SECTION_ID == g).First();
+                                    db.SECTIONs.Remove(record);
+                                }
+                                db.SaveChanges();
+                            }
 
-                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                            for (int row = 5; row < totalRows; row++)
+                            {
+                                string B = worksheet.Cells[row, 2].Text;
+                                string C = worksheet.Cells[row, 3].Text;
+                                string D = worksheet.Cells[row, 4].Text;
+                                string E = worksheet.Cells[row, 5].Text;
+                                string F = worksheet.Cells[row, 6].Text;
+                                string G = worksheet.Cells[row, 7].Text;
+                                string H = worksheet.Cells[row, 8].Text;
+                                string L = worksheet.Cells[row, 12].Text;
+
+                                if (B.Length > 4 && B.Length < 12)
+                                {
+                                    tmp = B;
+                                    var CheckSubject = db.SUBJECTs.Where(x => x.SUBJECT_ID == B && x.SEMESTER == semester && x.YEAR == year).Any();
+                                    if (CheckSubject != true)
+                                    {
+                                        if (G.Length != 0)
+                                        {
+                                            if (L.Length == 0)
+                                            {
+                                                string Subject_ID = B;
+                                                string subject_NAME = C;
+                                                string subject_CREDIT = G;
+                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+
+                                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            }
+                                            else
+                                            {
+                                                string Subject_ID = B;
+                                                string subject_NAME = C;
+                                                string subject_CREDIT = G;
+                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+
+                                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            }
                                         }
                                         else
                                         {
-                                            string Subject_ID = B;
-                                            string subject_NAME = C;
-                                            string subject_CREDIT = G;
-                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
-                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
-                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
-                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                            if (L.Length == 0)
+                                            {
+                                                string Subject_ID = B;
+                                                string subject_NAME = C;
+                                                string subject_CREDIT = H.Trim();
+                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
 
-                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            }
+                                            else
+                                            {
+                                                string Subject_ID = B;
+                                                string subject_NAME = C;
+                                                string subject_CREDIT = H.Trim();
+                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+
+                                                saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                            }
                                         }
+                                    }
+                                }
+                                else if (B.Length <= 4)
+                                {
+                                    tmp2 = B;
+                                    if (B.Length != 0)
+                                    {
+                                        string[] split_date = D.Split('-');
+                                        if (G.LastOrDefault().ToString() == ",")
+                                        {
+                                            G = G + worksheet.Cells[row + 1, 7].Text;
+                                        }
+
+                                        string Subject_ID = tmp;
+                                        string Section_Number = B;
+                                        string Section_Date = C;
+                                        string Section_Start_Time = split_date[0];
+                                        string Section_End_Time = split_date[1];
+                                        string Section_Classroom = E;
+                                        string Section_Professor = F;
+                                        string Section_Branch_Name = G;
+                                        saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                        saveProfessor(Section_Professor, db);
                                     }
                                     else
                                     {
-                                        if (L.Length == 0)
+                                        if (D.Length != 0 && E.Length != 0 && G.Length != 0)
                                         {
-                                            string Subject_ID = B;
-                                            string subject_NAME = C;
-                                            string subject_CREDIT = H.Trim();
-                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                            if (C == "M" || C == "T" || C == "W" || C == "H" || C == "F" || C == "S" || C == "SUN")
+                                            {
+                                                string[] split_date = D.Split('-');
+                                                if (G.LastOrDefault().ToString() == ",")
+                                                {
+                                                    G = G + worksheet.Cells[row + 1, 7].Text;
+                                                }
 
-                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
-                                        }
-                                        else
-                                        {
-                                            string Subject_ID = B;
-                                            string subject_NAME = C;
-                                            string subject_CREDIT = H.Trim();
-                                            string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
-                                            string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
-                                            string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
-                                            string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                                string Subject_ID = tmp;
+                                                string Section_Number = tmp2;
+                                                string Section_Date = C;
+                                                string Section_Start_Time = split_date[0];
+                                                string Section_End_Time = split_date[1];
+                                                string Section_Classroom = E;
+                                                string Section_Professor = F;
+                                                string Section_Branch_Name = G;
+                                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                                saveProfessor(Section_Professor, db);
+                                            }
+                                            else if (D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
+                                            {
+                                                string[] split_date = E.Split('-');
+                                                if (H.LastOrDefault().ToString() == ",")
+                                                {
+                                                    H = H + worksheet.Cells[row + 1, 7].Text;
+                                                }
 
-                                            saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
+                                                string Subject_ID = tmp;
+                                                string Section_Number = C;
+                                                string Section_Date = D;
+                                                string Section_Start_Time = split_date[0];
+                                                string Section_End_Time = split_date[1];
+                                                string Section_Classroom = F;
+                                                string Section_Professor = G;
+                                                string Section_Branch_Name = H;
+                                                saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
+                                                saveProfessor(Section_Professor, db);
+                                            }
                                         }
                                     }
                                 }
                             }
-                            else if (B.Length <= 4)
-                            {
-                                tmp2 = B;
-                                if (B.Length != 0)
-                                {
-                                    string[] split_date = D.Split('-');
-                                    if (G.LastOrDefault().ToString() == ",")
-                                    {
-                                        G = G + worksheet.Cells[row + 1, 7].Text;
-                                    }
-
-                                    string Subject_ID = tmp;
-                                    string Section_Number = B;
-                                    string Section_Date = C;
-                                    string Section_Start_Time = split_date[0];
-                                    string Section_End_Time = split_date[1];
-                                    string Section_Classroom = E;
-                                    string Section_Professor = F;
-                                    string Section_Branch_Name = G;
-                                    saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
-                                    saveProfessor(Section_Professor,db);
-                                }
-                                else
-                                {
-                                    if (D.Length != 0 && E.Length != 0 && G.Length != 0)
-                                    {
-                                        if (C == "M" || C == "T" || C == "W" || C == "H" || C == "F" || C == "S" || C == "SUN")
-                                        {
-                                            string[] split_date = D.Split('-');
-                                            if (G.LastOrDefault().ToString() == ",")
-                                            {
-                                                G = G + worksheet.Cells[row + 1, 7].Text;
-                                            }
-
-                                            string Subject_ID = tmp;
-                                            string Section_Number = tmp2;
-                                            string Section_Date = C;
-                                            string Section_Start_Time = split_date[0];
-                                            string Section_End_Time = split_date[1];
-                                            string Section_Classroom = E;
-                                            string Section_Professor = F;
-                                            string Section_Branch_Name = G;
-                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
-                                            saveProfessor(Section_Professor,db);
-                                        }
-                                        else if (D == "M" || D == "T" || D == "W" || D == "H" || D == "F" || D == "S" || D == "SUN")
-                                        {
-                                            string[] split_date = E.Split('-');
-                                            if (H.LastOrDefault().ToString() == ",")
-                                            {
-                                                H = H + worksheet.Cells[row + 1, 7].Text;
-                                            }
-
-                                            string Subject_ID = tmp;
-                                            string Section_Number = C;
-                                            string Section_Date = D;
-                                            string Section_Start_Time = split_date[0];
-                                            string Section_End_Time = split_date[1];
-                                            string Section_Classroom = F;
-                                            string Section_Professor = G;
-                                            string Section_Branch_Name = H;
-                                            saveSection(Subject_ID, Section_Number, Section_Date, Section_Start_Time, Section_End_Time, Section_Classroom, Section_Professor, Section_Branch_Name, semester, year, db);
-                                            saveProfessor(Section_Professor,db);
-                                        }
-                                    }
-                                }
-                            }
+                            Export(semester, year);
                         }
-                    }
-                    catch
-                    {
+                        catch
+                        {
 
-                    }
+                        }
                         SetYear();
                         ViewBag.Message = "อัปโหลดไฟล์ " + excelfile.FileName + " เสร็จสิ้น";
                         ViewBag.ErrorMessage = "";
                         LogFile("อัปโหลดไฟล์ Excel " + excelfile.FileName);
                         return View("data", _DEPARTMENT);
                     }
-                else
-                {
+                    else
+                    {
                         SetYear();
                         ViewBag.Message = "";
                         ViewBag.ErrorMessage = "ชนิดของไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ .xlsx";
                         return View("data", _DEPARTMENT);
                     }
+                }
             }
-        }
             else
             {
                 return RedirectToAction("data");
@@ -412,12 +431,12 @@ namespace TestExcel.Controllers
         {
             try
             {
-            var item2 = new PROFESSOR();
-            var model = db.PROFESSORs;
+                var item2 = new PROFESSOR();
+                var model = db.PROFESSORs;
                 if (SECTION_PROFESSOR_SHORTNAME.Contains("/"))
                 {
                     string[] tmp = SECTION_PROFESSOR_SHORTNAME.Split('/');
-                    for (int i = 0; i < tmp.Length ; i++) 
+                    for (int i = 0; i < tmp.Length; i++)
                     {
                         model.Where(x => x.PROFESSOR_SHORTNAME == tmp[i]);
                         if (model.Count() == 0)
@@ -468,12 +487,130 @@ namespace TestExcel.Controllers
 
             }
         }
-        [HttpPost]
-        public ActionResult Export(FormCollection collection)
+        //[HttpPost]
+        //public ActionResult Export(FormCollection collection)
+        //{
+        //    var semester = collection["semester"];
+        //    var year = collection["year_export"];
+        //    var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+        //    string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + " " + datetime + ".xlsx");
+        //    System.IO.File.Delete(FilePath);
+        //    string FileName = Path.GetFileName(FilePath);
+
+        //    if (db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).Any() != false)
+        //    {
+        //        try
+        //        {
+        //            var package = new ExcelPackage(new FileInfo(FilePath));
+        //            var workbook = package.Workbook;
+        //            var worksheet = workbook.Worksheets.Add("ขบวน"+ semester + "-" + year); //read sheet 1
+
+        //            //------------------------------------------------------//
+        //            worksheet.Cells["B:K"].Style.Font.Name = "TH SarabunPSK";
+        //            worksheet.Cells["B:K"].Style.Font.Size = 15;
+        //            worksheet.Column(2).Style.Numberformat.Format = "@";
+        //            //------------------------------------------------------//
+
+        //            //-------------------------------------------//
+        //            using (ExcelRange range = worksheet.Cells["A2:K3"])
+        //            {
+        //                range.Merge = true;
+        //                range.Value = "ขบวนวิชาที่เปิดสอนระดับปริญญาตรี";
+        //                range.Style.Font.Name = "Angsana New";
+        //                range.Style.Font.Size = 20;
+        //                range.Style.Font.Bold = true;
+        //                range.Style.Font.UnderLine = true;
+        //                range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+        //            }
+        //            //-------------------------------------------//
+        //            using (ExcelRange range = worksheet.Cells["A4:K4"])
+        //            {
+        //                range.Merge = true;
+        //                range.Value = "ภาคการศึกษาที่ " + semester + " ปีการศึกษา " + year;
+        //                range.Style.Font.Name = "Angsana New";
+        //                range.Style.Font.Size = 20;
+        //                range.Style.Font.Bold = true;
+        //                range.Style.Font.UnderLine = true;
+        //                range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+        //            }
+        //            //-------------------------------------------//
+        //            worksheet.Column(10).Style.Numberformat.Format = "DD MMM YY";
+        //            worksheet.Column(2).Width = 12f;
+        //            worksheet.Column(4).Width = 13f;
+        //            worksheet.Column(5).Width = 16f;
+        //            worksheet.Column(6).Width = 21f;
+        //            worksheet.Column(7).Width = 30f;
+        //            worksheet.Column(11).Width = 11f;
+        //            int row = 5;
+        //            foreach (SUBJECT p in db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).ToList())
+        //            {
+        //                //-------------------------------------------//
+        //                worksheet.Cells[row, 2].Value = p.SUBJECT_ID;
+        //                worksheet.Cells[row, 3].Value = p.SUBJECT_NAME;
+        //                worksheet.Cells[row, 7].Value = p.SUBJECT_CREDIT;
+        //                //-------------------------------------------//
+        //                var midtermcheck = p.SUBJECT_MIDTERM_DATE.Any();
+        //                var finalcheck = p.SUBJECT_FINAL_DATE.Any();
+        //                if (midtermcheck == true && finalcheck == true)
+        //                {
+        //                    worksheet.Cells[row, 9].Value = "Mid";
+        //                    worksheet.Cells[row + 1, 9].Value = "Final";
+        //                    worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+        //                    worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
+        //                    worksheet.Cells[row + 1, 10].Value = p.SUBJECT_FINAL_DATE;
+        //                    worksheet.Cells[row + 1, 11].Value = p.SUBJECT_FINAL_TIME;
+        //                }
+        //                else if (midtermcheck == true && finalcheck == false)
+        //                {
+        //                    worksheet.Cells[row, 9].Value = "Mid";
+        //                    worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+        //                    worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
+        //                }
+        //                else if (midtermcheck == false && finalcheck == true)
+        //                {
+        //                    worksheet.Cells[row, 9].Value = "Final";
+        //                    worksheet.Cells[row, 10].Value = p.SUBJECT_FINAL_DATE;
+        //                    worksheet.Cells[row, 11].Value = p.SUBJECT_FINAL_TIME;
+        //                }
+        //                row++;
+        //                foreach (SECTION r in db.SECTIONs.Where(x => x.SUBJECT_ID == p.SUBJECT_ID && x.SEMESTER == semester && x.YEAR == year).ToList())
+        //                {
+        //                    worksheet.Cells[row, 2].Value = r.SECTION_NUMBER;
+        //                    worksheet.Cells[row, 3].Value = r.SECTION_DATE;
+        //                    worksheet.Cells[row, 4].Value = Convert.ToDecimal(r.SECTION_TIME_START).ToString("0#.00") + "-" + Convert.ToDecimal(r.SECTION_TIME_END).ToString("0#.00");
+        //                    worksheet.Cells[row, 5].Value = r.SECTION_CLASSROOM;
+        //                    worksheet.Cells[row, 6].Value = r.SECTION_PROFESSOR_SHORTNAME;
+        //                    worksheet.Cells[row, 7].Value = r.SECTION_BRANCH_NAME;
+        //                    row++;
+        //                }
+        //                row++;
+        //            }
+        //            //-------------------------------------------//
+        //            package.SaveAs(new FileInfo(FilePath));
+        //            byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+        //            LogFile("ดาวน์โหลดไฟล์ Excel " + FileName);
+        //            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", FileName);
+        //        }
+        //        catch
+        //        {
+        //            SetYear();
+        //            ViewBag.Message = "";
+        //            ViewBag.ErrorMessage = "ขออภัยมีข้อผิดพลาดเกิดขึ้นกรุณาติดต่อ ADMIN";
+        //            return View("data", _DEPARTMENT);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        SetYear();
+        //        ViewBag.Message = "";
+        //        ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
+        //        return View("data", _DEPARTMENT);
+        //    }
+        //}
+        public void Export(string semester, string year)
         {
-            var semester = collection["semester"];
-            var year = collection["year_export"];
-            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + ".xlsx");
+            var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + " " + datetime + ".xlsx");
             System.IO.File.Delete(FilePath);
             string FileName = Path.GetFileName(FilePath);
 
@@ -483,8 +620,8 @@ namespace TestExcel.Controllers
                 {
                     var package = new ExcelPackage(new FileInfo(FilePath));
                     var workbook = package.Workbook;
-                    var worksheet = workbook.Worksheets.Add("ขบวน"+ semester + "-" + year); //read sheet 1
-                  
+                    var worksheet = workbook.Worksheets.Add("ขบวน" + semester + "-" + year); //read sheet 1
+
                     //------------------------------------------------------//
                     worksheet.Cells["B:K"].Style.Font.Name = "TH SarabunPSK";
                     worksheet.Cells["B:K"].Style.Font.Size = 15;
@@ -568,26 +705,21 @@ namespace TestExcel.Controllers
                     //-------------------------------------------//
                     package.SaveAs(new FileInfo(FilePath));
                     byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
-                    LogFile("ดาวน์โหลดไฟล์ Excel " + FileName);
-                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", FileName);
                 }
                 catch
                 {
-                    SetYear();
-                    ViewBag.Message = "";
-                    ViewBag.ErrorMessage = "ขออภัยมีข้อผิดพลาดเกิดขึ้นกรุณาติดต่อ ADMIN";
-                    return View("data", _DEPARTMENT);
                 }
             }
-            else
-            {
-                SetYear();
-                ViewBag.Message = "";
-                ViewBag.ErrorMessage = "ขออภัยไม่มีข้อมูลของ ภาคการศึกษา/ปีการศึกษา ที่เลือก";
-                return View("data", _DEPARTMENT);
-            }
         }
-
+        [HttpPost]
+        public FileResult Export(FormCollection collection)
+        {
+            string excelfile = collection["date"];
+            string path = Server.MapPath("~/Content/import/fin/" + excelfile + ".xlsx");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            LogFile("ดาวน์โหลดไฟล์ Excel " + excelfile + ".xlsx");
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelfile);
+        }
         public FileResult Download(string id)
         {
             string path = Server.MapPath("~/Content/import/" + id + ".pdf");
@@ -635,7 +767,7 @@ namespace TestExcel.Controllers
                     {
                         var byteArray = Encoding.UTF8.GetBytes(data);
                         var stream = new MemoryStream(byteArray);
-                        fs.Write(byteArray,0, byteArray.Length);
+                        fs.Write(byteArray, 0, byteArray.Length);
                     }
                 }
             }
@@ -653,7 +785,7 @@ namespace TestExcel.Controllers
                 foreach (string f in Directory.GetFiles(FilePath))
                 {
                     string FileName = Path.GetFileNameWithoutExtension(f);
-                    var split = FileName.Split(' ','-');
+                    var split = FileName.Split(' ', '-');
                     var item = new DATE();
                     item.DAY = split[1];
                     item.MONTH = split[2];

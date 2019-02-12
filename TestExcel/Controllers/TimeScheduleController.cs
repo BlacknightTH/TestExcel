@@ -8,6 +8,7 @@ using TestExcel.Models;
 using System.Text;
 using TestExcel.Utility;
 using System.IO;
+using OfficeOpenXml;
 
 namespace TestExcel.Controllers
 {
@@ -706,6 +707,7 @@ namespace TestExcel.Controllers
                 Message = "2";
             }
             db.SaveChanges();
+            Export(Semester, Year);
             if (BR_NAME != null && SUBJECTid == null)
             {
                 return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
@@ -816,6 +818,7 @@ namespace TestExcel.Controllers
                 }
             }
             db.SaveChanges();
+            Export(Semester, Year);
             if (BR_NAME != null && SUBJECTid == null)
             {
                 return Redirect("/TimeSchedule/DSchedule?BR_NAME=" + BR_NAME + "&BR_SEMESTER=" + Semester + "&BR_YEAR=" + Year + "&Message=" + Message);
@@ -883,6 +886,110 @@ namespace TestExcel.Controllers
             }
             catch
             {
+            }
+        }
+        public void Export(string semester , string year)
+        {
+            var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
+            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + " " + datetime + ".xlsx");
+            System.IO.File.Delete(FilePath);
+            string FileName = Path.GetFileName(FilePath);
+
+            if (db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).Any() != false)
+            {
+                try
+                {
+                    var package = new ExcelPackage(new FileInfo(FilePath));
+                    var workbook = package.Workbook;
+                    var worksheet = workbook.Worksheets.Add("ขบวน" + semester + "-" + year); //read sheet 1
+
+                    //------------------------------------------------------//
+                    worksheet.Cells["B:K"].Style.Font.Name = "TH SarabunPSK";
+                    worksheet.Cells["B:K"].Style.Font.Size = 15;
+                    worksheet.Column(2).Style.Numberformat.Format = "@";
+                    //------------------------------------------------------//
+
+                    //-------------------------------------------//
+                    using (ExcelRange range = worksheet.Cells["A2:K3"])
+                    {
+                        range.Merge = true;
+                        range.Value = "ขบวนวิชาที่เปิดสอนระดับปริญญาตรี";
+                        range.Style.Font.Name = "Angsana New";
+                        range.Style.Font.Size = 20;
+                        range.Style.Font.Bold = true;
+                        range.Style.Font.UnderLine = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    }
+                    //-------------------------------------------//
+                    using (ExcelRange range = worksheet.Cells["A4:K4"])
+                    {
+                        range.Merge = true;
+                        range.Value = "ภาคการศึกษาที่ " + semester + " ปีการศึกษา " + year;
+                        range.Style.Font.Name = "Angsana New";
+                        range.Style.Font.Size = 20;
+                        range.Style.Font.Bold = true;
+                        range.Style.Font.UnderLine = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    }
+                    //-------------------------------------------//
+                    worksheet.Column(10).Style.Numberformat.Format = "DD MMM YY";
+                    worksheet.Column(2).Width = 12f;
+                    worksheet.Column(4).Width = 13f;
+                    worksheet.Column(5).Width = 16f;
+                    worksheet.Column(6).Width = 21f;
+                    worksheet.Column(7).Width = 30f;
+                    worksheet.Column(11).Width = 11f;
+                    int row = 5;
+                    foreach (SUBJECT p in db.SUBJECTs.Where(x => x.SEMESTER == semester && x.YEAR == year).ToList())
+                    {
+                        //-------------------------------------------//
+                        worksheet.Cells[row, 2].Value = p.SUBJECT_ID;
+                        worksheet.Cells[row, 3].Value = p.SUBJECT_NAME;
+                        worksheet.Cells[row, 7].Value = p.SUBJECT_CREDIT;
+                        //-------------------------------------------//
+                        var midtermcheck = p.SUBJECT_MIDTERM_DATE.Any();
+                        var finalcheck = p.SUBJECT_FINAL_DATE.Any();
+                        if (midtermcheck == true && finalcheck == true)
+                        {
+                            worksheet.Cells[row, 9].Value = "Mid";
+                            worksheet.Cells[row + 1, 9].Value = "Final";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
+                            worksheet.Cells[row + 1, 10].Value = p.SUBJECT_FINAL_DATE;
+                            worksheet.Cells[row + 1, 11].Value = p.SUBJECT_FINAL_TIME;
+                        }
+                        else if (midtermcheck == true && finalcheck == false)
+                        {
+                            worksheet.Cells[row, 9].Value = "Mid";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_MIDTERM_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_MIDTERM_TIME;
+                        }
+                        else if (midtermcheck == false && finalcheck == true)
+                        {
+                            worksheet.Cells[row, 9].Value = "Final";
+                            worksheet.Cells[row, 10].Value = p.SUBJECT_FINAL_DATE;
+                            worksheet.Cells[row, 11].Value = p.SUBJECT_FINAL_TIME;
+                        }
+                        row++;
+                        foreach (SECTION r in db.SECTIONs.Where(x => x.SUBJECT_ID == p.SUBJECT_ID && x.SEMESTER == semester && x.YEAR == year).ToList())
+                        {
+                            worksheet.Cells[row, 2].Value = r.SECTION_NUMBER;
+                            worksheet.Cells[row, 3].Value = r.SECTION_DATE;
+                            worksheet.Cells[row, 4].Value = Convert.ToDecimal(r.SECTION_TIME_START).ToString("0#.00") + "-" + Convert.ToDecimal(r.SECTION_TIME_END).ToString("0#.00");
+                            worksheet.Cells[row, 5].Value = r.SECTION_CLASSROOM;
+                            worksheet.Cells[row, 6].Value = r.SECTION_PROFESSOR_SHORTNAME;
+                            worksheet.Cells[row, 7].Value = r.SECTION_BRANCH_NAME;
+                            row++;
+                        }
+                        row++;
+                    }
+                    //-------------------------------------------//
+                    package.SaveAs(new FileInfo(FilePath));
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+                }
+                catch
+                {
+                }
             }
         }
     }
