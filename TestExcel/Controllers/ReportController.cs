@@ -610,7 +610,7 @@ namespace TestExcel.Controllers
         public void Export(string semester, string year)
         {
             var datetime = DateTime.Now.ToShortDateString().Replace('/', '-');
-            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + " " + datetime + ".xlsx");
+            string FilePath = Server.MapPath("~/Content/import/fin/ขบวน" + semester + "-" + year + " " + datetime + " ไฟล์ตั้งต้น.xlsx");
             System.IO.File.Delete(FilePath);
             string FileName = Path.GetFileName(FilePath);
 
