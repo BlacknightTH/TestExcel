@@ -718,13 +718,13 @@ namespace TestExcel.Controllers
             string path = Server.MapPath("~/Content/import/fin/" + excelfile + ".xlsx");
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
             LogFile("ดาวน์โหลดไฟล์ Excel " + excelfile + ".xlsx");
-            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelfile);
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelfile + ".xlsx");
         }
         public FileResult Download(string id)
         {
             string path = Server.MapPath("~/Content/import/" + id + ".pdf");
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-            return File(fileBytes, "application/pdf", id);
+            return File(fileBytes, "application/pdf", id + ".pdf");
         }
         public void LogFile(string Data)
         {

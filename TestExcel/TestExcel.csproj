@@ -503,7 +503,6 @@
     <Content Include="fonts\THSarabun Italic.ttf" />
     <Content Include="fonts\THSarabun.ttf" />
     <Content Include="fonts\angsa.ttf" />
-    <Content Include="Content\import\fin\ขบวน2-2561.xlsx" />
     <Content Include="Content\import\คู่มือการใช้งาน.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -642,6 +641,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\import\fin\" />
     <Folder Include="Content\import\Upload\" />
     <Folder Include="LogFile\" />
     <Folder Include="Views\Search\" />
