@@ -45,7 +45,7 @@
                     <select class="form-control" id="ddl_Month" name="ddl_Month" style="">
                         @foreach (var item in Model.Select(x => x.MONTH).Distinct().OrderByDescending(x => x))
                         {
-                            var num = int.Parse(item);
+                            var num = item;
                             <option value="@item">@MonthArray[num - 1]</option>
                         }
                     </select>
@@ -54,7 +54,7 @@
                 <td align="right"><b>วันที่&nbsp;</b></td>
                 <td colspan="5" style="padding-right:1em">
                     <select class="form-control" id="ddl_Day" name="ddl_Day" style="">
-                        @foreach (var item in Model.Where(x => x.MONTH == Month).Select(x => x.DAY).Distinct().OrderByDescending(x => x))
+                        @foreach (var item in Model.Where(x => x.MONTH.ToString() == Month).Select(x => x.DAY).Distinct().OrderByDescending(x => x))
                         {
                             <option value="@item">@item</option>
                         }
