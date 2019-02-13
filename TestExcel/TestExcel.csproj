@@ -478,6 +478,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="LogFile\Log 1-2-2562.txt" />
+    <Content Include="LogFile\Log 12-2-2562.txt" />
+    <Content Include="LogFile\Log 27-1-2562.txt" />
+    <Content Include="LogFile\Log 28-1-2562.txt" />
+    <Content Include="LogFile\Log 29-1-2562.txt" />
+    <Content Include="LogFile\Log 30-1-2562.txt" />
+    <Content Include="LogFile\Log 31-1-2562.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -504,6 +511,15 @@
     <Content Include="fonts\THSarabun.ttf" />
     <Content Include="fonts\angsa.ttf" />
     <Content Include="Content\import\คู่มือการใช้งาน.pdf" />
+    <Content Include="Content\import\fin\ขบวน2-2561 10-2-2562.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 12-2-2562.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 25-1-2562 ไฟล์ตั้งต้น.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 5-2-2562.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 6-2-2562.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 7-2-2562.xlsx" />
+    <Content Include="Content\import\fin\ขบวน2-2561 8-2-2562.xlsx" />
+    <Content Include="Content\import\Upload\ขบวน2-2561.xlsx" />
+    <Content Include="Content\import\ขบวน1-2560.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
@@ -641,9 +657,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\import\fin\" />
-    <Folder Include="Content\import\Upload\" />
-    <Folder Include="LogFile\" />
     <Folder Include="Views\Search\" />
   </ItemGroup>
   <ItemGroup>
