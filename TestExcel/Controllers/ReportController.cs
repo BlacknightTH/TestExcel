@@ -45,7 +45,6 @@ namespace TestExcel.Controllers
             SetYear();
 
             List<DATE> DATE = new List<DATE>();
-            string line;
 
             string FilePath = Server.MapPath("~/Content/import/fin/");
             foreach (string f in Directory.GetFiles(FilePath))
@@ -53,14 +52,13 @@ namespace TestExcel.Controllers
                 string FileName = Path.GetFileNameWithoutExtension(f);
                 var split = FileName.Split(' ', '-');
                 var item = new DATE();
-                item.DAY = split[2];
-                item.MONTH = split[3];
-                item.YEAR = split[4];
+                item.DAY = int.Parse(split[2]);
+                item.MONTH = int.Parse(split[3]);
+                item.YEAR = int.Parse(split[4]);
                 item.EXCEL_DATE = FileName;
                 DATE.Add(item);
             }
-            ViewBag.DATE = DATE.OrderByDescending(x => x.YEAR).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.DAY).ToList();
-
+            ViewBag.DATE = DATE.OrderByDescending(x => x.DAY).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.YEAR).ToList();
             return View(_DEPARTMENT);
         }
         [HttpPost]
@@ -787,15 +785,15 @@ namespace TestExcel.Controllers
                     string FileName = Path.GetFileNameWithoutExtension(f);
                     var split = FileName.Split(' ', '-');
                     var item = new DATE();
-                    item.DAY = split[1];
-                    item.MONTH = split[2];
-                    item.YEAR = split[3];
+                    item.DAY = int.Parse(split[1]);
+                    item.MONTH = int.Parse(split[2]);
+                    item.YEAR = int.Parse(split[3]);
                     DATE.Add(item);
                 }
 
-                string Year = DATE.Select(x => x.YEAR).Distinct().OrderByDescending(x => x).First();
-                string Month = DATE.OrderByDescending(x => x.MONTH).First().MONTH;
-                string Day = DATE.Where(x => x.MONTH == Month).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First();
+                string Year = DATE.Select(x => x.YEAR).Distinct().OrderByDescending(x => x).First().ToString();
+                string Month = DATE.OrderByDescending(x => x.MONTH).First().MONTH.ToString();
+                string Day = DATE.Where(x => x.MONTH.ToString() == Month).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First().ToString();
                 ViewBag.Year = Year;
                 ViewBag.Month = Month;
                 ViewBag.Day = Day;
@@ -833,9 +831,9 @@ namespace TestExcel.Controllers
                     string FileName = Path.GetFileNameWithoutExtension(f);
                     var split = FileName.Split(' ', '-');
                     var item = new DATE();
-                    item.DAY = split[1];
-                    item.MONTH = split[2];
-                    item.YEAR = split[3];
+                    item.DAY = int.Parse(split[1]);
+                    item.MONTH = int.Parse(split[2]);
+                    item.YEAR = int.Parse(split[3]);
                     DATE.Add(item);
                 }
 
@@ -843,7 +841,7 @@ namespace TestExcel.Controllers
                 {
                     ViewBag.Year = YEAR;
                     ViewBag.Month = MONTH;
-                    ViewBag.Day = DATE.Where(x => x.MONTH == MONTH).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First();
+                    ViewBag.Day = DATE.Where(x => x.MONTH.ToString() == MONTH).Select(x => x.DAY).Distinct().OrderByDescending(x => x).First().ToString();
                 }
                 else
                 {

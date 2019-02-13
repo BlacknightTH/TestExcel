@@ -7,9 +7,9 @@ namespace TestExcel.Models
 {
     public class DATE
     {
-        public string DAY { get; set; }
-        public string MONTH { get; set; }
-        public string YEAR { get; set; }
+        public int DAY { get; set; }
+        public int MONTH { get; set; }
+        public int YEAR { get; set; }
         public string EXCEL_DATE { get; set; }
     }
 }
