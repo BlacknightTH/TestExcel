@@ -385,6 +385,23 @@ namespace TestExcel.Controllers
                         ViewBag.Message = "อัปโหลดไฟล์ " + excelfile.FileName + " เสร็จสิ้น";
                         ViewBag.ErrorMessage = "";
                         LogFile("อัปโหลดไฟล์ Excel " + excelfile.FileName);
+
+                        List<DATE> DATE = new List<DATE>();
+
+                        string FilePath = Server.MapPath("~/Content/import/fin/");
+                        foreach (string f in Directory.GetFiles(FilePath))
+                        {
+                            string FileName = Path.GetFileNameWithoutExtension(f);
+                            var split = FileName.Split(' ', '-');
+                            var item = new DATE();
+                            item.DAY = int.Parse(split[2]);
+                            item.MONTH = int.Parse(split[3]);
+                            item.YEAR = int.Parse(split[4]);
+                            item.EXCEL_DATE = FileName;
+                            DATE.Add(item);
+                        }
+                        ViewBag.DATE = DATE.OrderByDescending(x => x.DAY).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.YEAR).ToList();
+
                         return View("data", _DEPARTMENT);
                     }
                     else
@@ -392,12 +409,46 @@ namespace TestExcel.Controllers
                         SetYear();
                         ViewBag.Message = "";
                         ViewBag.ErrorMessage = "ชนิดของไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ .xlsx";
+
+                        List<DATE> DATE = new List<DATE>();
+
+                        string FilePath = Server.MapPath("~/Content/import/fin/");
+                        foreach (string f in Directory.GetFiles(FilePath))
+                        {
+                            string FileName = Path.GetFileNameWithoutExtension(f);
+                            var split = FileName.Split(' ', '-');
+                            var item = new DATE();
+                            item.DAY = int.Parse(split[2]);
+                            item.MONTH = int.Parse(split[3]);
+                            item.YEAR = int.Parse(split[4]);
+                            item.EXCEL_DATE = FileName;
+                            DATE.Add(item);
+                        }
+                        ViewBag.DATE = DATE.OrderByDescending(x => x.DAY).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.YEAR).ToList();
+
                         return View("data", _DEPARTMENT);
                     }
                 }
             }
             else
             {
+
+                List<DATE> DATE = new List<DATE>();
+
+                string FilePath = Server.MapPath("~/Content/import/fin/");
+                foreach (string f in Directory.GetFiles(FilePath))
+                {
+                    string FileName = Path.GetFileNameWithoutExtension(f);
+                    var split = FileName.Split(' ', '-');
+                    var item = new DATE();
+                    item.DAY = int.Parse(split[2]);
+                    item.MONTH = int.Parse(split[3]);
+                    item.YEAR = int.Parse(split[4]);
+                    item.EXCEL_DATE = FileName;
+                    DATE.Add(item);
+                }
+                ViewBag.DATE = DATE.OrderByDescending(x => x.DAY).OrderByDescending(x => x.MONTH).OrderByDescending(x => x.YEAR).ToList();
+
                 return RedirectToAction("data");
             }
         }
