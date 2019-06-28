@@ -234,7 +234,7 @@ namespace TestExcel.Controllers
                                 db.SaveChanges();
                             }
 
-                            for (int row = 5; row < totalRows; row++)
+                            for (int row = 5; row <= totalRows; row++)
                             {
                                 string B = worksheet.Cells[row, 2].Text;
                                 string C = worksheet.Cells[row, 3].Text;
@@ -258,10 +258,21 @@ namespace TestExcel.Controllers
                                                 string Subject_ID = B;
                                                 string subject_NAME = C;
                                                 string subject_CREDIT = G;
-                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                                string subject_Mid_fin = worksheet.Cells[row, 9].Text;
+                                                string subject_MIDTERM_DATE = "", subject_FINAL_DATE = "", subject_MIDTERM_TIME = "", subject_FINAL_TIME = "";
+                                                if (subject_Mid_fin == "Mid")
+                                                {
+                                                    subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                                    subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                                    subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                                }
+                                                else if(subject_Mid_fin == "Final")
+                                                {
+                                                    subject_FINAL_DATE = worksheet.Cells[row, 10].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row, 11].Text;
+                                                }
+
 
                                                 saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                             }
@@ -270,10 +281,21 @@ namespace TestExcel.Controllers
                                                 string Subject_ID = B;
                                                 string subject_NAME = C;
                                                 string subject_CREDIT = G;
-                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
-                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
-                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
-                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                                string subject_Mid_fin = worksheet.Cells[row, 10].Text;
+                                                string subject_MIDTERM_DATE = "", subject_FINAL_DATE = "", subject_MIDTERM_TIME = "", subject_FINAL_TIME = "";
+                                                if (subject_Mid_fin == "Mid")
+                                                {
+                                                    subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                                    subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                                }
+                                                else if (subject_Mid_fin == "Final")
+                                                {
+                                                    subject_FINAL_DATE = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row, 12].Text;
+                                                }
+
 
                                                 saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                             }
@@ -285,10 +307,20 @@ namespace TestExcel.Controllers
                                                 string Subject_ID = B;
                                                 string subject_NAME = C;
                                                 string subject_CREDIT = H.Trim();
-                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
-                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
-                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
-                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                                string subject_Mid_fin = worksheet.Cells[row, 9].Text;
+                                                string subject_MIDTERM_DATE = "", subject_FINAL_DATE = "", subject_MIDTERM_TIME = "", subject_FINAL_TIME = "";
+                                                if (subject_Mid_fin == "Mid")
+                                                {
+                                                    subject_MIDTERM_DATE = worksheet.Cells[row, 10].Text;
+                                                    subject_FINAL_DATE = worksheet.Cells[row + 1, 10].Text;
+                                                    subject_MIDTERM_TIME = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row + 1, 11].Text;
+                                                }
+                                                else if (subject_Mid_fin == "Final")
+                                                {
+                                                    subject_FINAL_DATE = worksheet.Cells[row, 10].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row, 11].Text;
+                                                }
 
                                                 saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                             }
@@ -297,10 +329,20 @@ namespace TestExcel.Controllers
                                                 string Subject_ID = B;
                                                 string subject_NAME = C;
                                                 string subject_CREDIT = H.Trim();
-                                                string subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
-                                                string subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
-                                                string subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
-                                                string subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                                string subject_Mid_fin = worksheet.Cells[row, 10].Text;
+                                                string subject_MIDTERM_DATE = "", subject_FINAL_DATE = "", subject_MIDTERM_TIME = "", subject_FINAL_TIME = "";
+                                                if (subject_Mid_fin == "Mid")
+                                                {
+                                                    subject_MIDTERM_DATE = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_DATE = worksheet.Cells[row + 1, 11].Text;
+                                                    subject_MIDTERM_TIME = worksheet.Cells[row, 12].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row + 1, 12].Text;
+                                                }
+                                                else if (subject_Mid_fin == "Final")
+                                                {
+                                                    subject_FINAL_DATE = worksheet.Cells[row, 11].Text;
+                                                    subject_FINAL_TIME = worksheet.Cells[row, 12].Text;
+                                                }
 
                                                 saveSubject(Subject_ID, subject_NAME, subject_CREDIT, subject_MIDTERM_DATE, subject_FINAL_DATE, subject_MIDTERM_TIME, subject_FINAL_TIME, semester, year, db);
                                             }
